@@ -9,7 +9,7 @@
     "theme_color": "#ea580c",
     "icons": [
         {
-            "src": "/face.png",
+            "src": "/web.webp",
             "sizes": "512x512",
             "type": "image/png"
         }
