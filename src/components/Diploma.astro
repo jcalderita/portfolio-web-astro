@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets";
+
+import SRW24 from "../assets/diplomas/SRW24.png";
+import BootCamp24 from "../assets/diplomas/BootCamp24.png";
+import VDP24 from "../assets/diplomas/VDP24.png";
+
+interface Props {
+    code: string;
+    alt: string;
+    language: string;
+}
+
+const diplomaImages = {
+    SRW24,
+    BootCamp24,
+    VDP24,
+};
+
+const { code, alt, language } = Astro.props;
+const image = diplomaImages[code as keyof typeof diplomaImages];
+const ariaLabel = language === "es" ? "Ver diploma ampliado" : "View full-size certificate";
+---
+
+<span class="flex flex-col mr-4">
+    <button class="diploma-thumb" aria-label={ariaLabel} id={`diploma-${code}`} data-code={code} type="button">
+        <Image src={image} alt={alt} class="w-29 h-20 object-contain cursor-zoom-in" loading="lazy" />
+    </button>
+
+    <div
+        id={`modal-${code}`}
+        class="flex hidden fixed inset-0 z-50 items-center justify-center bg-gray-100 dark:bg-gray-950 bg-opacity-70"
+        tabindex="-1"
+        aria-modal="true"
+        role="dialog"
+        aria-label={alt}
+    >
+        <span id={`diploma-title-${code}`} class="sr-only">{alt}</span>
+        <Image src={image} alt={alt} class="w-11/12 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl max-h-[80vh] rounded cursor-zoom-out" />
+    </div>
+</span>

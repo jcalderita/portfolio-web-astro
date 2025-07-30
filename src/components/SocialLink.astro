@@ -1,0 +1,15 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+    link: string;
+    label: string;
+    name: string;
+}
+
+const { link, label, name } = Astro.props;
+---
+
+<a href={link} class="cursor-pointer" aria-label={label} title={label}>
+    <Icon name={name} class="w-8 h-8" aria-hidden="true" focusable="false" />
+</a>

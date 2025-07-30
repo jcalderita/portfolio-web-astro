@@ -1,0 +1,47 @@
+---
+import FlagToggle from "./FlagToggle.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import HamburgerMenu from "./HamburgerMenu.astro";
+
+interface Props {
+    language: string;
+    links: string[];
+}
+
+const { language, links } = Astro.props;
+const ariaLabel = language === "es" ? "Inicio" : "Home";
+const link = language === "es" ? "Ir a la sección " : "Go to section ";
+---
+
+<header class="w-full sticky top-0 z-50 bg-gray-50/75 dark:bg-gray-950/75">
+    <nav class="flex items-center px-4 py-2 text-orange-600 border-b">
+        <a href="#" class="font-semibold text-lg cursor-pointer" title={ariaLabel} aria-label={ariaLabel}>Jorge Calderita</a>
+
+        <div class="flex-1 gap-4 justify-center font-semibold hidden md:flex">
+            {
+                links.map((section) => (
+                    <a href={`#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+                        {section}
+                    </a>
+                ))
+            }
+        </div>
+
+        <HamburgerMenu language={language}>
+            {
+                links.map((section) => (
+                    <a href={`#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+                        {section}
+                    </a>
+                ))
+            }
+        </HamburgerMenu>
+
+        <div class="flex items-center gap-2 ml-2">
+            <div class="flex gap-4 rounded px-3 py-1">
+                <FlagToggle language={language} />
+                <ThemeToggle language={language} />
+            </div>
+        </div>
+    </nav>
+</header>

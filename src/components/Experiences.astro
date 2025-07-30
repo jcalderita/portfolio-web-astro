@@ -1,0 +1,19 @@
+---
+import type { ExperienceType } from "@types/PortfolioSchema";
+import Experience from "./Experience.astro";
+
+interface Props {
+    title: string;
+    experiences: ExperienceType[];
+    language: string;
+}
+
+const { title, experiences, language } = Astro.props;
+---
+
+<div id={title} class="my-8 scroll-mt-20">
+    <h2 class="text-3xl md:text-4xl font-bold text-orange-600">
+        {title}
+    </h2>
+    {experiences.map((exp) => <Experience experience={exp} language={language} />)}
+</div>

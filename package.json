@@ -9,6 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.12.2"
+    "@tailwindcss/vite": "^4.1.11",
+    "astro": "^5.12.4",
+    "astro-icon": "^1.1.5",
+    "astro-remote": "^0.3.4",
+    "tailwindcss": "^4.1.11",
+    "zod": "^4.0.10"
+  },
+  "prettier": {
+    "printWidth": 180
   }
 }

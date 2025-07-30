@@ -1,0 +1,38 @@
+---
+import type { ExperienceType } from "@types/PortfolioSchema";
+import Diploma from "./Diploma.astro";
+// ...
+
+interface Props {
+    experience: ExperienceType;
+    language: string;
+}
+
+const { experience, language } = Astro.props;
+const responsabilities: Array<string> = experience.responsabilities;
+const tecnologies: Array<string> = experience.tecnologies;
+const image = experience.diploma;
+const alt = experience.alt;
+---
+
+<div class="rounded-2xl my-4 border border-orange-700">
+    <div class="flex items-center bg-gray-150 dark:bg-gray-950 rounded-t-2xl border-b border-orange-700 gap-2">
+        <div class="flex-1 p-4">
+            <h2 class="font-bold">{experience.title}</h2>
+            <h3>{experience.role}</h3>
+            <h3>
+                {experience.place}
+                <span class="italic"> {experience.interval}</span>
+            </h3>
+        </div>
+        {image && alt && <Diploma code={image} alt={alt} language={language} />}
+    </div>
+    <div class="p-4">
+        <ul class="mb-2 list-disc list-inside">
+            {responsabilities.map((resp) => <li>{resp}</li>)}
+        </ul>
+    </div>
+    <div class="flex flex-wrap gap-2 bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4">
+        {tecnologies.map((resp) => <span class="rounded-full px-3 py-2 text-xs font-bold bg-orange-100 dark:bg-orange-900">{resp}</span>)}
+    </div>
+</div>

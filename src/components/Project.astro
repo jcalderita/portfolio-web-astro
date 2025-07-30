@@ -1,0 +1,23 @@
+---
+import type { ProjectType } from "@types/PortfolioSchema";
+import { Markdown } from "astro-remote";
+import SocialLink from "./SocialLink.astro";
+
+interface Props {
+    project: ProjectType;
+}
+
+const { project } = Astro.props;
+---
+
+<div class="rounded-2xl my-4 border border-orange-700 flex flex-col">
+    <div class="bg-gray-150 dark:bg-gray-950 rounded-t-2xl border-b border-orange-700 p-4">
+        <h2 class="font-bold">{project.name}</h2>
+    </div>
+    <div class="p-4 flex-1">
+        <Markdown content={project.description} />
+    </div>
+    <div class="bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4 flex justify-center items-center">
+        <SocialLink link={project.link} label="GitHub" name="github" />
+    </div>
+</div>

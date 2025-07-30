@@ -1,0 +1,29 @@
+---
+
+---
+
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.body.addEventListener("click", (e) => {
+            const thumb = e.target.closest("button.diploma-thumb, [id^='diploma-']");
+            if (thumb && thumb.dataset.code) {
+                const code = thumb.dataset.code;
+                const modal = document.getElementById(`modal-${code}`);
+                if (modal) modal.classList.remove("hidden");
+            }
+
+            const modal = e.target.closest("[id^='modal-']");
+            if (modal && !modal.classList.contains("hidden")) {
+                modal.classList.add("hidden");
+            }
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                document.querySelectorAll("[id^='modal-']").forEach((modal) => {
+                    if (!modal.classList.contains("hidden")) modal.classList.add("hidden");
+                });
+            }
+        });
+    });
+</script>

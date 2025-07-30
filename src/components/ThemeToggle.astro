@@ -1,0 +1,36 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  language: string;
+}
+
+const { language } = Astro.props;
+const ariaLabel = language === "es" ? "Alternar entre modo claro y modo oscuro" : "Toggle light and dark mode";
+const darkMessage = language === "es" ? "Modo oscuro activado, alternar a modo claro" : "Dark mode active, switch to light mode";
+const lightMessage = language === "es" ? "Modo claro activado, alternar a modo oscuro" : "Light mode active, switch to dark mode";
+---
+
+<button id="theme-toggle" title={ariaLabel} class="cursor-pointer" data-dark-message={darkMessage} data-light-message={lightMessage}>
+  <Icon name="sun" class="hidden dark:block w-7 h-7" aria-hidden="true" focusable="false" />
+  <Icon name="moon" class="block dark:hidden w-7 h-7" aria-hidden="true" focusable="false" />
+</button>
+
+<script>
+  const toggle = document.querySelector("#theme-toggle") as HTMLButtonElement | null;
+  const darkMessage = toggle?.dataset.darkMessage ?? "";
+  const lightMessage = toggle?.dataset.lightMessage ?? "";
+  const initialIsDark = document.documentElement.classList.contains("dark");
+
+  function setTheme() {
+    const isDark = document.documentElement.classList.contains("dark");
+    localStorage.theme = isDark ? "light" : "dark";
+    document.documentElement.classList.toggle("dark");
+    toggle?.setAttribute("aria-pressed", isDark ? "true" : "false");
+    toggle?.setAttribute("aria-label", isDark ? darkMessage : lightMessage);
+  }
+
+  toggle?.setAttribute("aria-pressed", initialIsDark ? "true" : "false");
+  toggle?.setAttribute("aria-label", initialIsDark ? lightMessage : darkMessage);
+  toggle?.addEventListener("click", setTheme);
+</script>

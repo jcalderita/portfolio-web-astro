@@ -1,0 +1,49 @@
+---
+interface Props {
+    language: string;
+}
+
+const { language } = Astro.props;
+const ariaLabel = language === "es" ? "Abrir menú" : "Open menu";
+---
+
+<button
+    id="menu-toggle"
+    class="ml-auto md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+    title={ariaLabel}
+    aria-label={ariaLabel}
+    aria-controls="mobile-menu"
+    aria-expanded="false"
+>
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+</button>
+
+<div id="mobile-menu" class="absolute right-20 top-14 bg-white dark:bg-gray-900 rounded-xl shadow-xl border p-4 flex flex-col gap-4 z-50 hidden md:hidden">
+    <slot />
+</div>
+
+<script is:inline>
+    window.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("menu-toggle");
+        const menu = document.getElementById("mobile-menu");
+        if (btn && menu) {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                menu.classList.toggle("hidden");
+                btn.setAttribute("aria-expanded", menu.classList.contains("hidden") ? "false" : "true");
+            });
+            menu.addEventListener("click", () => {
+                menu.classList.toggle("hidden");
+                btn.setAttribute("aria-expanded", menu.classList.contains("hidden") ? "false" : "true");
+            });
+            document.addEventListener("click", (e) => {
+                if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && e.target !== btn) {
+                    menu.classList.add("hidden");
+                    btn.setAttribute("aria-expanded", menu.classList.contains("hidden") ? "false" : "true");
+                }
+            });
+        }
+    });
+</script>

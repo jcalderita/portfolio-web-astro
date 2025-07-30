@@ -1,0 +1,190 @@
+{
+    "role": "Software Developer",
+    "introduction": "With over 20 years of software development experience, I led the development and subsequent migration of the IRATI web application at SALUD GN, enhancing its performance and scalability. I currently specialize in iOS and VisionOS development with Swift, both on the client and server side, incorporating accessibility best practices. I’m looking for new challenges in these emerging areas.",
+    "languages": [
+        {
+            "language": "Spanish",
+            "level": "Native"
+        },
+        {
+            "language": "English",
+            "level": "A2"
+        }
+    ],
+    "jobs": [
+        {
+            "title": "Bilbomatica - Salud Gobierno de Navarra",
+            "role": "Technical Lead",
+            "place": "Pamplona, Spain",
+            "interval": "April 2010–May 2024",
+            "responsabilities": [
+                "Maintenance, development, analysis, and evolution of the Irati web application (Nursing Care).",
+                "Migrated from Visual Basic to C# using MVC architecture, improving scalability and performance.",
+                "Maintained and migrated SQL Server database, optimizing efficiency.",
+                "Managed and automated deployments through continuous integration for faster, higher-quality deliveries.",
+                "Maintained and evolved APIs to ensure efficient communication with other systems and services."
+            ],
+            "tecnologies": [
+                "SQL Server",
+                "Oracle",
+                ".Net",
+                "C#",
+                "Visual Basic",
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "JQuery"
+            ]
+        },
+        {
+            "title": "Wairbut - Infodesa - Duna (Caja de ahorros de Navarra)",
+            "role": "Software Analyst",
+            "place": "Pamplona, Spain",
+            "interval": "March 2005–April 2010",
+            "responsabilities": [
+                "Management and administration of the Oracle-based Datawarehouse environment.",
+                "Planning and execution of Unix scripts with SQL instructions for table loading in Oracle.",
+                "Optimization of process performance and continuous improvement of operational efficiency.",
+                "Creation and development of new projects focused on the analysis and improvement of the informational environment.",
+                "Resolution of technical incidents in the system, ensuring service stability and continuity.",
+                "Maintenance of batch processes in Cobol on the host for data loading and unloading.",
+                "Creation of customized reports for different departments, meeting the specific needs of each area."
+            ],
+            "tecnologies": [
+                "Oracle",
+                "Teradata",
+                "Cobol",
+                "Unix"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "title": "APPLE CODING ACADEMY",
+            "role": "Swift Accesibility Program",
+            "place": "Spain",
+            "interval": "July 2025",
+            "responsabilities": [
+                "Intensive and hands-on training on accessibility in iOS apps.",
+                "Compliance with the European Accessibility Act (EAA) and Apple’s Accessibility Nutrition Labels.",
+                "Accessibility implementation using Swift, SwiftUI, and Apple’s native APIs.",
+                "Auditing and best practices for building inclusive apps aligned with current and future standards."
+            ],
+            "tecnologies": [
+                "SwiftUI",
+                "Accessibility",
+                "WCAC Compliance",
+                "VoiceOver",
+                "Accessibilty Inspector",
+                "European Accessibility Act"
+            ]
+        },
+        {
+            "title": "APPLE CODING ACADEMY",
+            "role": "Swift Refresh Workshop",
+            "place": "Spain",
+            "interval": "December 2024",
+            "responsabilities": [
+                "Hands-on experience with the latest Apple technologies: Swift 6, Swift Data, and Swift Testing.",
+                "Use of macros to optimize development and reduce boilerplate code.",
+                "Strict concurrency in Swift for safe and efficient asynchronous operations.",
+                "Design of modern and scalable solutions aligned with Apple's best practices."
+            ],
+            "tecnologies": [
+                "Swift 6",
+                "Swift Data",
+                "Swift Testing",
+                "Macros",
+                "Strict Concurrency"
+            ],
+            "diploma": "SRW24",
+            "alt": "Certificate of completion, 20 hours."
+        },
+        {
+            "title": "APPLE CODING ACADEMY",
+            "role": "Vision Developer Program",
+            "place": "Spain",
+            "interval": "July 2024",
+            "responsabilities": [
+                "Advanced knowledge in 3D and spatial app development with Apple Vision Pro.",
+                "Integration of immersive technologies and design of interactive experiences.",
+                "Exclusive use of Apple’s native tools with no third-party dependencies.",
+                "Architecture focused on simplicity and workflow efficiency."
+            ],
+            "tecnologies": [
+                "iOS",
+                "visionOS",
+                "Swift",
+                "SwiftUI",
+                "MVVM",
+                "ARKit",
+                "RealityKit"
+            ],
+            "diploma": "VDP24",
+            "alt": "Certificate, 45 hours, project grade 9."
+        },
+        {
+            "title": "APPLE CODING ACADEMY",
+            "role": "Swift Full Stack Bootcamp",
+            "place": "Spain",
+            "interval": "February 2024–June 2024",
+            "responsabilities": [
+                "Development of full-featured applications for the Apple ecosystem using Swift and Vapor.",
+                "Advanced SwiftUI, design patterns, and data persistence with SwiftData.",
+                "Concurrency and asynchrony with Async/Await to enhance performance.",
+                "Security best practices and testing for robust and scalable development."
+            ],
+            "tecnologies": [
+                "iOS",
+                "Swift",
+                "Async/Await",
+                "MVVM",
+                "DocC",
+                "SwiftData",
+                "Vapor",
+                "TDD",
+                "Secure Development",
+                "Machine Learning"
+            ],
+            "diploma": "BootCamp24",
+            "alt": "Certificate, 380 hours, project grade 10."
+        },
+        {
+            "title": "ARTEAN. CUATROVIENTOS SCOOP",
+            "role": "Advanced Diploma in Software Application Development",
+            "place": "Pamplona, Spain",
+            "interval": "September 1999–June 2001",
+            "responsabilities": [
+                "Design, analyze, test applications, develop software, and implement systems."
+            ],
+            "tecnologies": [
+                "Acces",
+                "Metodoly",
+                "Visual Basic",
+                "Pascal",
+                "Cobol",
+                "Html",
+                "Css",
+                "Asp.net"
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "Portfolio",
+            "description": "**Personal web portfolio** made with *Ignite* and *Swift*.",
+            "link": "https://github.com/jcalderita/portfolio-web-ignite"
+        },
+        {
+            "name": "Spatial shoes",
+            "description": "Practice project for **Apple Vision Pro**, developed with *VisionOS* and *Swift*.",
+            "link": "https://github.com/jcalderita/spatialshoes-app-vision"
+        }
+    ],
+    "metadata": {
+        "language": "en",
+        "webTitle": "Jorge Calderita's portfolio",
+        "title": "Jorge Calderita – iOS and VisionOS Developer",
+        "description": "Professional portfolio of Jorge Calderita, a software developer specializing in iOS, VisionOS, and Swift with over 20 years of experience. Discover his projects, education, and career path."
+    }
+}

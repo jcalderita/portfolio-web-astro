@@ -1,0 +1,25 @@
+---
+import SocialLink from "./SocialLink.astro";
+
+interface Props {
+    language: string;
+}
+
+const { language } = Astro.props;
+const ariaFooter = language === "es" ? "Redes sociales de Jorge Calderita" : "Jorge Calderita's social medias";
+const ariaPdf = language === "es" ? "Descargar CV en PDF" : "Download PDF CV";
+const pdfRoute = "/JorgeCalderita-" + language + ".pdf";
+---
+
+<footer
+    class="fixed bottom-0 left-0 w-full flex justify-center items-center gap-4 text-orange-600 py-4 bg-gray-50/75 dark:bg-gray-950/75 border-t z-50"
+    role="contentinfo"
+    aria-label={ariaFooter}
+>
+    <SocialLink link="https://www.linkedin.com/in/jcalderita" label="LinkedIn" name="linkedin" />
+    <SocialLink link="https://github.com/jcalderita" label="GitHub" name="github" />
+    <SocialLink link="https://x.com/jcalderita" label="X" name="x" />
+    <SocialLink link="https://discord.com/users/jcalderita" label="Discord" name="discord" />
+    <SocialLink link="mailto:contacto@jcalderita.com" label="Mail" name="mail" />
+    <SocialLink link={pdfRoute} label={ariaPdf} name="pdf" />
+</footer>
