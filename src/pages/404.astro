@@ -1,0 +1,9 @@
+---
+
+---
+
+<script>
+    const language = navigator.language?.split("-")[0] || "en";
+    const url = language === "es" ? "/es/" : "/en/";
+    window.location.replace(url);
+</script>
