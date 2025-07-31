@@ -1,47 +1,92 @@
-# Astro Starter Kit: Minimal
+Si prefieres leer esta página en español, puedes encontrar la [🇪🇸 Versión en español aquí](README_es.md).
+# jcalderita-portfolio
 
-```sh
-bun create astro@latest -- --template minimal
-```
+> **Professional portfolio of Jorge Calderita – Developer specialized in iOS, VisionOS, and Swift**
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+[![Deploy on Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange?logo=cloudflare)](https://pages.cloudflare.com/)
+[![Astro v5](https://img.shields.io/badge/Astro-5.x-blue?logo=astro)](https://astro.build/) 
+[![Bun](https://img.shields.io/badge/Bun-1.x-pink?logo=bun)](https://bun.sh/)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🚀 Description
 
-## 🚀 Project Structure
+This is the personal and professional portfolio of Jorge Calderita, developed with [Astro](https://astro.build/) and deployed on Cloudflare Pages.  
+The site supports multiple languages (Spanish and English), is optimized for SEO and accessibility (WAI-ARIA), and is fully responsive.
+
+- **Framework:** Astro 5
+- **Package manager:** Bun
+- **Styling:** Tailwind CSS 4
+- **Data validation:** Zod (for JSON validation)
+- **Accessibility:** Complies with WCAG standards and uses ARIA attributes
+- **Deployment:** Cloudflare Pages
+- **Light/dark theme:** Automatic and manual support (persists in localStorage)
+- **Cookie policy:** Only a technical cookie for language preference
+
+## 📁 Project structure
 
 Inside of your Astro project, you'll see the following folders and files:
 
 ```text
 /
-├── public/
+├── public/            # Static images and assets (favicons, diplomas, etc.)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/    # Reusable components (navbar, footer, toggles, etc.)
+│   ├── layouts/       # Global layouts (MainLayout, LegalLayout)
+│   ├── pages/         # .astro pages (multi-language, legal, portfolio, blog)
+│   ├── data/          # JSON files with structured content
+│   └── styles/        # Global style files
+├── package.json
+├── bun.lockb
+└── tailwind.config.js
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🛠️ Useful Scripts
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Command            | Action                                         |
+| ------------------ | ---------------------------------------------- |
+| `bun install`      | Install dependencies                           |
+| `bun dev`          | Local development server (`localhost:4321`)    |
+| `bun build`        | Build the site for production (`./dist/`)      |
+| `bun preview`      | Preview the compiled site                      |
+| `bun astro ...`    | Advanced Astro commands                        |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🌎 Multilanguage
 
-## 🧞 Commands
+The site detects the user's preferred language and saves the selection using a technical cookie (`lang`).  
+All legal pages are available in both Spanish and English.
 
-All commands are run from the root of the project, from a terminal:
+## 🔒 Accessibility and SEO
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+- Keyboard navigation and screen reader support.
+- ARIA attributes and semantic landmarks.
+- Meta tags for social sharing (Open Graph, Twitter Card).
+- Responsive on mobile, tablet, and desktop.
 
-## 👀 Want to learn more?
+## ☁️ Deployment
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Automatically deployed on [Cloudflare Pages](https://pages.cloudflare.com/).  
+Language and preference rules are managed by Workers.
+
+## 📄 Legal Pages
+
+- `/es/cookies` and `/en/cookies` – Cookie Policy
+- `/es/aviso-legal` and `/en/legal-notice` – Legal Notice
+
+## 📦 Main dependencies
+
+- [Astro](https://astro.build/)
+- [Bun](https://bun.sh/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Zod](https://zod.dev/)
+
+## 👨‍💻 Author
+
+**Jorge Calderita**
+
+[![LinkedIn](https://img.shields.io/badge/linkedin-0077B5?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=101010)](https://www.linkedin.com/in/jcalderita)
+[![GitHub](https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=101010)](https://github.com/jcalderita)
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---

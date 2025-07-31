@@ -171,7 +171,12 @@
     ],
     "projects": [
         {
-            "name": "Portfolio",
+            "name": "Current Portfolio",
+            "description": "**Personal web portfolio** made with *Astro* and *Tailwind*.",
+            "link": "https://github.com/jcalderita/portfolio-web-astro/blob/main/README.md"
+        },
+        {
+            "name": "Swift Portfolio",
             "description": "**Personal web portfolio** made with *Ignite* and *Swift*.",
             "link": "https://github.com/jcalderita/portfolio-web-ignite"
         },

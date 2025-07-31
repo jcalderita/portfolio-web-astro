@@ -9,7 +9,7 @@ const { language } = Astro.props;
 const ariaFooter = language === "es" ? "Redes sociales de Jorge Calderita" : "Jorge Calderita's social medias";
 const ariaPdf = language === "es" ? "Descargar CV en PDF" : "Download PDF CV";
 const pdfRoute = "/JorgeCalderita-" + language + ".pdf";
-const cookieLink = "/cookies" + language;
+const cookieLink = "/" + language + "/cookies";
 ---
 
 <footer
