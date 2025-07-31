@@ -10,7 +10,7 @@ const ariaLabel = language === "es" ? "Cambiar a inglés" : "Switch to Spanish";
 const title = language === "es" ? "Cambiar el idioma de la web a inglés" : "Switch website language to Spanish";
 ---
 
-<a href={`/${targetLanguage}/`} class="cursor-pointer text-3xl" title={title} aria-label={ariaLabel}>
+<a id="flag-toggle" href={`/${targetLanguage}/`} class="cursor-pointer text-3xl" title={title} aria-label={ariaLabel} data-language={targetLanguage}>
   <span aria-hidden="true">{flag}</span>
 </a>
 
@@ -19,7 +19,8 @@ const title = language === "es" ? "Cambiar el idioma de la web a inglés" : "Swi
     const flagToggle = document.getElementById("flag-toggle");
     if (flagToggle) {
       flagToggle.addEventListener("click", function () {
-        document.cookie = `lang=${encodeURIComponent("${targetLanguage}")}; path=/; max-age=31536000`;
+        const lang = flagToggle.dataset.language;
+        document.cookie = `lang=${encodeURIComponent(lang)}; path=/; max-age=31536000`;
       });
     }
   });
