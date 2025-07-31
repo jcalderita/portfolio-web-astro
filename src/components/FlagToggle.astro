@@ -13,3 +13,14 @@ const title = language === "es" ? "Cambiar el idioma de la web a inglés" : "Swi
 <a href={`/${targetLanguage}/`} class="cursor-pointer text-3xl" title={title} aria-label={ariaLabel}>
   <span aria-hidden="true">{flag}</span>
 </a>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const flagToggle = document.getElementById("flag-toggle");
+    if (flagToggle) {
+      flagToggle.addEventListener("click", function () {
+        document.cookie = `lang=${encodeURIComponent("${targetLanguage}")}; path=/; max-age=31536000`;
+      });
+    }
+  });
+</script>

@@ -1,10 +1,9 @@
 ---
+import MainLayout from "@layouts/MainLayout.astro";
 import portFolioRaw from "../data/English.json";
 import { PortfolioSchema, type Portfolio } from "@types/PortfolioSchema";
 
 const portFolio: Portfolio = PortfolioSchema.parse(portFolioRaw);
-
-import MainLayout from "@layouts/MainLayout.astro";
 ---
 
 <MainLayout portfolio={portFolio} />
