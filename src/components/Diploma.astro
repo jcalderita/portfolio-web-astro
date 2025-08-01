@@ -24,7 +24,7 @@ const ariaLabel = language === "es" ? "Ver diploma ampliado" : "View full-size c
 
 <span class="flex flex-col mr-4">
     <button class="diploma-thumb" aria-label={ariaLabel} id={`diploma-${code}`} data-code={code} type="button">
-        <Image src={image} alt={alt} class="w-29 h-20 object-contain cursor-zoom-in" loading="lazy" />
+        <Image src={image} alt="" class="w-29 h-20 object-contain cursor-zoom-in" loading="lazy" />
     </button>
 
     <div
@@ -35,7 +35,6 @@ const ariaLabel = language === "es" ? "Ver diploma ampliado" : "View full-size c
         role="dialog"
         aria-label={alt}
     >
-        <span id={`diploma-title-${code}`} class="sr-only">{alt}</span>
-        <Image src={image} alt={alt} class="w-11/12 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl max-h-[80vh] rounded cursor-zoom-out" />
+        <Image src={image} alt="" class="w-11/12 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl max-h-[80vh] rounded cursor-zoom-out" />
     </div>
 </span>

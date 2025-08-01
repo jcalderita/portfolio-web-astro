@@ -6,8 +6,19 @@ interface Props {
 }
 
 const { language } = Astro.props;
-const ariaFooter = language === "es" ? "Redes sociales de Jorge Calderita" : "Jorge Calderita's social medias";
-const ariaPdf = language === "es" ? "Descargar CV en PDF" : "Download PDF CV";
+
+function makeText(es: string, en: string) {
+    return language === "es" ? `${es}` : `${en}`;
+}
+
+const ariaFooter = makeText("Redes sociales de Jorge Calderita", "Jorge Calderita's social medias");
+const ariaLinkedin = makeText("Ir al LinkedIn de Jorge Calderita", "Go to Jorge Calderita's LinkedIn");
+const ariaGitHub = makeText("Ir al GitHub de Jorge Calderita", "Go to Jorge Calderita's GitHub");
+const ariaX = makeText("Ir al perfil de X de Jorge Calderita", "Go to Jorge Calderita's X profile");
+const ariaDiscord = makeText("Unirse al Discord de Jorge Calderita", "Join Jorge Calderita's Discord");
+const ariaMail = makeText("Enviar un email a Jorge Calderita", "Send an email to Jorge Calderita");
+const ariaPdf = makeText("Descargar CV en PDF", "Download portfolio in PDF format");
+
 const pdfRoute = "/JorgeCalderita-" + language + ".pdf";
 const cookieLink = "/" + language + "/cookies";
 ---
@@ -18,11 +29,11 @@ const cookieLink = "/" + language + "/cookies";
     aria-label={ariaFooter}
 >
     <div class="flex justify-center items-center gap-4">
-        <SocialLink link="https://www.linkedin.com/in/jcalderita" label="LinkedIn" name="linkedin" />
-        <SocialLink link="https://github.com/jcalderita" label="GitHub" name="github" />
-        <SocialLink link="https://x.com/jcalderita" label="X" name="x" />
-        <SocialLink link="https://discord.com/users/jcalderita" label="Discord" name="discord" />
-        <SocialLink link="mailto:contacto@jcalderita.com" label="Mail" name="mail" />
+        <SocialLink link="https://www.linkedin.com/in/jcalderita" label={ariaLinkedin} name="linkedin" />
+        <SocialLink link="https://github.com/jcalderita" label={ariaGitHub} name="github" />
+        <SocialLink link="https://x.com/jcalderita" label={ariaX} name="x" />
+        <SocialLink link="https://discord.com/users/jcalderita" label={ariaDiscord} name="discord" />
+        <SocialLink link="mailto:contacto@jcalderita.com" label={ariaMail} name="mail" />
         <SocialLink link={pdfRoute} label={ariaPdf} name="pdf" />
     </div>
 
