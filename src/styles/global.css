@@ -31,6 +31,5 @@ html {
     .prose h5[id],
     .prose h6[id] {
         scroll-margin-top: 5rem;
-        /* o el valor equivalente a tu navbar */
     }
 }

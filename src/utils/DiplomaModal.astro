@@ -3,8 +3,8 @@
 ---
 
 <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
-        document.body.addEventListener("click", (e) => {
+    function initDiplomaModal(doc = document) {
+        doc.body.addEventListener("click", (e) => {
             const thumb = e.target.closest("button.diploma-thumb, [id^='diploma-']");
             if (thumb && thumb.dataset.code) {
                 const code = thumb.dataset.code;
@@ -18,12 +18,18 @@
             }
         });
 
-        document.addEventListener("keydown", (e) => {
+        doc.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 document.querySelectorAll("[id^='modal-']").forEach((modal) => {
                     if (!modal.classList.contains("hidden")) modal.classList.add("hidden");
                 });
             }
         });
+    }
+
+    initDiplomaModal(document);
+
+    document.addEventListener("astro:before-swap", (ev) => {
+        initDiplomaModal(ev.newDocument);
     });
 </script>

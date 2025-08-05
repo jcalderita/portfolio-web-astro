@@ -28,7 +28,6 @@ const tags = post.data.tags;
         <Image src={post.data.cover} alt={post.data.coverDescription} loading="lazy" transition:name={`${post.slug}-image`} />
     </div>
     <div class="bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4 flex items-center justify-between">
-        <!-- Author avatar + name -->
         <div class="flex items-center gap-3">
             {tags.map((tag) => <Badge info={tag} />)}
         </div>

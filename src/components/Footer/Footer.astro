@@ -1,5 +1,5 @@
 ---
-import SocialLink from "./SocialLink.astro";
+import SocialLink from "@components/Utils/SocialLink.astro";
 
 interface Props {
     language: string;
@@ -21,10 +21,11 @@ const ariaPdf = makeText("Descargar CV en PDF", "Download portfolio in PDF forma
 
 const pdfRoute = "/JorgeCalderita-" + language + ".pdf";
 const cookieLink = "/" + language + "/cookies";
+const year = new Date().getFullYear();
 ---
 
 <footer
-    class="fixed bottom-0 left-0 w-full flex flex-col items-center gap-1 text-orange-600 py-2 bg-gray-50/75 dark:bg-gray-950/75 border-t z-50"
+    class="fixed bottom-0 left-0 w-full flex flex-col items-center gap-1 text-orange-600 py-3 bg-gray-50/75 dark:bg-gray-950/75 border-t z-50"
     role="contentinfo"
     aria-label={ariaFooter}
 >
@@ -38,7 +39,8 @@ const cookieLink = "/" + language + "/cookies";
     </div>
 
     <div class="text-xs flex items-center gap-2 mt-1 font-extrabold">
-        <span aria-hidden="true">©</span> 2025 Jorge Calderita
+        <span aria-hidden="true">©</span>
+        {year} Jorge Calderita
         <a
             href={cookieLink}
             class="underline focus:outline-none focus:ring-2 focus:ring-orange-600 rounded"

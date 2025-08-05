@@ -2,12 +2,13 @@
 import "../styles/global.css";
 import type { PortfolioType } from "@types/PortfolioSchema";
 import DiplomaModal from "../utils/DiplomaModal.astro";
-import Header from "@components/Header.astro";
-import Role from "@components/Role.astro";
-import Experiences from "@components/Experiences.astro";
-import Project from "@components/Projects.astro";
-import Footer from "@components/Footer.astro";
-import { ClientRouter } from "astro:transitions";
+import Header from "@components/Header/Header.astro";
+import Role from "@components/Portfolio/Role.astro";
+import Experiences from "@components/Portfolio/Experiences.astro";
+import Project from "@components/Portfolio/Projects.astro";
+import Footer from "@components/Footer/Footer.astro";
+import Head from "@components/Common/Head.astro";
+import MainMeta from "@components/Meta/MainMeta.astro";
 
 interface Props {
     portfolio: PortfolioType;
@@ -27,49 +28,12 @@ const projectTitle = makeTitle("Proyectos", "Projects");
 
 <!doctype html>
 <html lang={metadata.language}>
-    <head>
-        <script is:inline>
-            (function () {
-                document.documentElement.classList.toggle(
-                    "dark",
-                    localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
-                );
-            })();
-        </script>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{metadata.webTitle}</title>
-
-        <meta name="description" content={metadata.description} />
-        <meta name="author" content="Jorge Calderita" />
-        <meta name="keywords" content="Swift, iOS, VisionOS, SwiftUI, Vapor, Portfolio, Jorge Calderita, Developer, Accesibility" />
-        <meta name="robots" content="index, follow" />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={metadata.title} />
-        <meta property="og:description" content={metadata.description} />
-        <meta property="og:url" content="https://jcalderita.com" />
-        <meta property="og:image" content="https://jcalderita.com/web.webp" />
-        <meta property="og:locale" content={metadata.language === "es" ? "es_ES" : "en_US"} />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metadata.title} />
-        <meta name="twitter:description" content={metadata.description} />
-        <meta name="twitter:image" content="https://jcalderita.com/web.webp" />
-        <meta name="twitter:site" content="@jcalderita" />
-        <meta name="twitter:creator" content="@jcalderita" />
-
-        <ClientRouter />
-
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-        <link rel="manifest" href="/site.webmanifest" />
-    </head>
+    <Head title={metadata.webTitle}>
+        <MainMeta language={metadata.language} title={metadata.title} description={metadata.description} />
+    </Head>
     <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
         <Header language={metadata.language} links={[jobTitle, educationTitle, projectTitle]} />
-        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-10">
+        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-12">
             <div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10">
                 <Role role={portfolio.role} introduction={portfolio.introduction} />
                 <Experiences title={jobTitle} experiences={portfolio.jobs} language={metadata.language} />

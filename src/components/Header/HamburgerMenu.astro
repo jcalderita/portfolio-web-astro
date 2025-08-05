@@ -25,9 +25,9 @@ const ariaLabel = language === "es" ? "Abrir menú" : "Open menu";
 </div>
 
 <script is:inline>
-    window.addEventListener("DOMContentLoaded", () => {
-        const btn = document.getElementById("menu-toggle");
-        const menu = document.getElementById("mobile-menu");
+    function initHamburgerMenu(doc = document) {
+        const btn = doc.getElementById("menu-toggle");
+        const menu = doc.getElementById("mobile-menu");
         if (btn && menu) {
             btn.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -45,5 +45,11 @@ const ariaLabel = language === "es" ? "Abrir menú" : "Open menu";
                 }
             });
         }
+    }
+
+    initHamburgerMenu(document);
+
+    document.addEventListener("astro:before-swap", (ev) => {
+        initHamburgerMenu(ev.newDocument);
     });
 </script>

@@ -1,0 +1,32 @@
+---
+interface Props {
+    language: string;
+    title: string;
+    description: string;
+}
+
+const { language, title, description } = Astro.props;
+---
+
+<meta name="description" content={description} />
+<meta name="author" content="Jorge Calderita" />
+<meta name="keywords" content="Swift, iOS, VisionOS, SwiftUI, Vapor, Portfolio, Jorge Calderita, Developer, Accesibility" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content="https://jcalderita.com" />
+<meta property="og:image" content="https://jcalderita.com/web.webp" />
+<meta property="og:locale" content={language === "es" ? "es_ES" : "en_US"} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content="https://jcalderita.com/web.webp" />
+<meta name="twitter:site" content="@jcalderita" />
+<meta name="twitter:creator" content="@jcalderita" />
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<link rel="manifest" href="/site.webmanifest" />

@@ -3,8 +3,8 @@
 ---
 
 <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll("pre code").forEach((codeBlock) => {
+    function initCopyCode(doc = document) {
+        doc.querySelectorAll("pre code").forEach((codeBlock) => {
             const pre = codeBlock.parentElement;
             if (pre.querySelector(".copy-btn")) return;
 
@@ -24,5 +24,11 @@
             pre.classList.add("relative");
             pre.appendChild(button);
         });
+    }
+
+    initCopyCode(document);
+
+    document.addEventListener("astro:before-swap", (ev) => {
+        initCopyCode(ev.newDocument);
     });
 </script>

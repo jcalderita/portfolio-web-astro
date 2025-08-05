@@ -15,13 +15,19 @@ const title = language === "es" ? "Cambiar el idioma de la web a inglés" : "Swi
 </a>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const flagToggle = document.getElementById("flag-toggle");
+  function initFlagToggle(doc = document) {
+    const flagToggle = doc.getElementById("flag-toggle");
     if (flagToggle) {
       flagToggle.addEventListener("click", function () {
         const lang = flagToggle.dataset.language;
         document.cookie = `lang=${encodeURIComponent(lang)}; path=/; max-age=31536000`;
       });
     }
+  }
+
+  initFlagToggle(document);
+
+  document.addEventListener("astro:before-swap", (ev) => {
+    initFlagToggle(ev.newDocument);
   });
 </script>
