@@ -1,0 +1,20 @@
+---
+import BlogLayout from "@layouts/BlogLayout.astro";
+import BlogCard from "./BlogCard.astro";
+import { getPosts } from "@utils/blogData";
+
+interface Props {
+    language: string;
+}
+
+const { language } = Astro.props;
+const posts = await getPosts(language);
+
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BlogLayout language={language} title="Blog">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => <BlogCard language={language} post={post} />)}
+    </div>
+</BlogLayout>

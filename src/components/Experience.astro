@@ -1,6 +1,7 @@
 ---
 import type { ExperienceType } from "@types/PortfolioSchema";
 import Diploma from "./Diploma.astro";
+import Badge from "./Utils/Badge.astro";
 // ...
 
 interface Props {
@@ -33,6 +34,6 @@ const alt = experience.alt;
         </ul>
     </div>
     <div class="flex flex-wrap gap-2 bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4">
-        {tecnologies.map((resp) => <span class="rounded-full px-3 py-2 text-xs font-bold bg-orange-100 dark:bg-orange-900">{resp}</span>)}
+        {tecnologies.map((resp) => <Badge info={resp} />)}
     </div>
 </div>

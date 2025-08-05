@@ -1,0 +1,16 @@
+---
+import { getPosts } from "@utils/blogData";
+import PostIndex from "@components/Blog/PostIndex.astro";
+
+export async function getStaticPaths() {
+    const posts = await getPosts("en");
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+---
+
+<PostIndex language="en" post={post} />

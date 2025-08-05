@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -11,4 +12,25 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+@layer components {
+
+    .prose pre {
+        background-color: #030712 !important;
+    }
+
+    .dark .prose pre {
+        background-color: #030712 !important;
+    }
+
+    .prose h1[id],
+    .prose h2[id],
+    .prose h3[id],
+    .prose h4[id],
+    .prose h5[id],
+    .prose h6[id] {
+        scroll-margin-top: 5rem;
+        /* o el valor equivalente a tu navbar */
+    }
 }

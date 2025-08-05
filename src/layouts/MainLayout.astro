@@ -7,6 +7,7 @@ import Role from "@components/Role.astro";
 import Experiences from "@components/Experiences.astro";
 import Project from "@components/Projects.astro";
 import Footer from "@components/Footer.astro";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
     portfolio: PortfolioType;
@@ -57,6 +58,8 @@ const projectTitle = makeTitle("Proyectos", "Projects");
         <meta name="twitter:image" content="https://jcalderita.com/web.webp" />
         <meta name="twitter:site" content="@jcalderita" />
         <meta name="twitter:creator" content="@jcalderita" />
+
+        <ClientRouter />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="any" />

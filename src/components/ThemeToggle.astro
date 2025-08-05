@@ -16,21 +16,30 @@ const lightMessage = language === "es" ? "Modo claro activado, alternar a modo o
   <Icon name="moon" class="block dark:hidden w-7 h-7" aria-hidden="true" focusable="false" />
 </button>
 
-<script>
-  const toggle = document.querySelector("#theme-toggle") as HTMLButtonElement | null;
-  const darkMessage = toggle?.dataset.darkMessage ?? "";
-  const lightMessage = toggle?.dataset.lightMessage ?? "";
-  const initialIsDark = document.documentElement.classList.contains("dark");
+<script is:inline>
+  function initThemeToggle(doc = document) {
+    const toggle = doc.querySelector("#theme-toggle");
+    const darkMessage = toggle?.dataset.darkMessage ?? "";
+    const lightMessage = toggle?.dataset.lightMessage ?? "";
+    const initialIsDark = document.documentElement.classList.contains("dark");
 
-  function setTheme() {
-    const isDark = document.documentElement.classList.contains("dark");
-    localStorage.theme = isDark ? "light" : "dark";
-    document.documentElement.classList.toggle("dark");
-    toggle?.setAttribute("aria-pressed", isDark ? "true" : "false");
-    toggle?.setAttribute("aria-label", isDark ? darkMessage : lightMessage);
+    function setTheme() {
+      console.log("Enter");
+      const isDark = document.documentElement.classList.contains("dark");
+      localStorage.theme = isDark ? "light" : "dark";
+      document.documentElement.classList.toggle("dark");
+      toggle?.setAttribute("aria-pressed", isDark ? "true" : "false");
+      toggle?.setAttribute("aria-label", isDark ? darkMessage : lightMessage);
+    }
+
+    toggle?.setAttribute("aria-pressed", initialIsDark ? "true" : "false");
+    toggle?.setAttribute("aria-label", initialIsDark ? lightMessage : darkMessage);
+    toggle?.addEventListener("click", setTheme);
   }
 
-  toggle?.setAttribute("aria-pressed", initialIsDark ? "true" : "false");
-  toggle?.setAttribute("aria-label", initialIsDark ? lightMessage : darkMessage);
-  toggle?.addEventListener("click", setTheme);
+  initThemeToggle(document);
+
+  document.addEventListener("astro:before-swap", (ev) => {
+    initThemeToggle(ev.newDocument);
+  });
 </script>
