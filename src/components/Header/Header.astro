@@ -21,7 +21,7 @@ const link = language === "es" ? "Ir a la sección " : "Go to section ";
         <div class="flex-1 gap-4 justify-center font-semibold hidden md:flex">
             {
                 links.map((section) => (
-                    <a href={isLegal ? `/${language}#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+                    <a href={isLegal ? `/${language}/#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
                         {section}
                     </a>
                 ))
@@ -31,7 +31,7 @@ const link = language === "es" ? "Ir a la sección " : "Go to section ";
         <HamburgerMenu language={language}>
             {
                 links.map((section) => (
-                    <a href={isLegal ? `/${language}#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+                    <a href={isLegal ? `/${language}/#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
                         {section}
                     </a>
                 ))
