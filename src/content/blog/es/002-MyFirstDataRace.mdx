@@ -6,11 +6,13 @@ author: "Jorge Calderita"
 description: "Un artículo técnico que explica cómo una refactorización para concurrencia en Swift llevó a una condición de carrera, y cómo resolverla usando patrones de actores."
 tags: ["Swift", "Vapor"]
 cover: "../images/MyFirstDataRace.png"
+publicCover: "MyFirstDataRace.webp"
 coverDescription: "“Mi primera condición de carrera.” Un programador estresado mira su portátil mientras una pista de Scalextric se estrella cerca, simbolizando el caos de un bug de concurrencia en su código."
 publish: true
 ---
+---
 
-## De una refactorización secuencial a un bug de concurrencia en Swift
+### De una refactorización secuencial a un bug de concurrencia en Swift
 
 Durante un proceso de refactorización para convertir una funcionalidad previamente secuencial en una concurrente, me encontré con un problema clásico: garantizar la unicidad de los registros cuando múltiples tareas intentan crear eventos al mismo tiempo. Aunque el objetivo era mejorar el rendimiento procesando miles de eventos deportivos en paralelo usando Swift, la transición expuso un desafío típico de concurrencia: evitar duplicados y mantener la integridad de los datos bajo acceso simultáneo.
 
@@ -111,3 +113,5 @@ private actor EventsActor {
 - Un actor por sí solo no previene condiciones de carrera lógicas del tipo “check-then-act”.
 - En escenarios concurrentes, serializar la construcción del recurso por clave es fundamental para mantener la integridad de los datos.
 - Es esencial probar bajo carga y escenarios concurrentes, no solo en modo secuencial.
+
+---

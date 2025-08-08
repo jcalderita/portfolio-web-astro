@@ -1,0 +1,17 @@
+---
+interface Props {
+    language: string;
+    tag: string;
+}
+
+const { language, tag } = Astro.props;
+const tagName = tag === "all" ? (language === "es" ? "Todos" : "All") : tag;
+---
+
+<button
+    data-tag={tag}
+    class="px-3 py-1 rounded-full bg-gray-50 dark:bg-gray-950 font-medium border hover:border-orange-600 hover:text-orange-600 cursor-pointer"
+    onclick={`filterByTag('${tag}')`}
+>
+    {tagName}
+</button>

@@ -1,6 +1,7 @@
 ---
 import { getPosts } from "@utils/blogData";
 import PostIndex from "@components/Blog/PostIndex.astro";
+import BlogLayout from "@layouts/BlogLayout.astro";
 
 export async function getStaticPaths() {
     const posts = await getPosts("en");
@@ -13,4 +14,6 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 ---
 
-<PostIndex language="en" post={post} />
+<BlogLayout language={"en"} post={post}>
+    <PostIndex language="en" post={post} />
+</BlogLayout>

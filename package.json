@@ -10,15 +10,22 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",
+    "@astrojs/rss": "^4.0.12",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.12.4",
     "astro-icon": "^1.1.5",
     "astro-remote": "^0.3.4",
+    "markdown-it": "^14.1.0",
+    "sanitize-html": "^2.17.0",
     "tailwindcss": "^4.1.11",
     "zod": "^4.0.10"
   },
   "prettier": {
     "printWidth": 180
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/sanitize-html": "^2.16.0"
   }
 }

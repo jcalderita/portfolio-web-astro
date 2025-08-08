@@ -1,0 +1,28 @@
+---
+interface Props {
+    language: string;
+    isNotMain: boolean;
+}
+
+const { language, isNotMain } = Astro.props;
+const link = language === "es" ? "Ir a la sección " : "Go to section ";
+
+function makeTitle(es: string, en: string) {
+    return language === "es" ? `${es}` : `${en}`;
+}
+
+const jobTitle = makeTitle("Trabajos", "Jobs");
+const educationTitle = makeTitle("Educación", "Education");
+const projectTitle = makeTitle("Proyectos", "Projects");
+
+const links = [jobTitle, educationTitle, projectTitle];
+---
+
+{
+    links.map((section) => (
+        <a href={isNotMain ? `/${language}#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+            {section}
+        </a>
+    ))
+}
+<!-- <a href={`/${language}/blog`} aria-label="Blog" title="Blog"> Blog </a> -->

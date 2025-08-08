@@ -1,0 +1,40 @@
+---
+
+---
+
+<script is:inline>
+    function initTagFilter(doc = document) {
+        const postsList = doc.getElementById("posts-list");
+        if (!postsList) return;
+
+        const postCards = [...postsList.children];
+        const tagBtns = [...doc.querySelectorAll("[data-tag]")];
+        let selectedTag = sessionStorage.getItem("blogTag") || "all";
+
+        function filterByTag(tag) {
+            selectedTag = tag;
+            sessionStorage.setItem("blogTag", tag);
+            postCards.forEach((card) => {
+                const tags = card.innerText.toLowerCase();
+                card.style.display = tag === "all" || tags.includes(tag.toLowerCase()) ? "" : "none";
+            });
+            tagBtns.forEach((btn) => {
+                const isSelected = btn.dataset.tag === tag;
+                btn.classList.toggle("border-orange-600", isSelected);
+                btn.classList.toggle("text-orange-600", isSelected);
+            });
+        }
+
+        tagBtns.forEach((btn) => {
+            btn.onclick = () => filterByTag(btn.dataset.tag);
+        });
+
+        filterByTag(selectedTag);
+    }
+
+    initTagFilter(document);
+
+    document.addEventListener("astro:before-swap", (ev) => {
+        initTagFilter(ev.newDocument);
+    });
+</script>

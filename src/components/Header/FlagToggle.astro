@@ -8,9 +8,12 @@ const targetLanguage = language === "es" ? "en" : "es";
 const flag = language === "es" ? "🇺🇸" : "🇪🇸";
 const ariaLabel = language === "es" ? "Cambiar a inglés" : "Switch to Spanish";
 const title = language === "es" ? "Cambiar el idioma de la web a inglés" : "Switch website language to Spanish";
+const currentPath = Astro.url.pathname;
+const url = currentPath.replace(`/${language}/`, `/${targetLanguage}/`).replace(`-${language}`, `-${targetLanguage}`);
+console.log(url);
 ---
 
-<a id="flag-toggle" href={`/${targetLanguage}/`} class="cursor-pointer text-3xl" title={title} aria-label={ariaLabel} data-language={targetLanguage}>
+<a id="flag-toggle" href={url} class="cursor-pointer text-3xl" title={title} aria-label={ariaLabel} data-language={targetLanguage}>
   <span aria-hidden="true">{flag}</span>
 </a>
 

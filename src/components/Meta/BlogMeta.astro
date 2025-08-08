@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    language: string;
+    post?: CollectionEntry<"blog">;
+}
+
+const { language, post } = Astro.props;
+const title = post?.data.title ?? "Blog";
+const description = (post?.data.description ?? language === "es") ? "Blog personal de Jorge Calderita" : "Jorge Calderita's personal Blog";
+const keywords = "Jorge Calderita, Portfolio, Developer" + (post?.data.tags.join(",") ?? ", Swift, iOS, VisionOS, SwiftUI, Vapor, Accesibility, Web, Astro");
+const route = `/${language}/blog/${post?.slug}`;
+const image = `https://jcalderita.com/blog/${post?.data.publicCover ?? "Blog.webp"}`;
+---
+
+<meta name="description" content={description} />
+<meta name="author" content="Jorge Calderita" />
+<meta name="keywords" content={keywords} />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content=`https://jcalderita.com${route}` />
+<meta property="og:image" content={image} />
+<meta property="og:locale" content={language === "es" ? "es_ES" : "en_US"} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:site" content="@jcalderita" />
+<meta name="twitter:creator" content="@jcalderita" />

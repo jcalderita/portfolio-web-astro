@@ -10,14 +10,6 @@ interface Props {
 }
 
 const { language, title } = Astro.props;
-
-function makeTitle(es: string, en: string) {
-    return language === "es" ? es : en;
-}
-
-const jobTitle = makeTitle("Trabajos", "Jobs");
-const educationTitle = makeTitle("Educación", "Education");
-const projectTitle = makeTitle("Proyectos", "Projects");
 ---
 
 <!doctype html>
@@ -26,7 +18,7 @@ const projectTitle = makeTitle("Proyectos", "Projects");
         <meta name="robots" content="noindex, nofollow" />
     </Head>
     <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
-        <Header language={language} links={[jobTitle, educationTitle, projectTitle]} isLegal={true} />
+        <Header language={language} isNotMain={true} />
         <main>
             <section class="w-full max-w-xl mx-auto my-10 p-6 rounded-lg shadow bg-white/80 dark:bg-gray-950/80">
                 <h1 class="text-2xl font-bold mb-4">{title}</h1>

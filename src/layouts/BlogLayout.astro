@@ -4,35 +4,28 @@ import Header from "@components/Header/Header.astro";
 import Footer from "@components/Footer/Footer.astro";
 import UpButton from "@components/Utils/UpButton.astro";
 import Head from "@components/Common/Head.astro";
+import BlogMeta from "@components/Meta/BlogMeta.astro";
+import type { CollectionEntry } from "astro:content";
 
 interface Props {
     language: string;
     title?: string;
-    description?: string;
+    post?: CollectionEntry<"blog">;
 }
 
-const { language, title = "Blog", description } = Astro.props;
-
-function makeTitle(es: string, en: string) {
-    return language === "es" ? es : en;
-}
-
-const jobTitle = makeTitle("Trabajos", "Jobs");
-const educationTitle = makeTitle("Educación", "Education");
-const projectTitle = makeTitle("Proyectos", "Projects");
-const blogTitle = makeTitle("Blog", "Blog");
+const { language, title, post } = Astro.props;
+const blogTitle = title ?? post?.data.title ?? "";
 ---
 
 <!doctype html>
 <html lang={language}>
-    <Head title={title}>
-        {description && <meta name="description" content={description} />}
-        <meta name="robots" content="index, follow" />
+    <Head title={blogTitle}>
+        <BlogMeta language={language} post={post} />
     </Head>
 
     <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
-        <Header language={language} links={[jobTitle, educationTitle, projectTitle, blogTitle]} />
-        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-10 my-8">
+        <Header language={language} isNotMain={true} />
+        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-12 my-8">
             <div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10">
                 <slot />
                 <UpButton language={language} />
