@@ -16,7 +16,7 @@ const tags = post.data.tags;
 
 <a
     href={`/${language}/blog/${post.slug}/`}
-    class="group rounded-2xl border border-orange-700 flex flex-col my-4 hover:shadow-md transition outline-none focus:ring-2 focus:ring-orange-600 hover:text-orange-600"
+    class="rounded-2xl border border-orange-700 flex flex-col my-4 hover:shadow-md transition outline-none focus:ring-2 focus:ring-orange-600 hover:text-orange-600"
     aria-label={post.data.title}
 >
     <div class="bg-gray-150 dark:bg-gray-950 rounded-t-2xl border-b border-orange-700 p-4">
@@ -31,6 +31,6 @@ const tags = post.data.tags;
         <div class="flex items-center gap-3">
             {tags.map((tag) => <Badge info={tag} />)}
         </div>
-        <p class="text-sm text-gray-500">{getFormattedDate(language, post.data.date)}</p>
+        <p class="text-sm text-gray-800 dark:text-gray-300">{getFormattedDate(language, post.data.date)}</p>
     </div>
 </a>
