@@ -20,9 +20,9 @@ const links = [jobTitle, educationTitle, projectTitle];
 
 {
     links.map((section) => (
-        <a href={isNotMain ? `/${language}#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
+        <a href={isNotMain ? `/${language}/#${section}` : `#${section}`} aria-label={`${link} ${section}`} title={`${link} ${section}`}>
             {section}
         </a>
     ))
 }
-<!-- <a href={`/${language}/blog`} aria-label="Blog" title="Blog"> Blog </a> -->
+<!-- <a href={`/${language}/blog/`} aria-label="Blog" title="Blog"> Blog </a> -->

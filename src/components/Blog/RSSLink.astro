@@ -1,0 +1,11 @@
+---
+interface Props {
+    language: string;
+}
+
+const { language } = Astro.props;
+---
+
+<a href={`/${language}/rss.xml`} target="_blank" rel="noopener noreferrer" class="ml-auto flex items-center gap-1 hover:text-orange-600">
+    📡 <span>RSS</span>
+</a>

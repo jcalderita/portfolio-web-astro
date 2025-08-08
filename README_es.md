@@ -27,13 +27,17 @@ Inside of your Astro project, you'll see the following folders and files:
 
 ```text
 /
-├── public/            # Imágenes y assets estáticos (favicons, diplomas, etc)
+├── public/           # Imágenes y assets estáticos (favicons, diplomas, etc.)
 ├── src/
-│   ├── components/    # Componentes reutilizables (navbar, footer, toggles, etc)
-│   ├── layouts/       # Layouts globales (MainLayout, LegalLayout)
-│   ├── pages/         # Páginas .astro (multi-idioma, legales, portfolio, blog)
-│   ├── data/          # Archivos JSON con el contenido estructurado
-│   └── styles/        # Archivos de estilos globales
+│   ├── components/   # Componentes reutilizables (navbar, footer, toggles, etc.)
+│   ├── content/      # Contenido del blog en Markdown
+│   ├── data/         # Archivos JSON con contenido estructurado
+│   ├── icons/        # Archivos SVG para iconos
+│   ├── layouts/      # Layouts globales (MainLayout, LegalLayout)
+│   ├── pages/        # Páginas .astro (multiidioma, legales, portfolio, blog)
+│   ├── styles/       # Estilos globales
+│   ├── types/        # Esquema usado por el portfolio
+│   └── utils/        # Utilidades comunes reutilizables
 ├── package.json
 ├── bun.lockb
 └── tailwind.config.js

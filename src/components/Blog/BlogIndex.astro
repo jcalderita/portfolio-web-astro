@@ -3,6 +3,7 @@ import BlogLayout from "@layouts/BlogLayout.astro";
 import BlogCard from "./BlogCard.astro";
 import TagButton from "./TagButton.astro";
 import TagFilter from "./TagFilter.astro";
+import RSSLink from "./RSSLink.astro";
 import { getPosts } from "@utils/blogData";
 
 interface Props {
@@ -17,9 +18,10 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags)));
 ---
 
 <BlogLayout language={language} title="Blog">
-    <div class="flex flex-wrap gap-2 mb-8">
+    <div class="flex flex-wrap gap-2 mb-8 items-center">
         <TagButton language={language} tag="all" />
         {allTags.map((tag) => <TagButton language={language} tag={tag} />)}
+        <RSSLink language={language} />
     </div>
     <div id="posts-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => <BlogCard language={language} post={post} />)}
