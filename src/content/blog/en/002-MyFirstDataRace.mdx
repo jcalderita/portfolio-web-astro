@@ -12,7 +12,7 @@ publish: true
 ---
 ---
 
-### From sequential refactoring to a concurrency bug in Swift
+### From Refactor to Data Race in Swift
 
 During a refactoring process to convert a previously sequential feature into a concurrent one, I encountered a classic problem: guaranteeing the uniqueness of records when multiple tasks try to create events simultaneously. Although the goal was to improve performance by processing thousands of sporting events in parallel using Swift, the transition exposed a typical concurrency challenge: avoiding duplicates and maintaining data integrity under simultaneous access.
 
