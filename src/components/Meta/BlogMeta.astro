@@ -8,7 +8,7 @@ interface Props {
 
 const { language, post } = Astro.props;
 const title = post?.data.title ?? "Blog";
-const description = (post?.data.description ?? language === "es") ? "Blog personal de Jorge Calderita" : "Jorge Calderita's personal Blog";
+const description = post?.data.description ?? (language === "es" ? "Blog personal de Jorge Calderita" : "Jorge Calderita's personal Blog");
 const keywords = "Jorge Calderita, Portfolio, Developer" + (post?.data.tags.join(",") ?? ", Swift, iOS, VisionOS, SwiftUI, Vapor, Accesibility, Web, Astro");
 const route = `/${language}/blog/${post?.slug}`;
 const image = `https://jcalderita.com/blog/${post?.data.publicCover ?? "Blog.webp"}`;
