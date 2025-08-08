@@ -2,7 +2,6 @@
 import type { CollectionEntry } from "astro:content";
 import CopyCode from "@utils/CopyCode.astro";
 import { Image } from "astro:assets";
-import BackButton from "./BackButton.astro";
 
 interface Props {
     language: string;
@@ -36,4 +35,3 @@ const contentTitle = language === "es" ? "Tabla de contenidos" : "Table of conte
     <Content />
 </article>
 <CopyCode />
-<BackButton language={language} />
