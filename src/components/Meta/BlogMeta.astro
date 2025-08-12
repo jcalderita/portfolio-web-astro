@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { language, post } = Astro.props;
+const isArticle = Boolean(post);
 const title = post?.data.title ?? "Blog";
 const description = post?.data.description ?? (language === "es" ? "Blog personal de Jorge Calderita" : "Jorge Calderita's personal Blog");
 const keywords = "Jorge Calderita, Portfolio, Developer" + (post?.data.tags.join(",") ?? ", Swift, iOS, VisionOS, SwiftUI, Vapor, Accesibility, Web, Astro");
@@ -19,10 +20,10 @@ const image = `https://jcalderita.com/blog/${post?.data.publicCover ?? "Blog.web
 <meta name="keywords" content={keywords} />
 <meta name="robots" content="index, follow" />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={isArticle ? "article" : "website"} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content=`https://jcalderita.com${route}` />
+<meta property="og:url" content={`https://jcalderita.com${route}`} />
 <meta property="og:image" content={image} />
 <meta property="og:locale" content={language === "es" ? "es_ES" : "en_US"} />
 
@@ -32,3 +33,14 @@ const image = `https://jcalderita.com/blog/${post?.data.publicCover ?? "Blog.web
 <meta name="twitter:image" content={image} />
 <meta name="twitter:site" content="@jcalderita" />
 <meta name="twitter:creator" content="@jcalderita" />
+
+{
+    isArticle && post && (
+        <>
+            <meta property="article:published_time" content={post.data.date.toISOString()} />
+            {post.data.tags.map((tag) => (
+                <meta property="article:tag" content={tag} />
+            ))}
+        </>
+    )
+}
