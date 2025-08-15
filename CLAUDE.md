@@ -92,3 +92,6 @@ src/components/
 - All content requires both Spanish and English versions
 - Component props should follow existing TypeScript patterns
 - Use existing utility components before creating new ones
+
+### Git Commit Messages
+When creating git commits, NEVER include the Claude Code footer. Keep commit messages clean without any AI attribution.
