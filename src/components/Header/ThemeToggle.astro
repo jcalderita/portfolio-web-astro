@@ -24,7 +24,6 @@ const lightMessage = language === "es" ? "Modo claro activado, alternar a modo o
     const initialIsDark = document.documentElement.classList.contains("dark");
 
     function setTheme() {
-      console.log("Enter");
       const isDark = document.documentElement.classList.contains("dark");
       localStorage.theme = isDark ? "light" : "dark";
       document.documentElement.classList.toggle("dark");

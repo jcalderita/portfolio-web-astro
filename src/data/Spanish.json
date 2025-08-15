@@ -17,14 +17,14 @@
             "role": "Responsable técnico",
             "place": "Pamplona, España",
             "interval": "Abril 2010–Mayo 2024",
-            "responsabilities": [
+            "responsibilities": [
                 "Mantenimiento, desarrollo, análisis y evolución de la aplicación web Irati (Cuidados de enfermería).",
                 "Migración de Visual Basic a C# bajo arquitectura MVC, mejorando la escalabilidad y el rendimiento.",
                 "Mantenimiento y migración de la base de datos en SQL Server, optimizando la eficiencia.",
                 "Gestión y automatización de despliegues mediante integración continua, con entregas rápidas y de calidad.",
                 "Mantenimiento y evolución de la API para garantizar la comunicación eficiente con otros sitemas y servicios"
             ],
-            "tecnologies": [
+            "technologies": [
                 "SQL Server",
                 "Oracle",
                 ".Net",
@@ -41,7 +41,7 @@
             "role": "Analista programador",
             "place": "Pamplona, España",
             "interval": "Marzo 2005–Abril 2010",
-            "responsabilities": [
+            "responsibilities": [
                 "Gestión y administración del entorno Datawarehouse basado en Oracle.",
                 "Planificación y ejecución de scripts Unix con instrucciones SQL para la carga de tablas en Oracle.",
                 "Optimización del rendimiento de procesos y mejora continua de la eficiencia operativa.",
@@ -50,7 +50,7 @@
                 "Mantenimiento de procesos batch en Cobol sobre host para la carga y descarga de datos.",
                 "Creación de informes personalizados para diferentes departamentos, cumpliendo las necesidades específicas de cada área."
             ],
-            "tecnologies": [
+            "technologies": [
                 "Oracle",
                 "Teradata",
                 "Cobol",
@@ -64,13 +64,13 @@
             "role": "Swift Accesibility Program",
             "place": "España",
             "interval": "Julio 2025",
-            "responsabilities": [
+            "responsibilities": [
                 "Formación intensiva y práctica sobre accesibilidad en apps iOS.",
                 "Cumplimiento de la Directiva Europea de Accesibilidad (EAA) y las Accessibility Nutrition Labels de Apple.",
                 "Implementación de accesibilidad utilizando Swift, SwiftUI y las APIs nativas de Apple.",
                 "Auditoría y buenas prácticas para crear apps inclusivas y alineadas con los estándares vigentes y futuros."
             ],
-            "tecnologies": [
+            "technologies": [
                 "SwiftUI",
                 "Accessibility",
                 "WCAC Compliance",
@@ -84,13 +84,13 @@
             "role": "Swift Refresh Workshop",
             "place": "España",
             "interval": "Diciembre 2024",
-            "responsabilities": [
+            "responsibilities": [
                 "Actualización práctica con las últimas novedades de Apple: Swift 6, Swift Data y Swift Testing.",
                 "Uso de macros para optimizar el desarrollo y reducir boilerplate.",
                 "Concurrencia estricta con Swift para operaciones asíncronas seguras y eficientes.",
                 "Diseño de soluciones modernas y escalables, alineadas con las mejores prácticas de Apple."
             ],
-            "tecnologies": [
+            "technologies": [
                 "Swift 6",
                 "Swift Data",
                 "Swift Testing",
@@ -105,13 +105,13 @@
             "role": "Vision Developer Program",
             "place": "España",
             "interval": "Julio 2024",
-            "responsabilities": [
+            "responsibilities": [
                 "Conocimientos avanzados en desarrollo para entornos 3D y espaciales con Apple Vision Pro.",
                 "Integración de tecnologías inmersivas y diseño de experiencias interactivas.",
                 "Uso exclusivo de herramientas nativas de Apple, sin dependencias de terceros.",
                 "Arquitectura enfocada en la simplicidad y eficiencia del flujo de trabajo."
             ],
-            "tecnologies": [
+            "technologies": [
                 "iOS",
                 "visionOS",
                 "Swift",
@@ -128,13 +128,13 @@
             "role": "Swift Full Stack Bootcamp",
             "place": "España",
             "interval": "Febrero 2024–Junio 2024",
-            "responsabilities": [
+            "responsibilities": [
                 "Desarrollo de aplicaciones completas para el ecosistema Apple con Swift y Vapor.",
                 "SwiftUI avanzado, patrones de diseño y persistencia con SwiftData.",
                 "Concurrencia y asincronía con Async/Await para mejorar el rendimiento.",
                 "Buenas prácticas de seguridad y testing para un desarrollo robusto y escalable."
             ],
-            "tecnologies": [
+            "technologies": [
                 "iOS",
                 "Swift",
                 "Async/Await",
@@ -154,10 +154,10 @@
             "role": "Ciclo superior Desarrollo aplicaciones informáticas",
             "place": "Pamplona, España",
             "interval": "Septiembre 1999–Junio 2001",
-            "responsabilities": [
+            "responsibilities": [
                 "Diseñar, analizar, probar aplicaciones, desarrollar software e implementar sistemas."
             ],
-            "tecnologies": [
+            "technologies": [
                 "Acces",
                 "Metodoly",
                 "Visual Basic",

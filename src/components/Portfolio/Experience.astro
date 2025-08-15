@@ -2,7 +2,6 @@
 import type { ExperienceType } from "@types/PortfolioSchema";
 import Diploma from "./Diploma.astro";
 import Badge from "@components/Utils/Badge.astro";
-// ...
 
 interface Props {
     experience: ExperienceType;
@@ -10,8 +9,8 @@ interface Props {
 }
 
 const { experience, language } = Astro.props;
-const responsabilities: Array<string> = experience.responsabilities;
-const tecnologies: Array<string> = experience.tecnologies;
+const responsibilities: Array<string> = experience.responsibilities;
+const technologies: Array<string> = experience.technologies;
 const image = experience.diploma;
 const alt = experience.alt;
 ---
@@ -30,10 +29,10 @@ const alt = experience.alt;
     </div>
     <div class="p-4">
         <ul class="mb-2 list-disc list-inside">
-            {responsabilities.map((resp) => <li>{resp}</li>)}
+            {responsibilities.map((resp) => <li>{resp}</li>)}
         </ul>
     </div>
     <div class="flex flex-wrap gap-2 bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4">
-        {tecnologies.map((resp) => <Badge info={resp} />)}
+        {technologies.map((resp) => <Badge info={resp} />)}
     </div>
 </div>

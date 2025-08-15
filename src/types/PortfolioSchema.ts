@@ -10,8 +10,8 @@ const ExperienceSchema = z.object({
     role: z.string(),
     place: z.string(),
     interval: z.string(),
-    responsabilities: z.array(z.string()),
-    tecnologies: z.array(z.string()),
+    responsibilities: z.array(z.string()),
+    technologies: z.array(z.string()),
     diploma: z.string().optional(),
     alt: z.string().optional(),
 
@@ -44,3 +44,4 @@ export type LanguageType = z.infer<typeof LanguageSchema>;
 export type PortfolioType = z.infer<typeof PortfolioSchema>;
 export type ExperienceType = z.infer<typeof ExperienceSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
+export type MetadataType = z.infer<typeof MetadataSchema>;
