@@ -1,8 +1,8 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:docs.astro.build)"
     ]
   }
 }
