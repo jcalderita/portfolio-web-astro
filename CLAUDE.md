@@ -93,5 +93,9 @@ src/components/
 - Component props should follow existing TypeScript patterns
 - Use existing utility components before creating new ones
 
+## Communication Guidelines
+
+The user is learning English and requests assistance with English corrections when asking about project tasks. When the user makes English grammar or syntax errors in their requests, gently provide the corrected version along with completing their request.
+
 ### Git Commit Messages
 When creating git commits, NEVER include the Claude Code footer. Keep commit messages clean without any AI attribution.
