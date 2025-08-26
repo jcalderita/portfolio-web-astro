@@ -95,7 +95,9 @@ src/components/
 
 ## Communication Guidelines
 
-The user is learning English and requests assistance with English corrections when asking about project tasks. When the user makes English grammar or syntax errors in their requests, gently provide the corrected version along with completing their request.
+The user is learning English and requests assistance with English corrections when asking about project tasks. When the user makes grammar or syntax errors in English in their requests, kindly provide the corrected version along with completing their request.
+
+In addition, whenever the user makes an error in English, it must always be corrected at the end of the message under a block prefixed with Note:. The explanation of the correction should be written in Spanish.
 
 ### Git Commit Messages
 When creating git commits, NEVER include the Claude Code footer. Keep commit messages clean without any AI attribution.
