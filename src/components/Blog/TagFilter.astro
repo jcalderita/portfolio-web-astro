@@ -15,8 +15,9 @@
             selectedTag = tag;
             sessionStorage.setItem("blogTag", tag);
             postCards.forEach((card) => {
-                const tags = card.innerText.toLowerCase();
-                card.style.display = tag === "all" || tags.includes(tag.toLowerCase()) ? "" : "none";
+                const cardTags = [...card.querySelectorAll("[data-info]")].map(badge => badge.dataset.info.toLowerCase());
+                const hasTag = tag === "all" || cardTags.includes(tag.toLowerCase());
+                card.style.display = hasTag ? "" : "none";
             });
             tagBtns.forEach((btn) => {
                 const isSelected = btn.dataset.tag === tag;
