@@ -6,12 +6,15 @@ const { language } = Astro.props;
 const ariaLabel = language === "es" ? "Volver atrás" : "Go back";
 ---
 
-<button
-    type="button"
-    aria-label={ariaLabel}
-    class="p-1 rounded-full bg-orange-600 text-white shadow-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 transition cursor-pointer pointer-events-auto"
-    onclick="window.history.back()"
->
+<style>
+    @import "tailwindcss" reference;
+
+    .backButton {
+        @apply p-1 rounded-full bg-orange-600 text-white shadow-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 transition cursor-pointer pointer-events-auto;
+    }
+</style>
+
+<button type="button" aria-label={ariaLabel} class="backButton" onclick="window.history.back()">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
     </svg>

@@ -14,12 +14,41 @@ const { language, post } = Astro.props;
 const tags = post.data.tags;
 ---
 
-<a
-    href={`/${language}/blog/${post.slug}/`}
-    class="rounded-2xl border border-orange-700 flex flex-col my-4 hover:shadow-md transition outline-none focus:ring-2 focus:ring-orange-600 hover:text-orange-600"
-    aria-label={post.data.title}
->
-    <div class="bg-gray-150 dark:bg-gray-950 rounded-t-2xl border-b border-orange-700 p-4">
+<style>
+    @import "tailwindcss" reference;
+
+    .blogCard {
+        @apply rounded-2xl border border-orange-700 flex flex-col my-4 hover:shadow-md transition outline-none focus:ring-2 focus:ring-orange-600 hover:text-orange-600;
+    }
+
+    .blogCardTitle {
+        @apply bg-gray-100 rounded-t-2xl border-b border-orange-700 p-4;
+    }
+
+    .blogCardBottom {
+        @apply bg-gray-100 rounded-b-2xl border-t border-orange-700 p-4 flex items-center justify-between;
+    }
+
+    .blogCardTags {
+        @apply flex items-center gap-3;
+    }
+
+    .blogCardDate {
+        @apply text-sm text-gray-800;
+    }
+
+    :global(.dark) .blogCardTitle,
+    :global(.dark) .blogCardBottom {
+        @apply bg-gray-950;
+    }
+
+    :global(.dark) .blogCardDate {
+        @apply text-gray-300;
+    }
+</style>
+
+<a href={`/${language}/blog/${post.slug}/`} class="blogCard" aria-label={post.data.title}>
+    <div class="blogCardTitle">
         <span class="font-bold text-lg">
             {post.data.title}
         </span>
@@ -27,10 +56,10 @@ const tags = post.data.tags;
     <div class="flex-1 p-0.5">
         <Image src={post.data.cover} alt={post.data.coverDescription} loading="lazy" transition:name={`${post.slug}-image`} />
     </div>
-    <div class="bg-gray-150 dark:bg-gray-950 rounded-b-2xl border-t border-orange-700 p-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <div class="blogCardBottom">
+        <div class="blogCardTags">
             {tags.map((tag) => <Badge info={tag} dataInfo={true} />)}
         </div>
-        <p class="text-sm text-gray-800 dark:text-gray-300">{getFormattedDate(language, post.data.date)}</p>
+        <p class="blogCardDate">{getFormattedDate(language, post.data.date)}</p>
     </div>
 </a>
