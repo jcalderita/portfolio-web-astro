@@ -15,6 +15,17 @@ html {
 }
 
 @layer components {
+    .bodyLayout {
+        @apply bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300;
+    }
+
+    .mainLayout {
+        @apply mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-12;
+    }
+
+    .contentLayout {
+        @apply col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10;
+    }
 
     .prose pre {
         background-color: #030712 !important;

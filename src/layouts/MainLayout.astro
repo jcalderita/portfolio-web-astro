@@ -26,15 +26,14 @@ const educationTitle = makeTitle("Educación", "Education");
 const projectTitle = makeTitle("Proyectos", "Projects");
 ---
 
-<!doctype html>
 <html lang={metadata.language}>
     <Head title={metadata.webTitle}>
         <MainMeta language={metadata.language} title={metadata.title} description={metadata.description} />
     </Head>
-    <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
+    <body class="bodyLayout">
         <Header language={metadata.language} />
-        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-12">
-            <div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10">
+        <main class="mainLayout">
+            <div class="contentLayout">
                 <Role role={portfolio.role} introduction={portfolio.introduction} />
                 <Experiences title={jobTitle} experiences={portfolio.jobs} language={metadata.language} />
                 <Experiences title={educationTitle} experiences={portfolio.education} language={metadata.language} />
