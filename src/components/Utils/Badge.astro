@@ -7,6 +7,18 @@ interface Props {
 const { info, dataInfo = false } = Astro.props;
 ---
 
-<span class="text-gray-800 dark:text-gray-300 rounded-full px-3 py-2 text-xs font-bold bg-orange-100 dark:bg-orange-900" {...dataInfo && { "data-info": info }}>
+<style>
+    @import "tailwindcss" reference;
+
+    .badge {
+        @apply text-gray-800 rounded-full px-3 py-2 text-xs font-bold bg-orange-100;
+    }
+
+    :global(.dark) .badge {
+        @apply text-gray-300 bg-orange-900;
+    }
+</style>
+
+<span class="badge" {...dataInfo && { "data-info": info }}>
     {info}
 </span>

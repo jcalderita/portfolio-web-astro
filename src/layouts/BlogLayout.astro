@@ -18,18 +18,25 @@ const { language, title, post } = Astro.props;
 const blogTitle = title ?? post?.data.title ?? "";
 ---
 
-<!doctype html>
+<style>
+    @import "tailwindcss" reference;
+
+    .blogBottom {
+        @apply sticky bottom-24 z-10 flex items-end justify-end gap-4 pointer-events-none;
+    }
+</style>
+
 <html lang={language}>
     <Head title={blogTitle}>
         <BlogMeta language={language} post={post} />
     </Head>
 
-    <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
+    <body class="bodyLayout">
         <Header language={language} isNotMain={true} />
-        <main class="mx-auto w-full max-w-screen-xl px-2 grid grid-cols-12 pb-12 my-8">
-            <div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10">
+        <main class="mainLayout my-8">
+            <div class="contentLayout">
                 <slot />
-                <div class="sticky bottom-24 z-10 flex items-end justify-end gap-4 pointer-events-none">
+                <div class="blogBottom">
                     {
                         post && (
                             <div class="mr-auto">
