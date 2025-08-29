@@ -1,0 +1,25 @@
+---
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<style>
+    @import "tailwindcss" reference;
+
+    .blogCardTitle {
+        @apply bg-gray-100 rounded-t-2xl border-b border-orange-700 p-4;
+    }
+
+    :global(.dark) .blogCardTitle {
+        @apply bg-gray-950;
+    }
+</style>
+
+<div class="blogCardTitle">
+    <span class="font-bold text-lg">
+        {title}
+    </span>
+</div>

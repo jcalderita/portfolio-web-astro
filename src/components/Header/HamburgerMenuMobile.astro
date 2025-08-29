@@ -1,0 +1,23 @@
+---
+
+---
+
+<style>
+    @import "tailwindcss" reference;
+
+    .mobileMenu {
+        @apply absolute right-20 top-14 bg-white rounded-xl shadow-xl border p-4 flex flex-col gap-4 z-50 md:hidden;
+    }
+
+    .mobileMenu.hidden {
+        @apply hidden;
+    }
+
+    :global(.dark) .mobileMenu {
+        @apply bg-gray-900;
+    }
+</style>
+
+<div id="mobile-menu" class="mobileMenu hidden">
+    <slot />
+</div>

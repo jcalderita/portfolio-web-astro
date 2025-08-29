@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { getFormattedDate } from "@utils/formattedDate";
+import BlogCardTitle from "./BlogCardTitle.astro";
 import Badge from "../Utils/Badge.astro";
 
 interface Props {
@@ -21,10 +22,6 @@ const tags = post.data.tags;
         @apply rounded-2xl border border-orange-700 flex flex-col my-4 hover:shadow-md transition outline-none focus:ring-2 focus:ring-orange-600 hover:text-orange-600;
     }
 
-    .blogCardTitle {
-        @apply bg-gray-100 rounded-t-2xl border-b border-orange-700 p-4;
-    }
-
     .blogCardBottom {
         @apply bg-gray-100 rounded-b-2xl border-t border-orange-700 p-4 flex items-center justify-between;
     }
@@ -37,7 +34,6 @@ const tags = post.data.tags;
         @apply text-sm text-gray-800;
     }
 
-    :global(.dark) .blogCardTitle,
     :global(.dark) .blogCardBottom {
         @apply bg-gray-950;
     }
@@ -48,11 +44,7 @@ const tags = post.data.tags;
 </style>
 
 <a href={`/${language}/blog/${post.slug}/`} class="blogCard" aria-label={post.data.title}>
-    <div class="blogCardTitle">
-        <span class="font-bold text-lg">
-            {post.data.title}
-        </span>
-    </div>
+    <BlogCardTitle title={post.data.title} />
     <div class="flex-1 p-0.5">
         <Image src={post.data.cover} alt={post.data.coverDescription} loading="lazy" transition:name={`${post.slug}-image`} />
     </div>
