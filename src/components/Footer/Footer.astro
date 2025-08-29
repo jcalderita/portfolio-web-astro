@@ -24,12 +24,32 @@ const cookieLink = "/" + language + "/cookies";
 const year = new Date().getFullYear();
 ---
 
-<footer
-    class="fixed bottom-0 left-0 w-full flex flex-col items-center gap-1 text-orange-600 py-3 bg-gray-50/75 dark:bg-gray-950/75 border-t z-50"
-    role="contentinfo"
-    aria-label={ariaFooter}
->
-    <div class="flex justify-center items-center gap-4">
+<style>
+    @import "tailwindcss" reference;
+
+    .footer {
+        @apply fixed bottom-0 left-0 w-full flex flex-col items-center gap-1 text-orange-600 py-3 bg-gray-50/75 border-t z-50;
+    }
+
+    .footerLinks {
+        @apply flex justify-center items-center gap-4;
+    }
+
+    .footerBottom {
+        @apply text-xs flex items-center gap-2 mt-1 font-extrabold;
+    }
+
+    .footerCookie {
+        @apply underline focus:outline-none focus:ring-2 focus:ring-orange-600 rounded;
+    }
+
+    :global(.dark) .footer {
+        @apply bg-gray-950/75;
+    }
+</style>
+
+<footer class="footer" role="contentinfo" aria-label={ariaFooter}>
+    <div class="footerLinks">
         <SocialLink link="https://www.linkedin.com/in/jcalderita" label={ariaLinkedin} name="linkedin" />
         <SocialLink link="https://github.com/jcalderita" label={ariaGitHub} name="github" />
         <SocialLink link="https://x.com/jcalderita" label={ariaX} name="x" />
@@ -38,15 +58,9 @@ const year = new Date().getFullYear();
         <SocialLink link={pdfRoute} label={ariaPdf} name="pdf" />
     </div>
 
-    <div class="text-xs flex items-center gap-2 mt-1 font-extrabold">
+    <div class="footerBottom">
         <span aria-hidden="true">©</span>
         {year} Jorge Calderita
-        <a
-            href={cookieLink}
-            class="underline focus:outline-none focus:ring-2 focus:ring-orange-600 rounded"
-            aria-label={language === "es" ? "Política de cookies" : "Cookie policy"}
-        >
-            Cookies
-        </a>
+        <a href={cookieLink} class="footerCookie" aria-label={language === "es" ? "Política de cookies" : "Cookie policy"}> Cookies </a>
     </div>
 </footer>

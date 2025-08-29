@@ -13,18 +13,38 @@ const { Content, headings } = await post.render();
 const contentTitle = language === "es" ? "Tabla de contenidos" : "Table of contents";
 ---
 
-<Image src={post.data.cover} alt={post.data.coverDescription} class="mx-auto my-6 max-w-xs h-auto rounded-lg shadow" transition:name={`${post.slug}-image`} />
-<h2 class="text-2xl text-orange-600 font-semibold mb-2">{contentTitle}</h2>
-<ol class="mb-8 space-y-1.5">
+<style>
+    @import "tailwindcss" reference;
+
+    .postImage {
+        @apply mx-auto my-6 max-w-xs h-auto rounded-lg shadow;
+    }
+
+    .postTitle {
+        @apply text-2xl text-orange-600 font-semibold mb-2;
+    }
+
+    .postIndex {
+        @apply mb-8 space-y-1.5;
+    }
+
+    .postIndexButton {
+        @apply scroll-mt-20 hover:text-orange-600 cursor-pointer;
+    }
+
+    .postIndexNumber {
+        @apply inline-flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full w-6 h-6 aspect-square mr-0.5;
+    }
+</style>
+
+<Image src={post.data.cover} alt={post.data.coverDescription} class="postImage" transition:name={`${post.slug}-image`} />
+<h2 class="postTitle">{contentTitle}</h2>
+<ol class="postIndex">
     {
         headings.map((heading, index) => (
             <li>
-                <button
-                    type="button"
-                    class="scroll-mt-20 hover:text-orange-600 cursor-pointer"
-                    onclick={`document.getElementById('${heading.slug}')?.scrollIntoView({ behavior: 'smooth', block: 'start' })`}
-                >
-                    <span class="inline-flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full w-6 h-6 aspect-square mr-0.5">{index + 1}</span>
+                <button type="button" class="postIndexButton" onclick={`document.getElementById('${heading.slug}')?.scrollIntoView({ behavior: 'smooth', block: 'start' })`}>
+                    <span class="postIndexNumber">{index + 1}</span>
                     {heading.text}
                 </button>
             </li>
