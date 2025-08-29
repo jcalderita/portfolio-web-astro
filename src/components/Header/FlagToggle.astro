@@ -1,4 +1,6 @@
 ---
+import FlagToggleScript from "./FlagToggleScript.astro";
+
 interface Props {
   language: string;
 }
@@ -16,20 +18,4 @@ const url = currentPath.replace(`/${language}/`, `/${targetLanguage}/`).replace(
   <span aria-hidden="true">{flag}</span>
 </a>
 
-<script is:inline>
-  function initFlagToggle(doc = document) {
-    const flagToggle = doc.getElementById("flag-toggle");
-    if (flagToggle) {
-      flagToggle.addEventListener("click", function () {
-        const lang = flagToggle.dataset.language;
-        document.cookie = `lang=${encodeURIComponent(lang)}; path=/; max-age=31536000`;
-      });
-    }
-  }
-
-  initFlagToggle(document);
-
-  document.addEventListener("astro:before-swap", (ev) => {
-    initFlagToggle(ev.newDocument);
-  });
-</script>
+<FlagToggleScript />

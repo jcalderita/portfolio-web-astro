@@ -6,13 +6,21 @@ interface Props {
 const { language } = Astro.props;
 ---
 
+<style>
+    @import "tailwindcss" reference;
+
+    .rssLink {
+        @apply ml-auto inline-flex items-center gap-2 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 text-sm sm:text-base;
+    }
+</style>
+
 <a
     href={`/${language}/rss.xml`}
     target="_blank"
     rel="noopener noreferrer"
     title={language === "es" ? "Suscribirse al RSS" : "Subscribe to RSS"}
     aria-label={language === "es" ? "Suscribirse al RSS" : "Subscribe to RSS"}
-    class="ml-auto inline-flex items-center gap-2 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 text-sm sm:text-base"
+    class="rssLink"
 >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 fill-current" aria-hidden="true">
         <path d="M4.26 15.74a2.26 2.26 0 1 0 0 4.52 2.26 2.26 0 0 0 0-4.52zM2 9v3a10 10 0 0 1 10 10h3A13 13 0 0 0 2 9zm0-5v3a15 15 0 0 1 15 15h3A18 18 0 0 0 2 4z"></path>
