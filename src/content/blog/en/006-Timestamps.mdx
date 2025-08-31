@@ -1,0 +1,68 @@
+---
+title: "Timestamps in Migrations"
+slug: "timestamps-migrations-en"
+date: 2025-09-15
+author: "Jorge Calderita"
+description: "How to avoid repeating createdAt, updatedAt and deletedAt in database migrations using extensions."
+tags: ["Swift", "Vapor"]
+cover: "../images/Timestamps.png"
+publicCover: "Timestamps.webp"
+coverDescription: "Jorge writing with one hand on a blackboard 1000 times, createdAt, updatedAt and deletedAt. With the other hand meanwhile programming."
+publish: false
+---
+---
+
+## Timestamps
+
+If you're like me, when you design a database model you want all tables to always include three key fields:
+* <span class="high">createdAt</span>: indicates when the record was created.
+* <span class="high">updatedAt</span>: reflects the last time it was updated.
+* <span class="high">deletedAt</span>: marks when it was logically deleted (without physically deleting the record).
+
+---
+
+## Problem
+
+> As you can see, in each migration we have to manually write the three timestamp fields. This is not only repetitive, but also error-prone if we forget a field or misspell the data type.
+
+```swift
+try await db.schema(model)
+    .id()
+    .field(.name, .string, .required)
+    .field(.createdAt, .datetime, .required)
+    .field(.updatedAt, .datetime, .required)
+    .field(.deletedAt, .datetime)
+    .create()
+```
+
+---
+
+## Solution
+
+> The solution is to create a <span class="high">SchemaBuilder</span> extension that adds a <span class="high">timestamps()</span> method. This extension encapsulates the repetitive logic in one place, making the code cleaner and more maintainable.
+
+```swift
+extension SchemaBuilder {
+    func timestamps() -> Self {
+        self.field(.createdAt, .datetime, .required)
+            .field(.updatedAt, .datetime, .required)
+            .field(.deletedAt, .datetime)
+    }
+}
+```
+
+---
+
+## Result
+
+> Now our migrations are much cleaner and more readable. By calling <span class="high">.timestamps()</span> we add the three necessary fields. This reduces the possibility of errors and makes the code easier to maintain.
+
+```swift
+try await db.schema(model)
+    .id()
+    .field(.name, .string, .required)
+    .timestamps()
+    .create()
+```
+
+---

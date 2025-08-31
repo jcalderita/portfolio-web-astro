@@ -1,7 +1,7 @@
 ---
 title: "Mi primera condición de carrera"
 slug: "my-first-data-race-es"
-date: 2025-08-02
+date: 2025-09-22
 author: "Jorge Calderita"
 description: "Un artículo técnico que explica cómo una refactorización para concurrencia en Swift llevó a una condición de carrera, y cómo resolverla usando patrones de actores."
 tags: ["Swift", "Vapor"]
@@ -12,13 +12,13 @@ publish: false
 ---
 ---
 
-### De refactor a condición de carrera en Swift
+## De refactor a condición de carrera en Swift
 
 Durante un proceso de refactorización para convertir una funcionalidad previamente secuencial en una concurrente, me encontré con un problema clásico: garantizar la unicidad de los registros cuando múltiples tareas intentan crear eventos al mismo tiempo. Aunque el objetivo era mejorar el rendimiento procesando miles de eventos deportivos en paralelo usando Swift, la transición expuso un desafío típico de concurrencia: evitar duplicados y mantener la integridad de los datos bajo acceso simultáneo.
 
 ---
 
-### Actor con array
+## Actor con array
 ```swift
 private actor EventsActor {
     private var events: [SportEventModel] = []
@@ -44,7 +44,7 @@ private actor EventsActor {
 - Búsqueda ineficiente en grandes volúmenes `O(n)`.
 
 ---
-### Actor con diccionario
+## Actor con diccionario
 
 ```swift
 private actor EventsActor {
@@ -70,7 +70,7 @@ private actor EventsActor {
 - Condición de carrera lógica
 
 ---
-### Condición de carrera lógica
+## Condición de carrera lógica
 
 Cuando múltiples tareas concurrentes intentan crear el mismo evento, todas pueden comprobar que no existe y proceder a crearlo al mismo tiempo.  
 Solo una de las instancias resultantes se almacena, mientras que el resto se convierten en "huérfanas", lo que provoca inconsistencias y referencias rotas en otras estructuras de datos.
@@ -78,7 +78,7 @@ Solo una de las instancias resultantes se almacena, mientras que el resto se con
 *Por ejemplo: dos tareas concurrentes comprueban si un evento existe. Ambas ven que no, ambas lo crean, pero solo una sobrevive en el diccionario; la otra referencia ahora está perdida.*
 
 ---
-### Solución
+## Solución
 
 Para evitar esto, es necesario serializar no solo el acceso sino también la creación por clave:  
 Si ya hay una creación en curso para esa clave, las tareas concurrentes deben esperar el resultado de la primera, asegurando que todas compartan exactamente el mismo recurso.
