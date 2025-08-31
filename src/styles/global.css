@@ -27,6 +27,10 @@ html {
         @apply col-start-1 col-span-12 md:col-start-1 md:col-span-12 lg:col-start-2 lg:col-span-10;
     }
 
+    .high {
+        @apply text-orange-600 font-bold
+    }
+
     .prose pre {
         background-color: #030712 !important;
     }
