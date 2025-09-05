@@ -1,0 +1,147 @@
+---
+title: "Índices Parciales"
+slug: "partial-index-es"
+date: 2025-09-15
+author: "Jorge Calderita"
+description: "Cómo utilizar índices parciales en Vapor para optimizar tus tablas"
+tags: ["Swift", "Vapor"]
+cover: "../images/PartialIndex.png"
+publicCover: "PartialIndex.webp"
+coverDescription: "Jorge corriendo por un carril totalmente distinto al de los demás corredores, con un bocadillo que dice Partial Index"
+publish: false
+---
+
+## Índices Parciales
+
+Un **índice parcial** es un índice que se crea únicamente sobre un subconjunto de filas de una tabla, definido mediante una condición <span class="high">WHERE</span> específica. En lugar de indexar todas las filas, el índice solo incluye aquellas que cumplen ciertos criterios, lo que puede mejorar el rendimiento y reducir el espacio utilizado.
+
+En mi caso particular, necesitaba indexar campos en función de si sus valores eran <span class="high">NULL</span> o <span class="high">NOT NULL</span>. Por ejemplo, los siguientes índices parciales en SQL:
+
+```sql
+CREATE INDEX index_field_null 
+ON table(field) 
+WHERE field IS NULL;
+
+CREATE INDEX index_field_not_null 
+ON table(field) 
+WHERE field IS NOT NULL;
+```
+
+También es posible crear índices parciales que involucren múltiples columnas:
+
+```sql
+CREATE INDEX index_field1_null_field2_null 
+ON table(field1, field2) 
+WHERE field1 IS NULL AND field2 IS NULL;
+
+CREATE INDEX index_field1_not_null_field2_not_null 
+ON table(field1, field2) 
+WHERE field1 IS NOT NULL AND field2 IS NOT NULL;
+```
+
+---
+
+## Problema
+
+Por defecto, Vapor no ofrece soporte directo para la creación de índices parciales, ya que la generación estándar de índices no contempla la inclusión de una cláusula <span class="high">WHERE</span> en la definición del índice.
+
+El siguiente fragmento de código crea un índice normal, ya sea sobre uno o varios campos, pero no permite especificar una condición para un índice parcial:
+
+```swift
+try await db.sqlDatabase
+    .create($0.key)
+    .on(table)
+    .colums($0.colums)
+    .run()
+```
+
+Este código funciona para crear índices simples, pero carece de la capacidad para agregar un predicado <span class="high">WHERE</span>.
+
+> Este fragmento ha sido adaptado por mí; el método <span class="high">.create</span> del constructor original expone más opciones de configuración, pero en este ejemplo muestro una implementación personalizada y simplificada que uso actualmente.
+
+---
+
+## Alternativa
+
+La forma más directa de crear índices parciales es ejecutar sentencias SQL en crudo <span class="high">raw SQL</span>, tal como se mostró en los ejemplos iniciales. Esto implica construir un método para ejecutar en crudo las sentencias <span class="high">CREATE INDEX</span> con la cláusula <span class="high">WHERE</span> correspondiente.
+
+Aunque efectivo, este enfoque pierde la ventaja de la abstracción y seguridad que ofrece Vapor al construir migraciones y esquemas de base de datos mediante código Swift.
+
+---
+
+## Solución
+
+Analizando la API de Vapor, me di cuenta de que el builder <span class="high">SQLCreateIndexBuilder</span> admite un predicado opcional <span class="high">predicate</span>. Si este no es <span class="high">nil</span>, agrega una cláusula <span class="high">WHERE</span> al índice.
+
+Por ello, extendí este builder para incluir un método <span class="high">where</span> que acepta una lista de columnas y un tipo de índice parcial (por ejemplo, <span class="high">null</span> o <span class="high">not null</span>). Este método construye la expresión lógica adecuada para el predicado y la asigna al índice.
+
+```swift
+extension SQLCreateIndexBuilder {
+    @discardableResult
+    func `where`(
+        _ columns: [FieldKey],
+        _ partialIndex: SQLPartialIndexEnum?
+    ) -> Self {
+        guard let partialIndex else {
+            return self
+        }
+        let op: SQLBinaryOperator = partialIndex == .null ? .is : .isNot
+
+        let conditions = columns.map {
+            self.where($0, op)
+        }
+
+        let combined: SQLBinaryExpression = conditions.dropFirst()
+            .reduce(conditions[0]) { .init($0, .and, $1) }
+
+        return self.where(combined)
+    }
+
+    private func `where`(
+        _ column: FieldKey,
+        _ binary: SQLBinaryOperator
+    ) -> SQLBinaryExpression {
+        .init(
+            left: SQLIdentifier(column.description),
+            op: binary,
+            right: SQLLiteral.null
+        )
+    }
+
+    private func `where`(_ expression: SQLExpression) -> Self {
+        self.createIndex.predicate = expression
+        return self
+    }
+}
+```
+
+Este código permite invocar el método <span class="high">where</span> para uno o varios campos, especificando si se desea un índice parcial para valores <span class="high">NULL</span> o <span class="high">NOT NULL</span>. Si no se proporciona un valor para <span class="high">partialIndex</span>, se devuelve el índice sin predicado, comportándose como un índice normal.
+
+La lógica consiste en crear una lista de expresiones binarias <span class="high">SQLBinaryExpression</span> para cada columna, combinándolas con el operador lógico <span class="high">AND</span> y asignando el resultado como predicado del índice.
+
+---
+
+## Resultado
+
+Con esta extensión, ahora puedo crear índices parciales de forma sencilla en Vapor, agregando únicamente una línea al código original:
+
+```swift
+try await db.sqlDatabase
+    .create($0.key)
+    .on(table)
+    .colums($0.colums)
+    .where($0.colums, $0.partial)
+    .run()
+```
+
+Donde <span class="high">$0.partial</span> es un valor opcional que indica el tipo de índice parcial deseado <span class="high">null</span> o <span class="high">not null</span>.
+
+---
+
+## Notas finales
+
+> Este enfoque está diseñado específicamente para índices parciales basados en la presencia o ausencia de valores <span class="high">NULL</span> en columnas. Sin embargo, la implementación puede adaptarse para soportar otras condiciones y casos de uso más complejos, simplemente modificando la construcción del predicado.
+
+La solución ofrece una forma limpia y reutilizable de crear índices parciales dentro del ecosistema Vapor, manteniendo la coherencia y seguridad del código Swift.
+
+---
