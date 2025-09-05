@@ -1,0 +1,147 @@
+---
+title: "Partial Indexes"
+slug: "partial-index-en"
+date: 2025-09-15
+author: "Jorge Calderita"
+description: "How to use partial indexes in Vapor to optimize your tables"
+tags: ["Swift", "Vapor"]
+cover: "../images/PartialIndex.png"
+publicCover: "PartialIndex.webp"
+coverDescription: "Jorge running in a completely different lane from other runners, with a speech bubble saying Partial Index"
+publish: false
+---
+
+## Partial Indexes
+
+A **partial index** is an index created only on a subset of rows in a table, defined by a specific <span class="high">WHERE</span> condition. Instead of indexing all rows, the index only includes those that meet certain criteria, which can improve performance and reduce space usage.
+
+In my particular case, I needed to index fields based on whether their values were <span class="high">NULL</span> or <span class="high">NOT NULL</span>. For example, the following partial indexes in SQL:
+
+```sql
+CREATE INDEX index_field_null 
+ON table(field) 
+WHERE field IS NULL;
+
+CREATE INDEX index_field_not_null 
+ON table(field) 
+WHERE field IS NOT NULL;
+```
+
+It's also possible to create partial indexes involving multiple columns:
+
+```sql
+CREATE INDEX index_field1_null_field2_null 
+ON table(field1, field2) 
+WHERE field1 IS NULL AND field2 IS NULL;
+
+CREATE INDEX index_field1_not_null_field2_not_null 
+ON table(field1, field2) 
+WHERE field1 IS NOT NULL AND field2 IS NOT NULL;
+```
+
+---
+
+## Problem
+
+By default, Vapor doesn't offer direct support for creating partial indexes, since standard index generation doesn't include the ability to add a <span class="high">WHERE</span> clause in the index definition.
+
+The following code snippet creates a normal index, either on one or multiple fields, but doesn't allow specifying a condition for a partial index:
+
+```swift
+try await db.sqlDatabase
+    .create($0.key)
+    .on(table)
+    .colums($0.colums)
+    .run()
+```
+
+This code works for creating simple indexes but lacks the ability to add a <span class="high">WHERE</span> predicate.
+
+> This snippet has been adapted by me; the original builder's <span class="high">.create</span> method exposes more configuration options, but in this example I show a custom and simplified implementation that I currently use.
+
+---
+
+## Alternative
+
+The most direct way to create partial indexes is to execute raw SQL statements, as shown in the initial examples. This involves building a method to execute raw <span class="high">CREATE INDEX</span> statements with the corresponding <span class="high">WHERE</span> clause.
+
+While effective, this approach loses the advantage of the abstraction and safety that Vapor offers when building migrations and database schemas through Swift code.
+
+---
+
+## Solution
+
+Analyzing Vapor's API, I realized that the <span class="high">SQLCreateIndexBuilder</span> builder accepts an optional <span class="high">predicate</span>. If this is not <span class="high">nil</span>, it adds a <span class="high">WHERE</span> clause to the index.
+
+Therefore, I extended this builder to include a <span class="high">where</span> method that accepts a list of columns and a partial index type (for example, <span class="high">null</span> or <span class="high">not null</span>). This method builds the appropriate logical expression for the predicate and assigns it to the index.
+
+```swift
+extension SQLCreateIndexBuilder {
+    @discardableResult
+    func `where`(
+        _ columns: [FieldKey],
+        _ partialIndex: SQLPartialIndexEnum?
+    ) -> Self {
+        guard let partialIndex else {
+            return self
+        }
+        let op: SQLBinaryOperator = partialIndex == .null ? .is : .isNot
+
+        let conditions = columns.map {
+            self.where($0, op)
+        }
+
+        let combined: SQLBinaryExpression = conditions.dropFirst()
+            .reduce(conditions[0]) { .init($0, .and, $1) }
+
+        return self.where(combined)
+    }
+
+    private func `where`(
+        _ column: FieldKey,
+        _ binary: SQLBinaryOperator
+    ) -> SQLBinaryExpression {
+        .init(
+            left: SQLIdentifier(column.description),
+            op: binary,
+            right: SQLLiteral.null
+        )
+    }
+
+    private func `where`(_ expression: SQLExpression) -> Self {
+        self.createIndex.predicate = expression
+        return self
+    }
+}
+```
+
+This code allows calling the <span class="high">where</span> method for one or multiple fields, specifying whether you want a partial index for <span class="high">NULL</span> or <span class="high">NOT NULL</span> values. If no value is provided for <span class="high">partialIndex</span>, the index is returned without a predicate, behaving like a normal index.
+
+The logic consists of creating a list of <span class="high">SQLBinaryExpression</span> binary expressions for each column, combining them with the <span class="high">AND</span> logical operator and assigning the result as the index predicate.
+
+---
+
+## Result
+
+With this extension, I can now easily create partial indexes in Vapor, adding only one line to the original code:
+
+```swift
+try await db.sqlDatabase
+    .create($0.key)
+    .on(table)
+    .colums($0.colums)
+    .where($0.colums, $0.partial)
+    .run()
+```
+
+Where <span class="high">$0.partial</span> is an optional value indicating the desired partial index type <span class="high">null</span> or <span class="high">not null</span>.
+
+---
+
+## Final Notes
+
+> This approach is specifically designed for partial indexes based on the presence or absence of <span class="high">NULL</span> values in columns. However, the implementation can be adapted to support other conditions and more complex use cases by simply modifying the predicate construction.
+
+The solution offers a clean and reusable way to create partial indexes within the Vapor ecosystem, maintaining the consistency and safety of Swift code.
+
+---
