@@ -1,0 +1,115 @@
+---
+title: "Guard and LogError"
+slug: "guard-log-es"
+date: 2025-10-13
+author: "Jorge Calderita"
+description: "Cómo desempaquetar un opcional, crear un log y retornar un throw simultáneamente."
+tags: ["Swift", "Vapor"]
+cover: "../images/GuardLog.png"
+publicCover: "GuardLog.webp"
+coverDescription: "Jorge corriendo mientras abre una bebida de la que salen confetis sin esperarlo. En el bocadillo pone GUARD and LOGERROR."
+publish: false
+---
+---
+## Problema
+
+En múltiples secciones de mi código necesito ejecutar tres operaciones cada vez que manejo un <span class="high">Optional</span>:
+
+1. **Desempaquetar** el contenido del <span class="high">Optional</span>
+2. **Registrar un error** en el sistema de logs si el valor es <span class="high">nil</span>
+3. **Lanzar una excepción** cuando el valor no existe
+
+Este patrón se repite frecuentemente, generando código duplicado y reduciendo la mantenibilidad.
+
+---
+
+## Solución
+
+La estrategia consiste en **encapsular las tres operaciones** en funciones reutilizables que trabajen de forma coordinada.
+
+***Función auxiliar:*** <span class="high">logError</span>
+
+```swift
+func logError(
+    _ message: String, 
+    status: HTTPResponseStatus
+) throws -> Never {
+    self.logMessage(message, level: .error)
+    throw Abort(status, reason: message)
+}
+```
+
+Esta función ejecuta el **registro del error** en el sistema de logs y posteriormente **termina la ejecución** lanzando una excepción <span class="high">Abort</span>. El tipo de retorno <span class="high">Never</span> es fundamental, ya que indica al compilador que esta función **nunca retorna normalmente**, garantizando que la ejecución se interrumpa completamente.
+
+***Función principal:*** <span class="high">guardAndLogError</span>
+
+```swift
+func guardAndLogError<T>(
+    _ optional: T?,
+    message: String,
+    status: HTTPResponseStatus = .noContent
+) throws -> T {
+    guard let optional else {
+        try logError(message, status: status)
+    }
+    return optional
+}
+```
+
+Esta **función genérica** implementa el patrón completo:
+- Utiliza <span class="high">guard let</span> para **desempaquetar el Optional** de forma segura
+- Si el valor es <span class="high">nil</span>, invoca <span class="high">logError()</span> para registrar el fallo y terminar la ejecución
+- Si contiene un valor, lo **retorna exitosamente**
+
+La **genericidad** <span class="high">T</span> permite usar esta función con cualquier tipo de dato opcional.
+
+---
+
+## Resultado
+
+Con esta implementación, **una sola línea de código** ejecuta las tres operaciones requeridas: desempaquetado seguro, logging de errores y manejo de excepciones.
+
+```swift
+let fileName = try guardAndLogError(
+    fileName, 
+    message: "Valor fileName no encontrado"
+)
+```
+
+---
+
+## Beneficios
+
+- ✅ **Reducción de código duplicado**
+- ✅ **Manejo consistente de errores**
+- ✅ **Logs centralizados y estructurados**
+- ✅ **Reutilización mediante genericidad**
+
+---
+
+## Extensibilidad
+
+Este patrón puede **extenderse** para casos de uso más específicos:
+
+```swift
+// Para validaciones booleanas
+func guardAndLogError(
+    _ condition: Bool, 
+    message: String
+) throws { ... }
+
+// Para arrays
+func guardAndLogError<T>(
+    _ optionals: T?..., 
+    message: String
+) throws -> [T] { ... }
+
+// Para tuplas
+func guardAndLogError<T, U>(
+    _ first: T?, 
+    _ second: U?
+    , message: String
+) throws -> (T, U) { ... }
+```
+
+---

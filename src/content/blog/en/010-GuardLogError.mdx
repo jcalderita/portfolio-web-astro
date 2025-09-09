@@ -1,0 +1,115 @@
+---
+title: "Guard and LogError"
+slug: "guard-log-en"
+date: 2025-10-13
+author: "Jorge Calderita"
+description: "How to unwrap an optional, create a log, and return a throw simultaneously."
+tags: ["Swift", "Vapor"]
+cover: "../images/GuardLog.png"
+publicCover: "GuardLog.webp"
+coverDescription: "Jorge running while opening a drink that unexpectedly releases confetti. The speech bubble says GUARD and LOGERROR."
+publish: false
+---
+---
+## Problem
+
+In multiple sections of my code, I need to execute three operations every time I handle an <span class="high">Optional</span>:
+
+1. **Unwrap** the <span class="high">Optional</span> content
+2. **Log an error** in the logging system if the value is <span class="high">nil</span>
+3. **Throw an exception** when the value doesn't exist
+
+This pattern repeats frequently, generating duplicate code and reducing maintainability.
+
+---
+
+## Solution
+
+The strategy consists of **encapsulating the three operations** in reusable functions that work in a coordinated manner.
+
+***Helper function:*** <span class="high">logError</span>
+
+```swift
+func logError(
+    _ message: String, 
+    status: HTTPResponseStatus
+) throws -> Never {
+    self.logMessage(message, level: .error)
+    throw Abort(status, reason: message)
+}
+```
+
+This function executes the **error logging** in the logging system and subsequently **terminates execution** by throwing an <span class="high">Abort</span> exception. The <span class="high">Never</span> return type is fundamental, as it indicates to the compiler that this function **never returns normally**, ensuring that execution is completely interrupted.
+
+***Main function:*** <span class="high">guardAndLogError</span>
+
+```swift
+func guardAndLogError<T>(
+    _ optional: T?,
+    message: String,
+    status: HTTPResponseStatus = .noContent
+) throws -> T {
+    guard let optional else {
+        try logError(message, status: status)
+    }
+    return optional
+}
+```
+
+This **generic function** implements the complete pattern:
+- Uses <span class="high">guard let</span> to **safely unwrap the Optional**
+- If the value is <span class="high">nil</span>, invokes <span class="high">logError()</span> to log the failure and terminate execution
+- If it contains a value, **returns it successfully**
+
+The **genericity** <span class="high">T</span> allows using this function with any type of optional data.
+
+---
+
+## Result
+
+With this implementation, **a single line of code** executes the three required operations: safe unwrapping, error logging, and exception handling.
+
+```swift
+let fileName = try guardAndLogError(
+    fileName, 
+    message: "fileName value not found"
+)
+```
+
+---
+
+## Benefits
+
+- ✅ **Reduction of duplicate code**
+- ✅ **Consistent error handling**
+- ✅ **Centralized and structured logs**
+- ✅ **Reusability through genericity**
+
+---
+
+## Extensibility
+
+This pattern can be **extended** for more specific use cases:
+
+```swift
+// For boolean validations
+func guardAndLogError(
+    _ condition: Bool, 
+    message: String
+) throws { ... }
+
+// For arrays
+func guardAndLogError<T>(
+    _ optionals: T?..., 
+    message: String
+) throws -> [T] { ... }
+
+// For tuples
+func guardAndLogError<T, U>(
+    _ first: T?, 
+    _ second: U?
+    , message: String
+) throws -> (T, U) { ... }
+```
+
+---
