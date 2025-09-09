@@ -1,0 +1,42 @@
+---
+title: "Schemas and Namespaces"
+slug: "schema-space-en"
+date: 2025-10-06
+author: "Jorge Calderita"
+description: "Table organization through schemas and namespaces in databases with Vapor"
+tags: ["Swift", "Vapor"]
+cover: "../images/SchemaSpace.png"
+publicCover: "SchemaSpace.webp"
+coverDescription: "Jorge sitting programming thinking about Schemas and Spaces"
+publish: false
+---
+---
+## Schema and Namespace
+
+When defining a data model in Vapor, it's possible to specify the <span class="high">schema</span>, which corresponds to the table name in the database. However, to maintain an organized architecture, it's recommended to group tables into different namespaces based on functional criteria, rather than concentrating them all in the default schema. This practice facilitates logical separation by domains or application modules.
+
+---
+
+## Implementation
+
+To assign a table to a specific namespace, you must override the static <span class="high">space</span> property in the model. This property allows you to define the namespace where the table will reside, providing more granular organization of the database structure.
+
+```swift
+public final class LocationCityModel: Model {
+    public static let schema = "cities"
+    public static let space: String? = "location"
+
+    @ID() public var id: UUID?
+    @Field(.name) public var name: String
+
+    public init() { }
+}
+```
+
+---
+
+## Consideration
+
+It's essential to declare the <span class="high">space</span> property as type <span class="high">String?</span> **(optional)**. If declared as <span class="high">String</span> **(non-optional)**, it won't override the inherited property from the <span class="high">Model</span> protocol, but will create a new property with the same name instead. This will cause the framework to ignore the namespace configuration, keeping the tables in the default schema without any apparent error indication.
+
+---
