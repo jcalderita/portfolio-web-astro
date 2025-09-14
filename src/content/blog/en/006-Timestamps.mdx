@@ -23,7 +23,7 @@ If you're like me, when you design a database model you want all tables to alway
 
 ## Problem
 
-> As you can see, in each migration we have to manually write the three timestamp fields. This is not only repetitive, but also error-prone if we forget a field or misspell the data type.
+As you can see, in each migration we have to manually write the three timestamp fields. This is not only repetitive, but also error-prone if we forget a field or misspell the data type.
 
 ```swift
 try await db.schema(model)
@@ -39,7 +39,7 @@ try await db.schema(model)
 
 ## Solution
 
-> The solution is to create a <span class="high">SchemaBuilder</span> extension that adds a <span class="high">timestamps()</span> method. This extension encapsulates the repetitive logic in one place, making the code cleaner and more maintainable.
+The solution is to create a <span class="high">SchemaBuilder</span> extension that adds a <span class="high">timestamps()</span> method. This extension encapsulates the repetitive logic in one place, making the code cleaner and more maintainable.
 
 ```swift
 extension SchemaBuilder {
@@ -55,7 +55,7 @@ extension SchemaBuilder {
 
 ## Result
 
-> Now our migrations are much cleaner and more readable. By calling <span class="high">.timestamps()</span> we add the three necessary fields. This reduces the possibility of errors and makes the code easier to maintain.
+Now our migrations are much cleaner and more readable. By calling <span class="high">.timestamps()</span> we add the three necessary fields. This reduces the possibility of errors and makes the code easier to maintain.
 
 ```swift
 try await db.schema(model)

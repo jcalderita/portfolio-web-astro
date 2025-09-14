@@ -23,7 +23,7 @@ Si eres como yo, cuando diseñas un modelo de base de datos quieres que todas la
 
 ## Problema
 
-> Como se puede observar, en cada migración tenemos que escribir manualmente los tres campos de timestamp. Esto no solo es repetitivo, sino que también es propenso a errores si olvidamos algún campo o escribimos mal el tipo de dato.
+Como se puede observar, en cada migración tenemos que escribir manualmente los tres campos de timestamp. Esto no solo es repetitivo, sino que también es propenso a errores si olvidamos algún campo o escribimos mal el tipo de dato.
 
 ```swift
 try await db.schema(model)
@@ -39,7 +39,7 @@ try await db.schema(model)
 
 ## Solución
 
-> La solución es crear una extensión de <span class="high">SchemaBuilder</span> que agregue un método <span class="high">timestamps()</span>. Esta extensión encapsula la lógica repetitiva en un solo lugar, haciendo el código más limpio y mantenible.
+La solución es crear una extensión de <span class="high">SchemaBuilder</span> que agregue un método <span class="high">timestamps()</span>. Esta extensión encapsula la lógica repetitiva en un solo lugar, haciendo el código más limpio y mantenible.
 
 ```swift
 extension SchemaBuilder {
@@ -55,7 +55,7 @@ extension SchemaBuilder {
 
 ## Resultado
 
-> Ahora nuestras migraciones son mucho más limpias y legibles. Llamando a <span class="high">.timestamps()</span> agregamos los tres campos necesarios. Esto reduce la posibilidad de errores y hace que el código sea más fácil de mantener.
+Ahora nuestras migraciones son mucho más limpias y legibles. Llamando a <span class="high">.timestamps()</span> agregamos los tres campos necesarios. Esto reduce la posibilidad de errores y hace que el código sea más fácil de mantener.
 
 ```swift
 try await db.schema(model)
