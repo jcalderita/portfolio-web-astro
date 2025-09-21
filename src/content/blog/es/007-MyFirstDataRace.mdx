@@ -7,14 +7,14 @@ description: "Un artículo técnico que explica cómo una refactorización para 
 tags: ["Swift", "Vapor"]
 cover: "../images/MyFirstDataRace.png"
 publicCover: "MyFirstDataRace.webp"
-coverDescription: "“Mi primera condición de carrera.” Un programador estresado mira su portátil mientras sufre, simbolizando el caos de un bug de concurrencia en su código."
-publish: false
+coverDescription: "Mi primera condición de carrera. Un programador estresado mira su portátil mientras sufre, simbolizando el caos de un bug de concurrencia en su código."
+publish: true
 ---
 ---
 
 ## De refactor a condición de carrera en Swift
 
-Durante un proceso de refactorización para convertir una funcionalidad previamente secuencial en una concurrente, me encontré con un problema clásico: garantizar la unicidad de los registros cuando múltiples tareas intentan crear eventos al mismo tiempo. Aunque el objetivo era mejorar el rendimiento procesando miles de eventos deportivos en paralelo usando Swift, la transición expuso un desafío típico de concurrencia: evitar duplicados y mantener la integridad de los datos bajo acceso simultáneo.
+Durante un proceso de refactorización para convertir una funcionalidad previamente secuencial en una concurrente, me encontré con un problema clásico: garantizar la unicidad de los registros cuando múltiples tareas intentan crear eventos al mismo tiempo. Aunque el objetivo era mejorar el rendimiento procesando miles de eventos en paralelo usando Swift, la transición expuso un desafío típico de concurrencia: evitar duplicados y mantener la integridad de los datos bajo acceso simultáneo.
 
 ---
 
@@ -23,7 +23,7 @@ Durante un proceso de refactorización para convertir una funcionalidad previame
 private actor EventsActor {
     private var events: [SportEventModel] = []
 
-    func getOrCreate(name: String, cityId: UUID, build: () async throws -> SportEventModel) async throws -> SportEventModel {
+    func getOrCreate(name: String, cityId: UUID, build: () async throws -> EventModel) async throws -> EventModel {
         if let event = events.first(where: { $0.normalizedName == name && $0.$city.id == cityId }) {
             return event
         }
@@ -31,8 +31,6 @@ private actor EventsActor {
         events.append(event)
         return event
     }
-
-    var all: [SportEventModel] { events }
 }
 ```
 
@@ -48,17 +46,15 @@ private actor EventsActor {
 
 ```swift
 private actor EventsActor {
-    private var events: [String: SportEventModel] = [:]
+    private var events: [String: EventModel] = [:]
 
-    func getOrCreate(name: String, cityId: UUID, build: () async throws -> SportEventModel) async throws -> SportEventModel {
+    func getOrCreate(name: String, cityId: UUID, build: () async throws -> EventModel) async throws -> EventModel {
         let key = "\(name)\(cityId.uuidString)"
         if let event = events[key] { return event }
         let event = try await build()
         events[key] = event
         return event
     }
-
-    var all: [SportEventModel] { Array(events.values) }
 }
 ```
 
@@ -85,10 +81,10 @@ Si ya hay una creación en curso para esa clave, las tareas concurrentes deben e
 
 ```swift
 private actor EventsActor {
-    private var events: [String: SportEventModel] = [:]
-    private var builds: [String: Task<SportEventModel, Error>] = [:]
+    private var events: [String: EventModel] = [:]
+    private var builds: [String: Task<EventModel, Error>] = [:]
     
-    func getOrCreate(name: String, cityId: UUID, build: @Sendable @escaping () async throws -> SportEventModel) async throws -> SportEventModel {
+    func getOrCreate(name: String, cityId: UUID, build: @Sendable @escaping () async throws -> EventModel) async throws -> EventModel {
         let key = "\(name)\(cityId.uuidString)"
         if let event = events[key] { return event }
         if let building = builds[key] { return try await building.value }
@@ -101,8 +97,6 @@ private actor EventsActor {
         builds.removeValue(forKey: key)
         return event
     }
-    
-    var all: [SportEventModel] { Array(events.values) }
 }
 ```
 
