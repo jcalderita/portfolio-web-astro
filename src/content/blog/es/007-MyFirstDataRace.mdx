@@ -23,10 +23,18 @@ Durante un proceso de refactorización para convertir una funcionalidad previame
 private actor EventsActor {
     private var events: [SportEventModel] = []
 
-    func getOrCreate(name: String, cityId: UUID, build: () async throws -> EventModel) async throws -> EventModel {
-        if let event = events.first(where: { $0.normalizedName == name && $0.$city.id == cityId }) {
-            return event
-        }
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
+        if let event = events.first(
+            where: { 
+                $0.normalizedName == name 
+                && $0.$city.id == cityId 
+            }
+        ) { return event }
+
         let event = try await build()
         events.append(event)
         return event
@@ -39,7 +47,7 @@ private actor EventsActor {
 - Seguridad frente a condiciones de carrera.
 
 **Desventaja:**  
-- Búsqueda ineficiente en grandes volúmenes `O(n)`.
+- Búsqueda ineficiente en grandes volúmenes <span class="high">O(n)</span>.
 
 ---
 ## Actor con diccionario
@@ -48,9 +56,15 @@ private actor EventsActor {
 private actor EventsActor {
     private var events: [String: EventModel] = [:]
 
-    func getOrCreate(name: String, cityId: UUID, build: () async throws -> EventModel) async throws -> EventModel {
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
         let key = "\(name)\(cityId.uuidString)"
-        if let event = events[key] { return event }
+        if let event = events[key] { 
+            return event 
+        }
         let event = try await build()
         events[key] = event
         return event
@@ -59,7 +73,7 @@ private actor EventsActor {
 ```
 
 **Ventajas:**  
-- Búsqueda e inserción rápida `O(1)`.  
+- Búsqueda e inserción rápida <span class="high">O(1)</span>.  
 - Ideal para grandes volúmenes de datos.
 
 **Bug:**  
@@ -84,12 +98,23 @@ private actor EventsActor {
     private var events: [String: EventModel] = [:]
     private var builds: [String: Task<EventModel, Error>] = [:]
     
-    func getOrCreate(name: String, cityId: UUID, build: @Sendable @escaping () async throws -> EventModel) async throws -> EventModel {
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: @Sendable @escaping () async throws -> EventModel
+    ) async throws -> EventModel {
         let key = "\(name)\(cityId.uuidString)"
-        if let event = events[key] { return event }
-        if let building = builds[key] { return try await building.value }
+        if let event = events[key] { 
+            return event 
+        }
+
+        if let building = builds[key] { 
+            return try await building.value 
+        }
         
-        let buildTask = Task { try await build() }
+        let buildTask = Task { 
+            try await build() 
+        }
         builds[key] = buildTask
         
         let event = try await buildTask.value
