@@ -1,0 +1,69 @@
+---
+title: "Async Map"
+slug: "async-map-es"
+date: 2025-10-20
+author: "Jorge Calderita"
+description: "Convertir el map en async map"
+tags: ["Swift", "Vapor"]
+cover: "../images/AsyncMap.png"
+publicCover: "AsyncMap.webp"
+coverDescription: "Varios Jorges corriendo por la misma linea uno detras de otros."
+publish: false
+---
+---
+
+## Problema
+
+Cuando procesamos colecciones con transformaciones asíncronas, el método <span class="high">map</span> no sirve porque sus closures no pueden ser <span class="high">async</span>.  
+Una solución ingenua sería usar un bucle <span class="high">for</span> con <span class="high">await</span>, pero se pierde legibilidad y un manejo de errores homogéneo.  
+El objetivo es disponer de un <span class="high">map</span> **secuencial** que acepte funciones <span class="high">async throws</span>, preserve el orden de los elementos y simplifique el flujo de trabajo.
+
+---
+
+## Solución
+
+Se crea una extensión de <span class="high">Sequence</span> que añade <span class="high">asyncMap</span>.  
+Su ejecución es **secuencial** dentro de la misma tarea, lo que permite:
+
+- Mantener el orden determinista de los resultados.  
+- Limitar el consumo de recursos ejecutando solo una operación a la vez.  
+- Propagar de manera uniforme el primer error que se produzca, deteniendo el proceso.
+
+```swift
+extension Sequence {
+    @inlinable
+    func asyncMap<T>(
+        _ transform: @escaping @Sendable (Element) async throws -> T
+    ) async throws -> [T] {
+        var results: [T] = []
+        results.reserveCapacity(underestimatedCount)
+        for element in self {
+            let value = try await transform(element)
+            results.append(value)
+        }
+        return results
+    }
+}
+```
+
+---
+
+## Resultado
+
+Con <span class="high">asyncMap</span> se obtiene un flujo claro y seguro para transformaciones asíncronas **sin paralelismo**.  
+Es especialmente útil cuando:
+
+- Necesitamos orden garantizado.  
+- Debemos limitar el consumo de recursos (una tarea en vuelo).
+- Existe dependencia entre las operaciones.
+
+Ejemplo de uso:
+
+```swift
+let urls: [URL] = [...]
+let contents = try await urls.asyncMap {
+    try await fetchContent(from: $0)
+}
+```
+
+---

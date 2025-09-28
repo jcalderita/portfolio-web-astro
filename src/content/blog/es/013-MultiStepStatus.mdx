@@ -1,0 +1,88 @@
+---
+title: "Multi-Step Process"
+slug: "multi-step-es"
+date: 2025-11-03
+author: "Jorge Calderita"
+description: "Patrón en Swift para orquestar procesos complejos de varios pasos con control de estado y recuperación ante fallos."
+tags: ["Swift", "Vapor"]
+cover: "../images/MultiStep.png"
+publicCover: "MultiStep.webp"
+coverDescription: "Jorge revisando un panel de control para ver que stage han sido resueltos."
+publish: false
+---
+---
+## Problema
+
+En sistemas distribuidos y procesos de backend, es común que una operación compleja requiera ejecutar **múltiples pasos secuenciales** con dependencias entre sí: creación de ficheros, subida, generación de respuestas, validación, limpieza, etc.  
+Controlar este flujo de estados es crítico para:
+
+- Garantizar que cada paso se ejecute en el **orden correcto**.  
+- Permitir la **recuperación** en caso de error o reinicio del sistema.  
+- Mantener la **consistencia de datos** incluso si el proceso se interrumpe.
+
+Sin una estrategia clara, el código puede volverse frágil, difícil de escalar y propenso a errores.
+
+---
+
+## Solución
+
+Se implementa una función de **gestión de estado por etapas** que controla el avance de un <span class="high">ProcessModel</span> a través de su ciclo de vida.  
+La idea es **encapsular la lógica de transición de estado** en una única función que evalúa el estado actual y ejecuta la acción correspondiente, hasta que el proceso alcanza su estado final.
+
+El patrón se apoya en un bucle <span class="high">repeat-while</span> que vuelve a evaluar el estado tras cada operación, garantizando que las transiciones ocurran de forma **determinista** y **resiliente**.
+
+```swift
+func checkProcess(
+    _ process: ProcessModel
+) async throws {
+    var process = process
+    var status = process.status
+
+    repeat {
+        status = process.status
+        process = try await checkStatus(process)
+    } while status != process.status
+}
+
+func checkStatus(
+    _ process: ProcessModel
+) async throws -> ProcessModel {
+    switch process.status {
+        case .filesCreated: 
+            try await _uploadFiles(process)
+        case .filesUploaded: 
+            try await _createResponses(process)
+        case .responsesCreated, .responsesReasoning: 
+            try await _checkResponses(process)
+        case .responsesCompleted: 
+            try await _deleteFiles(process)
+        case .filesDeleted: 
+            try await _deleteResponses(process)
+        case .responsesDeleted: 
+            try await _finishResponses(process)
+        case .responsesFinished: 
+            try await _deleteProcess(process)
+        default: process
+    }
+}
+```
+
+**Claves de la implementación:**
+
+- **Centralización de estados**: un único punto de control define todas las transiciones.  
+- **Reevaluación continua**: el bucle <span class="high">repeat-while</span> permite avanzar automáticamente mientras haya cambios de estado.  
+- **Aislamiento de operaciones**: cada caso del <span class="high">switch</span> delega en funciones especializadas (<span class="high">_uploadFiles</span>, <span class="high">_createResponses</span>, etc.), manteniendo el código limpio y testeable.
+
+---
+
+## Resultado
+
+Este patrón de **gestión de procesos multi‑etapa** aporta:
+
+- **Resiliencia**: cada transición es atómica y se puede reintentar si ocurre un fallo.  
+- **Escalabilidad**: agregar nuevos pasos solo requiere añadir un nuevo caso al <span class="high">switch</span>.  
+- **Claridad**: el flujo completo del proceso se entiende con una sola lectura.
+
+Ejemplo de aplicación: pipelines de procesamiento de datos, flujos de publicación de contenido, o cualquier proceso de larga duración que requiera **control preciso de cada etapa** sin comprometer la integridad de los datos.
+
+---

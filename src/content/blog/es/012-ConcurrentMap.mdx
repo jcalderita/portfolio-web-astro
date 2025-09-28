@@ -1,0 +1,71 @@
+---
+title: "Concurrent Map"
+slug: "concurrent-map-es"
+date: 2025-10-27
+author: "Jorge Calderita"
+description: "Convertir el map en concurrent map"
+tags: ["Swift", "Vapor"]
+cover: "../images/ConcurrentMap.png"
+publicCover: "ConcurrentMap.webp"
+coverDescription: "Varios Jorges corriendo por lineas paralelas y llegando al mismo tiempo a la meta."
+publish: false
+---
+---
+## Problema
+
+Cuando procesamos colecciones en Swift, el método <span class="high">map</span> ejecuta las transformaciones de forma secuencial.  
+En operaciones intensivas o que implican I/O —como peticiones HTTP, lectura de archivos o consultas de base de datos— esto puede ser un cuello de botella.  
+El objetivo es **aprovechar la concurrencia** para ejecutar múltiples transformaciones en paralelo, garantizando seguridad con <span class="high">Sendable</span> y manejo de errores.
+
+---
+
+## Solución
+
+Se crea una extensión de <span class="high">Sequence</span> que añade <span class="high">concurrentMap</span>.  
+Internamente usa <span class="high">withThrowingTaskGroup</span>, lo que permite:
+
+- Lanzar una tarea por cada elemento de la secuencia.  
+- Ejecutar todas las transformaciones en paralelo, respetando el modelo de concurrencia estructurada de Swift.  
+- Propagar automáticamente el primer error que se produzca, cancelando las tareas restantes.
+
+El uso de <span class="high">@Sendable</span> asegura que tanto los elementos como el resultado sean seguros en entornos concurrentes.  
+De esta manera, cualquier operación asíncrona puede beneficiarse de la **ejecución en paralelo** sin sacrificar la claridad del código.
+
+```swift
+extension Sequence where Element: Sendable {
+    func concurrentMap<T: Sendable>(
+        _ transform: @escaping @Sendable (Element) async throws -> T
+    ) async throws -> [T] {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            for element in self {
+                group.addTask {
+                    try await transform(element)
+                }
+            }
+            return try await group.reduce(into: []) { 
+                $0.append($1) 
+            }
+        }
+    }
+}
+```
+
+---
+
+## Resultado
+
+Con <span class="high">concurrentMap</span> se consigue una **ganancia de rendimiento significativa** en operaciones asíncronas que pueden ejecutarse en paralelo.  
+El patrón respeta las reglas de <span class="high">concurrencia estructurada</span> de Swift, evita *data races* y mantiene el mismo estilo declarativo que <span class="high">map</span>, por lo que su adopción en proyectos existentes es sencilla.
+
+Ejemplo de uso:
+
+```swift
+let urls: [URL] = [...]
+let contents = try await urls.concurrentMap {
+    try await fetchContent(from: $0)
+}
+```
+
+Este enfoque es ideal para peticiones HTTP en lotes, procesamiento de imágenes, lectura masiva de datos o cualquier escenario que requiera **máximo paralelismo seguro**.
+
+---

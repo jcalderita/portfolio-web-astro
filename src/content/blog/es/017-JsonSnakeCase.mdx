@@ -1,0 +1,87 @@
+---
+title: "Json Snake Case"
+slug: "json-snakecase-es"
+date: 2025-12-01
+author: "Jorge Calderita"
+description: "Conveniencias para codificar/decodificar JSON en snake_case sin boilerplate, válidas para cliente iOS y servidor Vapor."
+tags: ["Swift", "Vapor"]
+cover: "../images/JsonSnakeCase.png"
+publicCover: "JsonSnakeCase.webp"
+coverDescription: "Jorge trabajando en su portátil. En el bocadillo aparece un fragmento JSON con campos en snake-case y su valor en camel-case."
+publish: false
+---
+---
+## Problema
+
+Cuando integramos APIs REST, es muy común que las claves JSON vengan en <span class="high">snake_case</span> (por ejemplo, **first_name**) mientras que en Swift modelamos las propiedades en <span class="high">camelCase</span> (**firstName**).
+Si no configuramos nada, nos toca escribir <span class="high">CodingKeys</span> a mano en cada modelo o aceptar errores de decodificación.
+
+Buscamos una forma **centralizada** y **reutilizable** de:
+
+- Decodificar JSON sin <span class="high">CodingKeys</span> manuales.
+- Codificar nuestros modelos al enviar datos.
+- Mantener el mismo comportamiento tanto en apps iOS/macOS (URLSession) como en **Vapor** (req/res content).
+
+---
+## Solución
+
+Creamos extensiones de <span class="high">JSONDecoder</span> y <span class="high">JSONEncoder</span> que exponen constructores de conveniencia y atajos estáticos <span class="high">snakeCase</span>.
+Ventajas:
+
+- **Cero boilerplate** en los modelos: evita <span class="high">CodingKeys</span> repetitivas.
+- **Nombre autoexplicativo** al usarlas: <span class="high">JSONDecoder.snakeCase</span> / <span class="high">JSONEncoder.snakeCase</span>.
+- **Consistencia** en todo el proyecto (cliente y servidor).
+
+```swift
+extension JSONDecoder {
+    convenience init(keyDecodingStrategy: KeyDecodingStrategy) {
+        self.init()
+        self.keyDecodingStrategy = keyDecodingStrategy
+    }
+
+    static var snakeCase: JSONDecoder {
+        .init(keyDecodingStrategy: .convertFromSnakeCase)
+    }
+}
+
+extension JSONEncoder {
+    convenience init(keyEncodingStrategy: KeyEncodingStrategy) {
+        self.init()
+        self.keyEncodingStrategy = keyEncodingStrategy
+    }
+
+    static var snakeCase: JSONEncoder {
+        .init(keyEncodingStrategy: .convertToSnakeCase)
+    }
+}
+```
+
+> Nota: si un modelo necesita un nombre de clave específico, puedes seguir usando <span class="high">CodingKeys</span> localmente; la estrategia <span class="high">snake_case</span> actuará como valor por defecto.
+
+---
+## Resultado
+
+**Ejemplos de uso**
+
+```swift
+// iOS / macOS: leer datos
+let data: Data = ...
+let user = try JSONDecoder.snakeCase.decode(UserDTO.self, from: data)
+
+// iOS / macOS: enviar datos
+let body = CreateUserDTO(firstName: "Ada", lastName: "Lovelace")
+request.httpBody = try JSONEncoder.snakeCase.encode(body)
+
+// Vapor
+let input = try req.content.decode(CreateUserDTO.self, using: JSONDecoder.snakeCase)
+```
+
+Con estos atajos obtenemos:
+
+- **Menos errores** y mayor **legibilidad**: las propiedades permanecen en camelCase idiomático Swift.
+- **Interoperabilidad** inmediata con APIs legacy en snake_case.
+- **Configuración única** y reutilizable en todo el proyecto (tests incluidos).
+
+Esto estandariza cómo serializamos/parseamos JSON sin sacrificar claridad ni control fino cuando hace falta.
+
+---
