@@ -41,14 +41,16 @@ const contentTitle = language === "es" ? "Tabla de contenidos" : "Table of conte
 <h2 class="postTitle">{contentTitle}</h2>
 <ol class="postIndex">
     {
-        headings.map((heading, index) => (
-            <li>
-                <button type="button" class="postIndexButton" onclick={`document.getElementById('${heading.slug}')?.scrollIntoView({ behavior: 'smooth', block: 'start' })`}>
-                    <span class="postIndexNumber">{index + 1}</span>
-                    {heading.text}
-                </button>
-            </li>
-        ))
+        headings
+            .filter((heading) => heading.depth === 2)
+            .map((heading, index) => (
+                <li>
+                    <button type="button" class="postIndexButton" onclick={`document.getElementById('${heading.slug}')?.scrollIntoView({ behavior: 'smooth', block: 'start' })`}>
+                        <span class="postIndexNumber">{index + 1}</span>
+                        {heading.text}
+                    </button>
+                </li>
+            ))
     }
 </ol>
 <article class="prose prose-neutral dark:prose-invert max-w-none">
