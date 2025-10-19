@@ -1,0 +1,69 @@
+---
+title: "Async Map"
+slug: "async-map-en"
+date: 2025-10-20
+author: "Jorge Calderita"
+description: "Converting map into async map"
+tags: ["Swift", "Vapor"]
+cover: "../images/AsyncMap.png"
+publicCover: "AsyncMap.webp"
+coverDescription: "Several Jorges running on the same line one after another."
+publish: true
+---
+---
+
+## Problem
+
+When processing collections with asynchronous transformations, the standard <span class="high">map</span> method falls short because its closures cannot be <span class="high">async</span>.
+A naive solution would be to use a <span class="high">for</span> loop with <span class="high">await</span>, but this sacrifices readability and consistent error handling.
+The goal is to have a **sequential** <span class="high">map</span> that accepts <span class="high">async throws</span> functions, preserves element order, and simplifies the workflow.
+
+---
+
+## Solution
+
+We create an extension on <span class="high">Sequence</span> that adds <span class="high">asyncMap</span>.
+Its execution is **sequential** within the same task, which allows us to:
+
+- Maintain deterministic ordering of results.
+- Limit resource consumption by executing only one operation at a time.
+- Uniformly propagate the first error that occurs, stopping the process.
+
+```swift
+extension Sequence {
+    @inlinable
+    func asyncMap<T>(
+        _ transform: @escaping @Sendable (Element) async throws -> T
+    ) async throws -> [T] {
+        var results: [T] = []
+        results.reserveCapacity(underestimatedCount)
+        for element in self {
+            let value = try await transform(element)
+            results.append(value)
+        }
+        return results
+    }
+}
+```
+
+---
+
+## Result
+
+With <span class="high">asyncMap</span>, we achieve a clear and safe workflow for asynchronous transformations **without parallelism**.
+It's especially useful when:
+
+- We need guaranteed ordering.
+- We must limit resource consumption (one task in flight).
+- There's dependency between operations.
+
+Usage example:
+
+```swift
+let urls: [URL] = [...]
+let contents = try await urls.asyncMap {
+    try await fetchContent(from: $0)
+}
+```
+
+---
