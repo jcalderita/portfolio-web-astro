@@ -106,3 +106,13 @@ La migración a <span class="high">Subprocess</span> transforma el código de ge
 La nueva implementación no solo reduce la complejidad sino que también **mejora la robustez** del sistema al proporcionar mejor visibilidad de errores y un manejo más elegante de la ejecución asíncrona en aplicaciones <span class="high">Vapor</span>.
 
 ---
+
+## Nota sobre DYLD_LIBRARY_PATH
+
+En versiones anteriores de <span class="high">Swift</span>, existía un problema conocido con la variable de entorno <span class="high">DYLD_LIBRARY_PATH</span> al ejecutar procesos externos. Debido a las restricciones de **System Integrity Protection (SIP)** de macOS, esta variable era eliminada automáticamente al lanzar subprocesos, lo que causaba errores de "Library not loaded" en ciertos casos.
+
+La solución temporal requería configurar manualmente las rutas de las librerías usando <span class="high">install_name_tool</span> con <span class="high">@rpath</span>, o bien establecer la variable <span class="high">DYLD_LIBRARY_PATH</span> en su lugar.
+
+**¡Buenas noticias!** 🎉 Este problema ha sido resuelto en las versiones más recientes de <span class="high">Swift</span>. La librería <span class="high">Subprocess</span> maneja correctamente las variables de entorno del sistema, incluida <span class="high">DYLD_LIBRARY_PATH</span>, sin necesidad de configuraciones adicionales.
+
+---

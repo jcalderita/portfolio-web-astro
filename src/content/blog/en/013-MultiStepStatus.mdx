@@ -1,0 +1,88 @@
+---
+title: "Multi-Step Process"
+slug: "multi-step-en"
+date: 2025-11-12
+author: "Jorge Calderita"
+description: "A Swift pattern for orchestrating complex multi-step processes with state control and fault recovery."
+tags: ["Swift", "Vapor"]
+cover: "../images/MultiStep.png"
+publicCover: "MultiStep.webp"
+coverDescription: "Jorge reviewing a control panel to see which stages have been resolved."
+publish: true
+---
+---
+## Problem
+
+In distributed systems and backend processes, it's common for a complex operation to require executing **multiple sequential steps** with dependencies between them: file creation, upload, response generation, validation, cleanup, etc.
+Controlling this state flow is critical to:
+
+- Ensure each step executes in the **correct order**.
+- Allow for **recovery** in case of error or system restart.
+- Maintain **data consistency** even if the process is interrupted.
+
+Without a clear strategy, the code can become fragile, difficult to scale, and prone to errors.
+
+---
+
+## Solution
+
+A **stage-based state management** function is implemented to control the advancement of a <span class="high">ProcessModel</span> through its lifecycle.
+The idea is to **encapsulate the state transition logic** in a single function that evaluates the current state and executes the corresponding action, until the process reaches its final state.
+
+The pattern relies on a <span class="high">repeat-while</span> loop that re-evaluates the state after each operation, ensuring transitions occur in a **deterministic** and **resilient** manner.
+
+```swift
+func checkProcess(
+    _ process: ProcessModel
+) async throws {
+    var process = process
+    var status = process.status
+
+    repeat {
+        status = process.status
+        process = try await checkStatus(process)
+    } while status != process.status
+}
+
+func checkStatus(
+    _ process: ProcessModel
+) async throws -> ProcessModel {
+    switch process.status {
+        case .filesCreated:
+            try await _uploadFiles(process)
+        case .filesUploaded:
+            try await _createResponses(process)
+        case .responsesCreated, .responsesReasoning:
+            try await _checkResponses(process)
+        case .responsesCompleted:
+            try await _deleteFiles(process)
+        case .filesDeleted:
+            try await _deleteResponses(process)
+        case .responsesDeleted:
+            try await _finishResponses(process)
+        case .responsesFinished:
+            try await _deleteProcess(process)
+        default: process
+    }
+}
+```
+
+**Implementation key points:**
+
+- **State centralization**: a single control point defines all transitions.
+- **Continuous re-evaluation**: the <span class="high">repeat-while</span> loop allows automatic advancement as long as there are state changes.
+- **Operation isolation**: each <span class="high">switch</span> case delegates to specialized functions (<span class="high">_uploadFiles</span>, <span class="high">_createResponses</span>, etc.), keeping the code clean and testable.
+
+---
+
+## Result
+
+This **multi-stage process management** pattern provides:
+
+- **Resilience**: each transition is atomic and can be retried if a failure occurs.
+- **Scalability**: adding new steps only requires adding a new case to the <span class="high">switch</span>.
+- **Clarity**: the complete process flow is understood with a single read.
+
+Application example: data processing pipelines, content publishing workflows, or any long-running process that requires **precise control of each stage** without compromising data integrity.
+
+---
