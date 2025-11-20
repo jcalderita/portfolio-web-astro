@@ -1,0 +1,59 @@
+---
+title: "Async Task List"
+slug: "task-list-en"
+date: 2025-11-20
+author: "Jorge Calderita"
+description: "Implementation of a robust system for managing asynchronous task lists with database state persistence using Swift and Vapor."
+tags: ["Swift", "Vapor"]
+cover: "../images/TaskList.png"
+publicCover: "TaskList.webp"
+coverDescription: "Jorge participating in different Decathlon trials and checking off the completed ones."
+publish: true
+---
+---
+## Problem
+
+In distributed systems with microservices, complex processes can create control and reliability challenges. One solution is to **divide** them into **atomic** tasks, enabling more granular **flow** control, improved **observability**, ensured **idempotency**, and easier **recovery** from failures.
+
+The challenge is to design a pattern that allows for **controlled degradation**, so that a single task failure doesn't affect the entire flow, guaranteeing **resilience** and **fault tolerance** in production environments.
+
+---
+## Solution
+
+Create a <span class="high">task executor</span> that orchestrates asynchronous tasks.
+The <span class="high">execute</span> function wraps each task, manages errors with <span class="high">do-catch</span> as a <span class="high">circuit breaker</span>, updates state on **success**, logs and persists failures, and ensures an **atomic transaction** to maintain data consistency.
+
+```swift
+func execute(
+    status: StatusEnum,
+    process: ProcessModel,
+    _ work: () async throws -> ProcessModel
+) async throws {
+    do {
+        let job = try await work()
+        process.setStatus(job.status)
+    } catch {
+        process.setError(type: status, message: "\(error)")
+    }
+    try await repo.updateProcess(process)
+}
+```
+
+---
+## Result
+
+This implementation provides a **high-level abstraction** that enables **precise orchestration** of complex asynchronous processes with **atomicity** and **durability** guarantees.
+
+🎯 **Separation of Concerns:** each task isolates its execution context and error handling.  
+🔄 **Workflow Orchestration:** enables task chaining through the pipeline pattern.  
+📊 **Observability:** generates a complete audit trail for debugging and monitoring.  
+⚡ **Performance:** maintains high concurrency without compromising data consistency.  
+🛡️ **Resilience:** incorporates automatic fail-fast and recovery patterns.
+
+```swift
+try await execute(status: .loadImages, process: process) {
+    // Your implementation
+}
+```
+
+---

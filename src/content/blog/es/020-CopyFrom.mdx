@@ -1,12 +1,12 @@
 ---
-title: "Bulk Insert"
-slug: "bulk-insert-es"
+title: "Copy From"
+slug: "copy-from-es"
 date: 2025-12-31
 author: "Jorge Calderita"
 description: "Como hacer bulk insert con Vapor para acelerar tus inserciones de datos a base de datos."
 tags: ["Swift", "Vapor"]
-cover: "../images/BulkInsert.png"
-publicCover: "BulkInsert.webp"
+cover: "../images/CopyFrom.png"
+publicCover: "CopyFrom.webp"
 coverDescription: "Jorge metiendo en un armario un montón de zapatillas a la vez."
 publish: false
 ---
@@ -37,14 +37,15 @@ extension Database {
         let query = SQLQueryString(
             """
             COPY \"\(unsafeRaw: model.space ?? "public")\".
-                 \"\(unsafeRaw: model.schema)\"
+            \"\(unsafeRaw: model.schema)\"
             FROM '\(unsafeRaw: file.rawValue)'
             WITH (FORMAT csv, HEADER true, DELIMITER ',',
-                  QUOTE '"', ESCAPE '"', NULL '')
+            QUOTE '"', ESCAPE '"', NULL '')
             """
         )
 
-        try await self.sqlDatabase.raw(query).run()
+        try await self.sqlDatabase
+            .raw(query).run()
     }
 }
 ```
@@ -60,8 +61,6 @@ Puntos clave:
 
 ## Resultado
 
-Ejemplo de uso en una migración o endpoint de importación:
-
 ```swift
 private func importRegions() async throws {
     try await db.importCSV(
@@ -73,11 +72,11 @@ private func importRegions() async throws {
 
 Beneficios de esta aproximación:
 
-- 🚀 **Performance extremo**: <span class="high">COPY</span> es hasta **10-100x más rápido** que inserts individuales.
-- 📦 **Transacción atómica**: toda la importación ocurre en una sola operación, garantizando consistencia.
-- 💾 **Eficiencia de recursos**: minimiza el uso de memoria y conexiones de base de datos.
-- 🔧 **Integración nativa**: aprovecha capacidades optimizadas del motor <span class="high">PostgreSQL</span>.
-- 📊 **Escalabilidad**: permite importar millones de registros sin degradación significativa.
+🚀 **Performance extremo**: <span class="high">COPY</span> es hasta **10-100x más rápido** que inserts individuales.  
+📦 **Transacción atómica**: toda la importación ocurre en una sola operación, garantizando consistencia.  
+💾 **Eficiencia de recursos**: minimiza el uso de memoria y conexiones de base de datos.  
+🔧 **Integración nativa**: aprovecha capacidades optimizadas del motor <span class="high">PostgreSQL</span>.  
+📊 **Escalabilidad**: permite importar millones de registros sin degradación significativa.
 
 ---
 

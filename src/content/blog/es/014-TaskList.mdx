@@ -1,14 +1,14 @@
 ---
 title: "Async Task List"
 slug: "task-list-es"
-date: 2025-11-19
+date: 2025-11-20
 author: "Jorge Calderita"
 description: "Implementación de un sistema robusto para la gestión de listas de tareas asíncronas con persistencia de estado en base de datos utilizando Swift y Vapor."
 tags: ["Swift", "Vapor"]
 cover: "../images/TaskList.png"
 publicCover: "TaskList.webp"
 coverDescription: "Jorge participando en las distintas pruebas de una Decatlón y checkeando las realizadas."
-publish: false
+publish: true
 ---
 ---
 ## Problema
@@ -21,7 +21,7 @@ El reto es diseñar un patrón que permita una **degradación controlada**, de m
 ## Solución
 
 Crear un <span class="high">task executor</span> que orquesta tareas asíncronas.  
-La función <span class="high">execute</span> envuelve cada tarea, gestiona errores con <span class="high">do-catch</span> como <span class="high">circuit breaker</span>, actualiza el estado en caso de** éxito**, registra y persiste los fallos, y asegura una **transacción atómica** para mantener la consistencia de datos.
+La función <span class="high">execute</span> envuelve cada tarea, gestiona errores con <span class="high">do-catch</span> como <span class="high">circuit breaker</span>, actualiza el estado en caso de **éxito**, registra y persiste los fallos, y asegura una **transacción atómica** para mantener la consistencia de datos.
 
 ```swift
 func execute(
