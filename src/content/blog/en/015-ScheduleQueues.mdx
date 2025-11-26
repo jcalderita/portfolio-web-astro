@@ -1,0 +1,70 @@
+---
+title: "Schedule Queues"
+slug: "schedule-queues-en"
+date: 2025-11-26
+author: "Jorge Calderita"
+description: "Schedule the same ScheduledJob multiple times per hour with an expressive API: every N minutes, without repeating configuration or cron strings."
+tags: ["Swift", "Vapor"]
+cover: "../images/ScheduleQueues.png"
+publicCover: "ScheduleQueues.webp"
+coverDescription: "Clock with several indicators lighting up in green every N minutes (multiple triggers within an hour)."
+publish: true
+---
+---
+## Problem
+
+When using <span class="high">Vapor Queues</span> to schedule jobs, the typical API is:
+
+```swift
+app.queues
+    .schedule(MyJob()).hourly().at(0)
+```
+
+This schedules once per hour. If we want to run it **every N minutes** (e.g., every 5, 10, or 15), we have to manually register multiple <span class="high">.at(...)</span> calls, which results in **repetitive code**, prone to errors (duplicated/forgotten minutes), and difficult to read.
+
+---
+## Solution
+
+We extract a helper over <span class="high">Application.Queues</span> that registers the same <span class="high">ScheduledJob</span> **multiple times within the hour** using a <span class="high">stride</span> with step <span class="high">minutes</span>. This way, with a single call we express: *"run it every N minutes"*.
+
+```swift
+extension Application.Queues {
+    func scheduleEvery(
+        _ job: ScheduledJob,
+        minutes: Int
+    ) {
+        for minuteOffset in stride(
+            from: 0,
+            to: 60,
+            by: minutes
+        ) {
+            schedule(job).hourly()
+                .at(.init(integerLiteral: minuteOffset))
+        }
+    }
+}
+```
+
+Key points:
+- Uses <span class="high">stride(from: 0, to: 60, by: minutes)</span> to generate minute offsets within the hour.
+- For each offset it registers <span class="high">hourly().at(...)</span>, avoiding logic duplication.
+- If <span class="high">minutes</span> **doesn't divide 60**, the last execution will be the largest multiple < 60 (e.g., <span class="high">minutes = 7</span> ⇒ 0, 7, 14, …, 56).
+
+---
+## Result
+
+Usage example:
+
+```swift
+func configure(_ app: Application) throws {
+    app.queues.scheduleEvery(MyJob(), minutes: 5)
+}
+```
+
+A **concise and self-expressive** API for short periodic tasks:
+
+- **Less boilerplate**: a single call registers all triggers.
+- **Fewer errors**: no manual lists of <span class="high">.at(...)</span> or duplicated minutes.
+- **Readable and testable**: the pattern is evident and easy to verify.
+
+---
