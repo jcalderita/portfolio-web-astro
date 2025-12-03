@@ -1,0 +1,53 @@
+---
+title: "Array to dictionary"
+slug: "array-dictionary-en"
+date: 2025-12-03
+author: "Jorge Calderita"
+description: "Convert an Array of Identifiable elements (with optional ID of type UUID?) into a [UUID: Element] dictionary, ignoring null IDs and maintaining O(1) access."
+tags: ["Swift", "Vapor"]
+cover: "../images/ToDictionary.png"
+publicCover: "ToDictionary.webp"
+coverDescription: "Jorge supervises a sorting machine. A conveyor belt moves boxes: those without an ID fall into a discard bin, while boxes with UUID labels continue and are placed on a shelf."
+publish: true
+---
+---
+## Problem
+
+When working with lists of models (e.g., results, events, or users), we often need <span class="high">O(1)</span> access by identifier for lookups, merges, or deduplication.
+
+However, in many domains the **id** may be optional (<span class="high">UUID?</span>) until the backend assigns it. If we build a dictionary directly, two frictions arise:
+
+- We need to **filter out elements without ID** to avoid invalid entries.
+- We must **guarantee uniqueness** of keys or the <span class="high">Dictionary(uniqueKeysWithValues:)</span> constructor will fail at runtime if there are duplicates.
+
+---
+## Solution
+
+We extend <span class="high">Array</span> (when its elements are <span class="high">Identifiable</span> with <span class="high">ID == UUID?</span>) to expose <span class="high">toDictionary()</span>.
+The function uses <span class="high">compactMap</span> to **discard elements without ID** and builds the dictionary with <span class="high">Dictionary(uniqueKeysWithValues:)</span>.
+
+**Precondition**: existing IDs must be **unique** within the collection. If you expect collisions, consider a variant with <span class="high">Dictionary(_, uniquingKeysWith:)</span> to resolve duplicates.
+
+```swift
+extension Array where Element: Identifiable, Element.ID == UUID? {
+    func toDictionary() -> [UUID: Element] {
+        Dictionary(uniqueKeysWithValues: self.compactMap {
+            guard let id = $0.id else { return nil }
+            return (id, $0) }
+        )
+    }
+}
+```
+
+Notes:
+- Elements with <span class="high">id == nil</span> are **not** included.
+- Key-based access is <span class="high">O(1)</span> and simplifies in-memory merges/joins.
+---
+## Result
+
+A small, clear helper to convert from an array to a map by ID:
+
+- **Faster to query** <span class="high">O(1)</span>.
+- **Safer**: avoids inserting elements without identifier.
+- **More expressive** and reusable in services and view models.
+---
