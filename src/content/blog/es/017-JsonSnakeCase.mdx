@@ -1,14 +1,14 @@
 ---
 title: "Json Snake Case"
 slug: "json-snakecase-es"
-date: 2025-12-10
+date: 2025-12-11
 author: "Jorge Calderita"
 description: "Conveniencias para codificar/decodificar JSON en snake_case sin boilerplate, válidas para cliente iOS y servidor Vapor."
 tags: ["Swift", "Vapor"]
 cover: "../images/JsonSnakeCase.png"
 publicCover: "JsonSnakeCase.webp"
 coverDescription: "Jorge trabajando en su portátil. En el bocadillo aparece un fragmento JSON con campos en snake-case y su valor en camel-case."
-publish: false
+publish: true
 ---
 ---
 ## Problema
@@ -66,14 +66,16 @@ extension JSONEncoder {
 ```swift
 // iOS / macOS: leer datos
 let data: Data = ...
-let user = try JSONDecoder.snakeCase.decode(UserDTO.self, from: data)
+let user = try JSONDecoder.snakeCase
+    .decode(UserDTO.self, from: data)
 
 // iOS / macOS: enviar datos
 let body = CreateUserDTO(firstName: "Ada", lastName: "Lovelace")
 request.httpBody = try JSONEncoder.snakeCase.encode(body)
 
 // Vapor
-let input = try req.content.decode(CreateUserDTO.self, using: JSONDecoder.snakeCase)
+let input = try req.content
+    .decode(CreateUserDTO.self, using: JSONDecoder.snakeCase)
 ```
 
 Con estos atajos obtenemos:
