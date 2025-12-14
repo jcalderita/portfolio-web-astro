@@ -29,3 +29,8 @@ CLAUDE.md
 
 # Social media posts
 post/
+
+# Syncthing
+.stignore
+.stfolder
+
