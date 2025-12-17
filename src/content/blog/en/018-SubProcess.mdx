@@ -1,0 +1,118 @@
+---
+title: "Subprocess"
+slug: "sub-process-en"
+date: 2025-12-17
+author: "Jorge Calderita"
+description: "Migrating from Process to Subprocess, the new cross-platform package for launching processes in Swift."
+tags: ["Swift", "Vapor"]
+cover: "../images/Subprocess.png"
+publicCover: "Subprocess.webp"
+coverDescription: ""
+publish: true
+---
+---
+## Problem
+
+When working with external processes in <span class="high">Swift</span> applications, the traditional <span class="high">Process</span> class presents several significant limitations:
+
+- **Manual resource management**: Requires explicit configuration of executable URLs, arguments, and output handling
+- **Lack of async/await support**: Uses synchronous methods that block the execution thread
+- **Complex error handling**: Makes it difficult to capture and process errors from child processes
+- **Verbose configuration**: Each execution requires multiple lines of repetitive configuration
+
+In the previous code, I needed to execute <span class="high">Ghostscript</span> to convert PDF files to PNG images, but the implementation with <span class="high">Process</span> was extensive and inelegant.
+
+```swift
+func _PDFToImages(
+    _ fileName: PathEnum
+) async throws {
+    let process = Process()
+
+    process.executableURL = URL(
+        fileURLWithPath: "/opt/homebrew/bin/gs"
+    )
+
+    process.arguments = [
+        "-dNOPAUSE", "-dBATCH",
+        "-dQUIET", "-sDEVICE=png16m",
+        "-r300",
+        "-sOutputFile=\(fileName.rawValue)-%d.png",
+        fileName.rawValue.appending(".pdf"),
+    ]
+
+    try process.run()
+    process.waitUntilExit()
+}
+```
+
+---
+
+## Solution
+
+Apple's new <span class="high">Subprocess</span> library provides a modern and robust API for process execution in <span class="high">Swift</span>. This **cross-platform** library offers native support for <span class="high">async/await</span> and automatic resource management.
+
+**Key features:**  
+✅ **Native async/await API** for non-blocking operations.  
+✅ **Automatic resource management** and process cleanup.  
+✅ **Granular output control** (stdout, stderr).  
+✅ **Integrated termination status verification.**  
+✅ **Concise and expressive syntax.**
+
+The modernized implementation uses the <span class="high">run</span> function from <span class="high">Subprocess</span>:
+
+```swift
+func _PDFToImages(
+    _ fileName: PathEnum
+) async throws {
+    let result = try await run(
+        .path(.init("/opt/homebrew/bin/gs")),
+        arguments: [
+            "-dNOPAUSE", "-dBATCH",
+            "-dQUIET", "-sDEVICE=png16m",
+            "-r300",
+            "-sOutputFile=\(fileName.rawValue)-%d.png",
+            fileName.rawValue.appending(".pdf"),
+        ],
+        output: .discarded,
+        error: .string(limit: .max)
+    )
+
+    try guardAndLogError(
+        result.terminationStatus == .exited(0),
+        message: result.standardError,
+        status: .internalServerError
+    )
+}
+```
+
+**Key parameters:**
+- <span class="high">.path</span>: Specifies the executable directly
+- <span class="high">output: .discarded</span>: Discards standard output since we don't need to process it
+- <span class="high">error: .string(limit: .max)</span>: Captures errors as a string for logging
+- <span class="high">result.terminationStatus</span>: Verifies that the process terminated successfully
+
+---
+
+## Result
+
+The migration to <span class="high">Subprocess</span> transforms process management code into a **cleaner, safer, and more efficient** solution:
+
+**Benefits achieved:**  
+🚀 **Improved performance** with true asynchronous operations.  
+🔒 **Better error handling** with integrated stderr capture.  
+📝 **More readable code** with less manual configuration.  
+⚡ **Seamless integration** with the modern Swift concurrency ecosystem.  
+
+The new implementation not only reduces complexity but also **improves system robustness** by providing better error visibility and more elegant asynchronous execution handling in <span class="high">Vapor</span> applications.
+
+---
+
+## Note on DYLD_LIBRARY_PATH
+
+In earlier versions of <span class="high">Swift</span>, there was a known issue with the <span class="high">DYLD_LIBRARY_PATH</span> environment variable when executing external processes. Due to macOS's **System Integrity Protection (SIP)** restrictions, this variable was automatically removed when launching subprocesses, causing "Library not loaded" errors in certain cases.
+
+The temporary solution required manually configuring library paths using <span class="high">install_name_tool</span> with <span class="high">@rpath</span>, or alternatively setting the <span class="high">DYLD_LIBRARY_PATH</span> variable instead.
+
+**Good news!** 🎉 This issue has been resolved in recent versions of <span class="high">Swift</span>. The <span class="high">Subprocess</span> library correctly handles system environment variables, including <span class="high">DYLD_LIBRARY_PATH</span>, without requiring additional configuration.
+
+---
