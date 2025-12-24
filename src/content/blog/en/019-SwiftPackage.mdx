@@ -1,0 +1,219 @@
+---
+title: "Swift Package"
+slug: "swift-package-en"
+date: 2025-12-24
+author: "Jorge Calderita"
+description: "Complete guide to Swift Package Manager cleanup commands: clean, reset, purge-cache, and when to use each one to resolve dependency issues."
+tags: ["Swift", "Vapor"]
+cover: "../images/SwiftPackage.png"
+publicCover: "SwiftPackage.webp"
+coverDescription: "Jorge in front of his Mac, surrounded by boxes labeled clean, reset and purge, next to a retro machine with a large rm button, symbolizing the chaos of cleaning dependencies in Swift Package Manager."
+publish: true
+---
+---
+## The broken dependencies dilemma
+
+When working with **Swift Package Manager (SPM)**, you'll eventually encounter a compilation error that makes no sense. You've tried building multiple times, restarted Xcode, but the error persists. The solution often lies in **properly cleaning SPM caches and artifacts**, but which command should you use?
+
+There are multiple ways to "clean" in SPM, each with a specific purpose. Using the wrong command may not solve your problem or, worse yet, force you to download gigabytes of dependencies again.
+
+---
+
+## The four paths to clean
+
+SPM offers three official commands plus a manual alternative. Each affects different parts of the system:
+
+| Command | Deletes local .build | Deletes Package.resolved | Deletes global cache |
+|---------|---------------------|-------------------------|---------------------|
+| <span class="high">swift package clean</span> | ❌ (only compiled binaries) | ❌ | ❌ |
+| <span class="high">swift package reset</span> | ✅ (complete) | ✅ | ❌ |
+| <span class="high">swift package purge-cache</span> | ❌ | ❌ | ✅ |
+| <span class="high">rm -rf .build</span> | ✅ (complete) | ❌ | ❌ |
+
+### Swift package clean
+
+```bash
+swift package clean
+```
+
+**What it does:**
+Removes only the **final compiled binaries** inside the <span class="high">.build</span> folder, but **keeps downloaded dependencies and intermediate files**.
+
+**When to use it:**
+- After changing build configurations
+- To force a complete rebuild without re-downloading dependencies
+- When binaries are corrupted but sources are fine
+
+> 💡 Does not download dependencies again nor resolve package cache issues.
+
+### Swift package reset
+
+```bash
+swift package reset
+```
+
+**What it does:**
+**Completely** removes the <span class="high">.build</span> folder (including downloaded dependencies) and the <span class="high">Package.resolved</span> file.
+
+**When to use it:**
+- When there are conflicts in dependency versions
+- After significant changes to <span class="high">Package.swift</span>
+- To resolve "dependency not found" errors
+- When <span class="high">Package.resolved</span> is outdated or corrupted
+
+> ⚠️ The next build will download and resolve all dependencies from scratch. This can take several minutes depending on the number of packages.
+
+### Swift package purge-cache
+
+```bash
+swift package purge-cache
+```
+
+💡 Available from Swift 5.7 onwards.
+
+**What it does:**
+Removes the **global package cache** located at:
+```
+~/Library/Caches/org.swift.swiftpm/
+```
+
+This cache contains cloned repositories and binary artifacts shared across all your projects.
+
+**When to use it:**
+- When multiple projects have the same issue
+- After updating Xcode or Swift tooling
+- To free up disk space (can take up several GB)
+- When you suspect the global cache is corrupted
+
+> ⚠️ All your projects will need to re-download common dependencies.
+
+### rm -rf .build
+
+```bash
+rm -rf .build
+```
+
+**What it does:**
+Manually deletes the complete <span class="high">.build</span> folder, similar to <span class="high">reset</span> but **without touching** <span class="high">Package.resolved</span>. It's less aggressive than reset because it doesn't re-resolve dependencies.
+
+**When to use it:**
+- To clean build artifacts while maintaining version resolution
+- In CI/CD scripts where you want full control
+- When <span class="high">swift package reset</span> is not available
+
+> 💡 Preserves <span class="high">Package.resolved</span>, which means dependency versions won't be re-resolved.
+
+---
+
+## Troubleshooting strategy
+
+**Level 1: Light cleanup**
+```bash
+swift package clean
+```
+> 💡 Try the least invasive first. Solves 30% of issues.
+
+**Level 2: Complete project reset**
+```bash
+swift package reset
+```
+> 💡 If level 1 fails. Solves 60% of remaining issues.
+
+**Level 3: Purge global cache**
+```bash
+swift package purge-cache
+swift package reset
+```
+> 💡 For persistent issues or those affecting multiple projects.
+
+**Level 4: Nuclear**
+```bash
+rm -rf .build
+rm Package.resolved
+swift package purge-cache
+```
+> 💡 Last resort. Complete fresh start.
+
+---
+
+## Real-world use cases
+
+### Scenario 1: Error after updating Xcode
+```bash
+swift package purge-cache
+swift package reset
+```
+
+> 💡 Build tools changed and the cache may have incompatible artifacts.
+
+### Scenario 2: Dependency version conflicts
+```bash
+swift package reset
+```
+
+> 💡 You need to re-resolve all dependencies with the new constraints.
+
+### Scenario 3: Disk space full
+```bash
+swift package purge-cache
+```
+
+> 💡 The global cache can grow to several GB without you noticing.
+
+### Scenario 4: CI/CD builds
+```bash
+rm -rf .build
+```
+
+> 💡 In continuous integration environments, you want clean but reproducible builds with versioned `Package.resolved`.
+
+---
+
+## Understanding the components
+
+### .build (local)
+- Current project's build artifacts
+- Project-specific downloaded dependencies
+- Intermediate build files
+
+### Package.resolved
+- "Lockfile" that pins exact dependency versions
+- Guarantees reproducible builds
+- Should be versioned in Git for shared projects
+
+### Global cache
+- Shared across all your Swift projects
+- Contains clones of dependency repositories
+- Pre-compiled binary artifacts
+- Can reach several GB over time
+
+---
+
+## Best practices
+
+✅ **Version** <span class="high">Package.resolved</span> in Git to ensure the whole team uses the same versions
+
+✅ **Use** <span class="high">reset</span> **after changes to Package.swift** to ensure clean resolution
+
+✅ **Purge the cache periodically** if you work with many projects
+
+✅ **In CI/CD, keep** <span class="high">Package.resolved</span> but delete <span class="high">.build</span> for clean builds
+
+❌ **Don't ignore** <span class="high">.build</span> **in .gitignore** - it's already ignored by default
+
+❌ **Don't delete** <span class="high">Package.resolved</span> unless you really need to re-resolve versions
+
+---
+
+## Conclusion
+
+Understanding the difference between these commands saves you time and frustration. Not all build issues need a nuclear cleanup:
+
+- <span class="high">clean</span> → Only compiled binaries
+- <span class="high">reset</span> → Complete project + Package.resolved
+- <span class="high">purge-cache</span> → Shared global cache
+- <span class="high">rm -rf</span> → Surgical manual control
+
+The next time SPM shows you a strange error, you'll know exactly which tool to use.
+
+---
