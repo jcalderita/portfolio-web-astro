@@ -1,0 +1,89 @@
+---
+title: "Copy From"
+slug: "copy-from-en"
+date: 2025-12-31
+author: "Jorge Calderita"
+description: "How to perform bulk inserts with Vapor to speed up your database data insertions."
+tags: ["Swift", "Vapor"]
+cover: "../images/CopyFrom.png"
+publicCover: "CopyFrom.webp"
+coverDescription: "Jorge putting a bunch of sneakers into a closet all at once."
+publish: true
+---
+---
+## Problem
+
+In backend applications with <span class="high">Vapor</span>, when we need to insert **large volumes of data** into the database (initial migrations, catalog imports, bulk loading from external APIs), using <span class="high">.save()</span> in a loop generates **multiple individual transactions**.
+
+This results in:
+- **High latency**: each insert opens/closes connection and transaction overhead.
+- **Poor throughput**: doesn't leverage the database engine's bulk insertion capabilities.
+- **Timeout risk**: slow operations that may fail in environments with time constraints.
+
+For mass import scenarios (thousands or millions of records), we need a **bulk insert** strategy that leverages native <span class="high">PostgreSQL</span> capabilities.
+
+---
+
+## Solution
+
+We extend <span class="high">Database</span> with a function that executes <span class="high">PostgreSQL's</span> <span class="high">COPY</span> command, allowing us to import <span class="high">CSV</span> files directly from the file system into the table schema.
+
+```swift
+extension Database {
+    func importCSV(
+        _ model: any Model.Type,
+        file: PathEnum
+        ) async throws {
+        let query = SQLQueryString(
+            """
+            COPY \"\(unsafeRaw: model.space ?? "public")\".
+            \"\(unsafeRaw: model.schema)\"
+            FROM '\(unsafeRaw: file.rawValue)'
+            WITH (FORMAT csv, HEADER true, DELIMITER ',',
+            QUOTE '"', ESCAPE '"', NULL '')
+            """
+        )
+
+        try await self.sqlDatabase
+            .raw(query).run()
+    }
+}
+```
+
+Key points:
+- Uses <span class="high">PostgreSQL's</span> <span class="high">COPY</span>, the fastest method for bulk insert from files.
+- The <span class="high">model.space</span> parameter supports custom schemas (defaults to <span class="high">"public"</span>).
+- <span class="high">model.schema</span> automatically gets the table name from the <span class="high">Fluent</span> model.
+- Standard <span class="high">CSV</span> configuration: headers, delimiters, and null value handling.
+- Uses <span class="high">unsafeRaw</span> for direct interpolation in the SQL query.
+
+---
+
+## Result
+
+```swift
+private func importRegions() async throws {
+    try await db.importCSV(
+        RegionModel.self,
+        file: .LocationFile("regions", .csv)
+    )
+}
+```
+
+Benefits of this approach:
+
+🚀 **Extreme performance**: <span class="high">COPY</span> is up to **10-100x faster** than individual inserts.  
+📦 **Atomic transaction**: the entire import happens in a single operation, guaranteeing consistency.  
+💾 **Resource efficiency**: minimizes memory usage and database connections.  
+🔧 **Native integration**: leverages optimized <span class="high">PostgreSQL</span> engine capabilities.  
+📊 **Scalability**: allows importing millions of records without significant degradation.
+
+---
+
+## Notes
+
+This implementation uses <span class="high">COPY ... FROM</span> with file system files. There is currently an **open issue in Vapor** to implement native support for <span class="high">COPY ... FROM STDIN</span>, which would allow performing bulk inserts directly from memory without intermediate files.
+
+I'm actively monitoring this issue to integrate this functionality when available, which will provide an even more flexible and efficient API for mass import operations.
+
+---
