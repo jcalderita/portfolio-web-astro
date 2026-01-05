@@ -73,10 +73,10 @@ let results = try await records.asyncConcurrentMap(
 
 Beneficios de esta aproximación:
 
-⚡ **Balance perfecto**: combina la velocidad del procesamiento concurrente con el control del procesamiento secuencial por chunks.
-🎯 **Control de recursos**: limita la cantidad de tareas simultáneas al tamaño del chunk, evitando saturación.
-⏱️ **Timeout por chunk**: detecta y maneja chunks problemáticos sin bloquear todo el procesamiento.
-🔧 **Flexibilidad total**: usa chunking cuando lo necesites, o procesamiento concurrente puro cuando no.
+⚡ **Balance perfecto**: combina la velocidad del procesamiento concurrente con el control del procesamiento secuencial por chunks.<br />
+🎯 **Control de recursos**: limita la cantidad de tareas simultáneas al tamaño del chunk, evitando saturación.<br />
+⏱️ **Timeout por chunk**: detecta y maneja chunks problemáticos sin bloquear todo el procesamiento.<br />
+🔧 **Flexibilidad total**: usa chunking cuando lo necesites, o procesamiento concurrente puro cuando no.<br />
 📊 **Escalabilidad**: permite procesar millones de registros ajustando el tamaño del chunk según los recursos disponibles.
 
 Esta solución es la **evolución natural** de <span class="high">asyncMap</span> y <span class="high">concurrentMap</span>, combinando lo mejor de ambos mundos para optimizar el procesamiento de datos masivos en aplicaciones backend.

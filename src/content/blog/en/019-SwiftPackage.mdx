@@ -191,16 +191,11 @@ rm -rf .build
 
 ## Best practices
 
-✅ **Version** <span class="high">Package.resolved</span> in Git to ensure the whole team uses the same versions
-
-✅ **Use** <span class="high">reset</span> **after changes to Package.swift** to ensure clean resolution
-
-✅ **Purge the cache periodically** if you work with many projects
-
-✅ **In CI/CD, keep** <span class="high">Package.resolved</span> but delete <span class="high">.build</span> for clean builds
-
-❌ **Don't ignore** <span class="high">.build</span> **in .gitignore** - it's already ignored by default
-
+✅ **Version** <span class="high">Package.resolved</span> in Git to ensure the whole team uses the same versions<br />
+✅ **Use** <span class="high">reset</span> **after changes to Package.swift** to ensure clean resolution<br />
+✅ **Purge the cache periodically** if you work with many projects<br />
+✅ **In CI/CD, keep** <span class="high">Package.resolved</span> but delete <span class="high">.build</span> for clean builds<br />
+❌ **Don't ignore** <span class="high">.build</span> **in .gitignore** - it's already ignored by default<br />
 ❌ **Don't delete** <span class="high">Package.resolved</span> unless you really need to re-resolve versions
 
 ---

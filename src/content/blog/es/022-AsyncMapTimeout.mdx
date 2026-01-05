@@ -57,10 +57,11 @@ extension Sequence {
 ```
 
 **Cambios clave respecto a la versión original**:
-- ✨ Parámetro <span class="high">timeout: Double? = nil</span> opcional y retrocompatible.
-- ⏱️ Si se especifica timeout, añade <span class="high">Task.sleep(for: .seconds(timeout))</span> después de cada elemento.
-- 🔄 Mantiene el comportamiento original cuando no se especifica timeout (sin pausas).
-- 📊 Permite ajustar dinámicamente el rate limiting según los límites de cada API.
+
+✨ Parámetro <span class="high">timeout: Double? = nil</span> opcional y retrocompatible.<br />
+⏱️ Si se especifica timeout, añade <span class="high">Task.sleep(for: .seconds(timeout))</span> después de cada elemento.<br />
+🔄 Mantiene el comportamiento original cuando no se especifica timeout (sin pausas).<br />
+📊 Permite ajustar dinámicamente el rate limiting según los límites de cada API.
 
 ---
 
@@ -85,10 +86,10 @@ let results = try await localFiles.asyncMap {
 
 Beneficios de esta actualización:
 
-⏱️ **Rate limiting configurable**: controla el ritmo de llamadas según los límites de cada API.
-🛡️ **Prevención de bloqueos**: evita errores <span class="high">429</span> y suspensiones temporales de IP.
-🔄 **Retrocompatibilidad total**: sin timeout funciona exactamente igual que antes.
-🎯 **Flexibilidad por caso de uso**: ajusta el timeout según la tolerancia del servicio externo.
+⏱️ **Rate limiting configurable**: controla el ritmo de llamadas según los límites de cada API.<br />
+🛡️ **Prevención de bloqueos**: evita errores <span class="high">429</span> y suspensiones temporales de IP.<br />
+🔄 **Retrocompatibilidad total**: sin timeout funciona exactamente igual que antes.<br />
+🎯 **Flexibilidad por caso de uso**: ajusta el timeout según la tolerancia del servicio externo.<br />
 📊 **Procesamiento predecible**: calcula fácilmente el tiempo total (n elementos × timeout).
 
 Esta actualización convierte <span class="high">asyncMap</span> en una herramienta **completa para procesamiento secuencial controlado**, ideal para integración con APIs que imponen límites de tasa y necesitan un flujo de peticiones regulado.
