@@ -1,0 +1,44 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+      - developing
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-26
+
+    steps:
+      - name: Select latest stable Xcode
+        run: |
+          LATEST=$(ls -d /Applications/Xcode_*.app | grep -v beta | sort -V | tail -1)
+          sudo xcode-select -s "$LATEST"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Cache SPM dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: spm-${{ hashFiles('Package.resolved') }}
+
+      - name: Build Swift package
+        run: swift build -c release
+
+      - name: Generate site
+        run: .build/release/PortfolioSite
+
+      - name: Deploy to Cloudflare Workers
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            npx wrangler deploy
+          else
+            npx wrangler deploy --env staging
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

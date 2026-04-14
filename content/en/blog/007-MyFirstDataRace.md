@@ -1,0 +1,136 @@
+---
+title: My First Data Race
+slug: my-first-data-race
+date: 2025-09-22
+description: A technical article explaining how a refactoring for concurrency in Swift led to a data race condition, and how to solve it using actor patterns.
+tags: Swift, Vapor
+cover: MyFirstDataRace
+coverDescription: My first data race. A stressed programmer looks at his laptop while suffering, symbolizing the chaos of a concurrency bug in his code.
+publish: true
+---
+---
+## From refactor to data race in Swift
+
+During a refactoring process to convert previously sequential functionality into concurrent processing, I encountered a classic problem: ensuring record uniqueness when multiple tasks attempt to create events simultaneously. While the goal was to improve performance by processing thousands of events in parallel using Swift, the transition exposed a typical concurrency challenge: avoiding duplicates and maintaining data integrity under simultaneous access.
+
+---
+
+## Actor with array
+```swift
+private actor EventsActor {
+    private var events: [SportEventModel] = []
+
+    func getOrCreate(
+        name: String,
+        cityId: UUID,
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
+        if let event = events.first(
+            where: {
+                $0.normalizedName == name
+                && $0.$city.id == cityId
+            }
+        ) { return event }
+
+        let event = try await build()
+        events.append(event)
+        return event
+    }
+}
+```
+
+**Advantages:**
+- Simplicity.
+- Safety against data race conditions.
+
+**Disadvantage:**
+- Inefficient search for large volumes <span class="high">O(n)</span>.
+
+---
+## Actor with dictionary
+
+```swift
+private actor EventsActor {
+    private var events: [String: EventModel] = [:]
+
+    func getOrCreate(
+        name: String,
+        cityId: UUID,
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
+        let key = "\(name)\(cityId.uuidString)"
+        if let event = events[key] {
+            return event
+        }
+        let event = try await build()
+        events[key] = event
+        return event
+    }
+}
+```
+
+**Advantages:**
+- Fast search and insertion <span class="high">O(1)</span>.
+- Ideal for large data volumes.
+
+**Bug:**
+- Logical data race condition
+
+---
+## Logical data race condition
+
+When multiple concurrent tasks attempt to create the same event, they can all check that it doesn't exist and proceed to create it simultaneously.
+Only one of the resulting instances gets stored, while the rest become "orphaned," causing inconsistencies and broken references in other data structures.
+
+*For example: two concurrent tasks check if an event exists. Both see that it doesn't, both create it, but only one survives in the dictionary; the other reference is now lost.*
+
+---
+## Solution
+
+To prevent this, it's necessary to serialize not only access but also creation by key:
+If there's already a creation in progress for that key, concurrent tasks must wait for the result of the first one, ensuring that all of them share exactly the same resource.
+
+```swift
+private actor EventsActor {
+    private var events: [String: EventModel] = [:]
+    private var builds: [String: Task<EventModel, Error>] = [:]
+
+    func getOrCreate(
+        name: String,
+        cityId: UUID,
+        build: @Sendable @escaping () async throws -> EventModel
+    ) async throws -> EventModel {
+        let key = "\(name)\(cityId.uuidString)"
+        if let event = events[key] {
+            return event
+        }
+
+        if let building = builds[key] {
+            return try await building.value
+        }
+
+        let buildTask = Task {
+            try await build()
+        }
+        builds[key] = buildTask
+
+        let event = try await buildTask.value
+        events[key] = event
+        builds.removeValue(forKey: key)
+        return event
+    }
+}
+```
+
+---
+
+### Lessons learned
+
+- An actor alone doesn't prevent logical data race conditions of the "check-then-act" type.
+- In concurrent scenarios, serializing resource construction by key is fundamental to maintaining data integrity.
+- It's essential to test under load and concurrent scenarios, not just in sequential mode.
+
+
+**Keep coding, keep running** 🏃‍♂️
+
+---

@@ -1,0 +1,55 @@
+---
+title: Array to dictionary
+slug: array-dictionary
+date: 2025-12-03
+description: Convierte un Array de elementos Identifiable (ID opcional UUID?) en un diccionario [UUID: Element], ignorando IDs nulos y manteniendo acceso O(1).
+tags: Swift, Vapor
+cover: ToDictionary
+coverDescription: Jorge supervisa una máquina de clasificación. Una cinta transportadora mueve cajas: las que no tienen ID caen en un cubo de descarte, mientras que las cajas con la etiqueta UUID continúan y se colocan en una estantería.
+publish: true
+---
+---
+## Problema
+
+Al trabajar con listas de modelos (por ejemplo, resultados, eventos o usuarios), a menudo necesitamos acceso <span class="high">O(1)</span> por identificador para búsquedas, merges o deduplicación. 
+
+Sin embargo, en muchos dominios el **id** puede ser opcional (<span class="high">UUID?</span>) hasta que el backend lo asigne. Si construimos un diccionario directamente, aparecen dos fricciones:
+
+- Hay que **filtrar los elementos sin ID** para evitar entradas inválidas.
+- Debemos **garantizar unicidad** de las claves o el constructor de <span class="high">Dictionary(uniqueKeysWithValues:)</span> fallará en tiempo de ejecución si hay duplicados.
+
+---
+## Solución
+
+Extendemos <span class="high">Array</span> (cuando sus elementos son <span class="high">Identifiable</span> con <span class="high">ID == UUID?</span>) para exponer <span class="high">toDictionary()</span>. 
+La función usa <span class="high">compactMap</span> para **descartar elementos sin ID** y construye el diccionario con <span class="high">Dictionary(uniqueKeysWithValues:)</span>.
+
+**Precondición**: los IDs existentes deben ser **únicos** en la colección. Si esperas colisiones, considera una variante con <span class="high">Dictionary(_, uniquingKeysWith:)</span> para resolver duplicados.
+
+```swift
+extension Array where Element: Identifiable, Element.ID == UUID? {
+    func toDictionary() -> [UUID: Element] {
+        Dictionary(uniqueKeysWithValues: self.compactMap {
+            guard let id = $0.id else { return nil }
+            return (id, $0) }
+        )
+    }
+}
+```
+
+Notas:
+- Los elementos con <span class="high">id == nil</span> **no** se incluyen.
+- El acceso por clave es <span class="high">O(1)</span> y simplifica merges/joins en memoria.
+---
+## Resultado
+
+Un helper pequeño y claro para pasar de un array a un mapa por ID:
+
+- **Más rápido de consultar** <span class="high">O(1)</span>.
+- **Más seguro**: evita insertar elementos sin identificador.
+- **Más expresivo** y reutilizable en servicios y view models.
+
+
+**Keep coding, keep running** 🏃‍♂️
+
+---

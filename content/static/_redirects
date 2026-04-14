@@ -1,0 +1,12 @@
+# Old English URLs (previously at /en/) now at root
+/en/ / 301
+/en/blog/ /blog/ 301
+/en/blog/* /blog/:splat 301
+/en/cookies /legal/cookies/ 301
+/en/legal-notice /legal/legal-notice/ 301
+/en/rss.xml /blog/feed.xml 301
+
+# Old Spanish URLs (previously at /es/) now at /es/
+/es/aviso-legal /es/legal/aviso-legal/ 301
+/es/cookies /es/legal/cookies/ 301
+/es/rss.xml /es/blog/feed.xml 301

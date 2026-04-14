@@ -1,0 +1,9 @@
+name = "jcalderita"
+compatibility_date = "2026-04-08"
+
+[assets]
+directory = "./deploy"
+not_found_handling = "404-page"
+
+[env.staging]
+name = "jcalderita-staging"

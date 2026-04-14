@@ -1,0 +1,136 @@
+---
+title: Mi primera condición de carrera
+slug: my-first-data-race
+date: 2025-09-22
+description: Un artículo técnico que explica cómo una refactorización para concurrencia en Swift llevó a una condición de carrera, y cómo resolverla usando patrones de actores.
+tags: Swift, Vapor
+cover: MyFirstDataRace
+coverDescription: Mi primera condición de carrera. Un programador estresado mira su portátil mientras sufre, simbolizando el caos de un bug de concurrencia en su código.
+publish: true
+---
+---
+## De refactor a condición de carrera en Swift
+
+Durante un proceso de refactorización para convertir una funcionalidad previamente secuencial en una concurrente, me encontré con un problema clásico: garantizar la unicidad de los registros cuando múltiples tareas intentan crear eventos al mismo tiempo. Aunque el objetivo era mejorar el rendimiento procesando miles de eventos en paralelo usando Swift, la transición expuso un desafío típico de concurrencia: evitar duplicados y mantener la integridad de los datos bajo acceso simultáneo.
+
+---
+
+## Actor con array
+```swift
+private actor EventsActor {
+    private var events: [SportEventModel] = []
+
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
+        if let event = events.first(
+            where: { 
+                $0.normalizedName == name 
+                && $0.$city.id == cityId 
+            }
+        ) { return event }
+
+        let event = try await build()
+        events.append(event)
+        return event
+    }
+}
+```
+
+**Ventajas:**  
+- Simplicidad.  
+- Seguridad frente a condiciones de carrera.
+
+**Desventaja:**  
+- Búsqueda ineficiente en grandes volúmenes <span class="high">O(n)</span>.
+
+---
+## Actor con diccionario
+
+```swift
+private actor EventsActor {
+    private var events: [String: EventModel] = [:]
+
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: () async throws -> EventModel
+    ) async throws -> EventModel {
+        let key = "\(name)\(cityId.uuidString)"
+        if let event = events[key] { 
+            return event 
+        }
+        let event = try await build()
+        events[key] = event
+        return event
+    }
+}
+```
+
+**Ventajas:**  
+- Búsqueda e inserción rápida <span class="high">O(1)</span>.  
+- Ideal para grandes volúmenes de datos.
+
+**Bug:**  
+- Condición de carrera lógica
+
+---
+## Condición de carrera lógica
+
+Cuando múltiples tareas concurrentes intentan crear el mismo evento, todas pueden comprobar que no existe y proceder a crearlo al mismo tiempo.  
+Solo una de las instancias resultantes se almacena, mientras que el resto se convierten en "huérfanas", lo que provoca inconsistencias y referencias rotas en otras estructuras de datos.
+
+*Por ejemplo: dos tareas concurrentes comprueban si un evento existe. Ambas ven que no, ambas lo crean, pero solo una sobrevive en el diccionario; la otra referencia ahora está perdida.*
+
+---
+## Solución
+
+Para evitar esto, es necesario serializar no solo el acceso sino también la creación por clave:  
+Si ya hay una creación en curso para esa clave, las tareas concurrentes deben esperar el resultado de la primera, asegurando que todas compartan exactamente el mismo recurso.
+
+```swift
+private actor EventsActor {
+    private var events: [String: EventModel] = [:]
+    private var builds: [String: Task<EventModel, Error>] = [:]
+    
+    func getOrCreate(
+        name: String, 
+        cityId: UUID, 
+        build: @Sendable @escaping () async throws -> EventModel
+    ) async throws -> EventModel {
+        let key = "\(name)\(cityId.uuidString)"
+        if let event = events[key] { 
+            return event 
+        }
+
+        if let building = builds[key] { 
+            return try await building.value 
+        }
+        
+        let buildTask = Task { 
+            try await build() 
+        }
+        builds[key] = buildTask
+        
+        let event = try await buildTask.value
+        events[key] = event
+        builds.removeValue(forKey: key)
+        return event
+    }
+}
+```
+
+---
+
+### Lecciones aprendidas
+
+- Un actor por sí solo no previene condiciones de carrera lógicas del tipo “check-then-act”.
+- En escenarios concurrentes, serializar la construcción del recurso por clave es fundamental para mantener la integridad de los datos.
+- Es esencial probar bajo carga y escenarios concurrentes, no solo en modo secuencial.
+
+
+**Keep coding, keep running** 🏃‍♂️
+
+---

@@ -1,0 +1,22 @@
+# Swift build output
+.build/
+
+# Site output
+deploy/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Social media posts
+post/
+
+# Environment
+.env
+.env.production

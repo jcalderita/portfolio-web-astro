@@ -1,0 +1,39 @@
+---
+title: La liga, thanks!
+slug: la-liga-thanks
+date: 2025-08-18
+description: How La Liga blocks my website during matches due to anti-piracy measures affecting legitimate sites on Cloudflare.
+tags: Web, Astro
+cover: LaLiga
+coverDescription: “Thanks, La Liga!!” A footballer-programmer tries to score a goal in his website’s goalpost, which is—literally—a brick wall.
+publish: true
+---
+---
+## My website blocked during La Liga matches
+
+If you're trying to visit my site during a La Liga match and it's not loading, you're not imagining things — it's actually being blocked.
+
+In Spain, **La Liga applies aggressive anti-piracy measures**, and one of them is **blocking access to websites hosted on Cloudflare's network** during live matches. Unfortunately, this means that if your website is hosted on Cloudflare — like mine is — you might get caught in the crossfire, even if you're not streaming or distributing any illegal content.
+
+Cloudflare protects and accelerates millions of websites globally, but due to La Liga's policy, **entire IP ranges or CDN edges may be blacklisted**, which affects **innumerable legitimate websites**.
+
+## Why does this happen?
+
+- La Liga uses automated systems and DNS-level blocking to restrict access to what they consider potential piracy sources.
+- Cloudflare is widely used by all kinds of sites, including those that host pirated sports streams — so their IPs get flagged.
+- As a result, many **innocent websites are blocked** during games, simply because they share infrastructure.
+
+## What can you do?
+
+- If you're in Spain and you can't access my portfolio during a match, try again later.
+- If you're curious about the issue, there are online tools to test if a domain is being blocked.
+- Or use a VPN to temporarily bypass the restriction (just for browsing my portfolio, of course 😅).
+
+It's a frustrating example of how overzealous digital enforcement can harm the open web — even small developer portfolios like mine.
+
+*“Thanks, La Liga!!”*
+
+
+**Keep coding, keep running** 🏃‍♂️
+
+---
