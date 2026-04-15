@@ -1,5 +1,7 @@
+import CoreGraphics
 import Foundation
 import ImageIO
+import libwebp
 
 // MARK: - ImageOptimizer
 
@@ -17,22 +19,33 @@ public struct ImageOptimizer: Sendable {
         self.config = config
     }
 
-    public func run() throws {
-        try FileManager.default.createDirectory(at: config.outputDir, withIntermediateDirectories: true)
+    public func run() async throws {
+        try FileManager.default.createDirectory(
+            at: config.outputDir, withIntermediateDirectories: true)
 
         let images = try pngFiles(in: config.inputDir)
+        let results = await withTaskGroup(of: ProcessResult.self, returning: [ProcessResult].self) {
+            for file in images {
+                $0.addTask { processImage(file, config: config) }
+            }
+            var results: [ProcessResult] = []
+            for await result in $0 {
+                results.append(result)
+            }
+            return results
+        }
+
         var processed = 0
         var skipped = 0
-
-        for file in images {
-            switch processImage(file) {
+        for result in results {
+            switch result {
             case .processed(let message):
                 print("  \(message)")
                 processed += 1
             case .skipped:
                 skipped += 1
             case .failed(let name):
-                print("  Failed to read: \(name)")
+                print("  Failed: \(name)")
             }
         }
 
@@ -47,106 +60,128 @@ extension ImageOptimizer.Config {
         inputDir: URL(fileURLWithPath: "assets/blog/images"),
         outputDir: URL(fileURLWithPath: "content/static/blog"),
         maxWidth: 800,
-        quality: 0.95
+        quality: 80
     )
 }
 
-// MARK: - ResultEnum
+// MARK: - ProcessResult
 
-enum ResultEnum {
+enum ProcessResult: Sendable {
     case processed(String)
     case skipped
     case failed(String)
 }
 
-// MARK: - Helpers
+// MARK: - Processing (free functions for Sendable safety)
 
-extension ImageOptimizer {
+private func processImage(_ file: URL, config: ImageOptimizer.Config) -> ProcessResult {
+    let name = file.deletingPathExtension().lastPathComponent
+    let dest = config.outputDir.appendingPathComponent("\(name).webp")
 
-    // MARK: Pipeline
+    guard !isUpToDate(source: file, destination: dest) else { return .skipped }
 
-    func processImage(_ file: URL) -> ResultEnum {
-        let name = file.deletingPathExtension().lastPathComponent
-        let dest = config.outputDir.appendingPathComponent("\(name).avif")
+    let options: [CFString: Any] = [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceCreateThumbnailWithTransform: true,
+        kCGImageSourceShouldCacheImmediately: true,
+        kCGImageSourceThumbnailMaxPixelSize: config.maxWidth,
+    ]
 
-        guard !isUpToDate(source: file, destination: dest) else { return .skipped }
-
-        let options: [CFString: Any] = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceThumbnailMaxPixelSize: config.maxWidth,
-        ]
-
-        guard let source = CGImageSourceCreateWithURL(file as CFURL, nil),
-            let thumbnail = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
-        else {
-            return .failed(file.lastPathComponent)
-        }
-
-        writeAVIF(thumbnail, to: dest)
-        return .processed("\(file.lastPathComponent) -> \(name).avif (\(fileSize(dest)))")
+    guard let source = CGImageSourceCreateWithURL(file as CFURL, nil),
+        let thumbnail = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
+    else {
+        return .failed(file.lastPathComponent)
     }
 
-    // MARK: File discovery
-
-    func pngFiles(in directory: URL) throws -> [URL] {
-        guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
-        return try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension.lowercased() == "png" }
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    guard writeWebP(thumbnail, to: dest, quality: config.quality) else {
+        return .failed(file.lastPathComponent)
     }
 
-    // MARK: Timestamp comparison
+    return .processed("\(file.lastPathComponent) -> \(name).webp (\(fileSize(dest)))")
+}
 
-    func isUpToDate(source: URL, destination: URL) -> Bool {
-        guard FileManager.default.fileExists(atPath: destination.path),
-            let srcDate = modificationDate(of: source),
-            let dstDate = modificationDate(of: destination)
-        else { return false }
+// MARK: - WebP writing via libwebp
 
-        return dstDate >= srcDate
+private func writeWebP(_ image: CGImage, to url: URL, quality: Float) -> Bool {
+    let width = image.width
+    let height = image.height
+    let bytesPerRow = width * 4
+
+    guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+        let context = CGContext(
+            data: nil,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: bytesPerRow,
+            space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+        )
+    else {
+        print("  Failed to create CGContext: \(url.lastPathComponent)")
+        return false
     }
 
-    func modificationDate(of url: URL) -> Date? {
-        try? FileManager.default.attributesOfItem(atPath: url.path)[.modificationDate] as? Date
+    context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+    guard let data = context.data else {
+        print("  Failed to get pixel data: \(url.lastPathComponent)")
+        return false
     }
 
-    // MARK: AVIF writing
+    let pixels = data.assumingMemoryBound(to: UInt8.self)
 
-    func writeAVIF(_ image: CGImage, to url: URL) {
-        try? FileManager.default.removeItem(at: url)
+    var output: UnsafeMutablePointer<UInt8>?
+    let size = WebPEncodeRGBA(
+        pixels, Int32(width), Int32(height), Int32(bytesPerRow), quality, &output)
 
-        guard let destination = CGImageDestinationCreateWithURL(
-            url as CFURL,
-            "public.avif" as CFString,
-            1,
-            nil
-        ) else {
-            print("  Failed to create destination: \(url.lastPathComponent)")
-            return
-        }
-
-        let options: [CFString: Any] = [
-            kCGImageDestinationLossyCompressionQuality: config.quality
-        ]
-
-        CGImageDestinationAddImage(destination, image, options as CFDictionary)
-
-        if !CGImageDestinationFinalize(destination) {
-            print("  Failed to write: \(url.lastPathComponent)")
-        }
+    guard size > 0, let output else {
+        print("  Failed to encode WebP: \(url.lastPathComponent)")
+        return false
     }
 
-    // MARK: Helpers
+    let webpData = Data(bytes: output, count: size)
+    WebPFree(output)
 
-    func fileSize(_ url: URL) -> String {
-        guard let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
-            let size = attrs[.size] as? UInt64
-        else { return "?" }
-
-        if size < 1024 { return "\(size) B" }
-        if size < 1_048_576 { return "\(size / 1024) KB" }
-        return String(format: "%.1f MB", Double(size) / 1_048_576)
+    do {
+        try webpData.write(to: url)
+        return true
+    } catch {
+        print("  Failed to write: \(url.lastPathComponent) — \(error)")
+        return false
     }
+}
+
+// MARK: - File helpers
+
+private func pngFiles(in directory: URL) throws -> [URL] {
+    guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
+    return try FileManager.default.contentsOfDirectory(
+        at: directory, includingPropertiesForKeys: nil
+    )
+    .filter { $0.pathExtension.lowercased() == "png" }
+    .sorted { $0.lastPathComponent < $1.lastPathComponent }
+}
+
+private func isUpToDate(source: URL, destination: URL) -> Bool {
+    guard FileManager.default.fileExists(atPath: destination.path),
+        let srcDate = modificationDate(of: source),
+        let dstDate = modificationDate(of: destination)
+    else { return false }
+
+    return dstDate >= srcDate
+}
+
+private func modificationDate(of url: URL) -> Date? {
+    try? FileManager.default.attributesOfItem(atPath: url.path)[.modificationDate] as? Date
+}
+
+private func fileSize(_ url: URL) -> String {
+    guard let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
+        let size = attrs[.size] as? UInt64
+    else { return "?" }
+
+    if size < 1024 { return "\(size) B" }
+    if size < 1_048_576 { return "\(size / 1024) KB" }
+    return String(format: "%.1f MB", Double(size) / 1_048_576)
 }

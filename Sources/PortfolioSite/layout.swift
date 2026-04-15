@@ -10,7 +10,7 @@ struct PageContext {
     let locale: Locale
     let slug: String
     var description: String = ""
-    var ogImage: String = "/static/web.avif"
+    var ogImage: String = "/static/web.webp"
     var ogType: String = "website"
     var articleTags: [String] = []
     var articleDate: Date?

@@ -70,7 +70,7 @@ func renderBlogPost(context: ItemRenderingContext<BlogMetadata>) -> Node {
         locale: locale,
         slug: post.url,
         description: post.metadata.description,
-        ogImage: "/static/blog/\(post.metadata.cover).avif",
+        ogImage: "/static/blog/\(post.metadata.cover).webp",
         ogType: "article",
         articleTags: post.metadata.tags,
         articleDate: post.date
@@ -79,7 +79,7 @@ func renderBlogPost(context: ItemRenderingContext<BlogMetadata>) -> Node {
     return blogLayout(page) {
         // Cover image
         img(class: "postImage", customAttributes: [
-            "src": "/static/blog/\(post.metadata.cover).avif",
+            "src": "/static/blog/\(post.metadata.cover).webp",
             "alt": post.metadata.coverDescription,
             "style": "--vt-name: post-\(post.metadata.slug)",
         ])

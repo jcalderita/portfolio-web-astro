@@ -1,7 +1,7 @@
 import ImageOptimizer
 import Saga
 
-try ImageOptimizer().run()
+try await ImageOptimizer().run()
 
 try await Saga()
     .i18n()

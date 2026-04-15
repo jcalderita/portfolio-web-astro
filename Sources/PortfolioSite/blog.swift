@@ -18,7 +18,7 @@ func renderBlogCard(post: Item<BlogMetadata>, locale: Locale) -> Node {
         }
         div(class: "blogCardImage") {
             img(customAttributes: [
-                "src": "/static/blog/\(cover).avif",
+                "src": "/static/blog/\(cover).webp",
                 "alt": post.metadata.coverDescription,
                 "loading": "lazy",
                 "style": "--vt-name: post-\(slug)",

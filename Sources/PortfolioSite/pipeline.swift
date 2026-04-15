@@ -29,7 +29,7 @@ extension Saga {
                         author: SiteConfig.author,
                         baseURL: SiteConfig.baseURL,
                         summary: { $0.metadata.description },
-                        image: { "/static/blog/\($0.metadata.cover).avif" }
+                        image: { "/static/blog/\($0.metadata.cover).webp" }
                     ),
                     output: "feed.xml"
                 ),
