@@ -27,18 +27,19 @@ El sitio soporta varios idiomas (español e inglés), está optimizado para SEO 
 ```text
 /
 ├── Sources/
-│   ├── PortfolioSite/     # Generador del sitio (layouts, páginas, componentes, i18n)
-│   └── ImageOptimizer/    # Pipeline de optimización de imágenes PNG → AVIF
+│   ├── PortfolioSite/     # Generador del sitio (layouts, páginas, componentes, SEO, i18n)
+│   └── ImageOptimizer/    # Pipeline de optimización de imágenes PNG → WebP
+├── worker/
+│   └── index.js           # Cloudflare Worker (bypass de bots para crawlers SEO)
 ├── content/
-│   ├── en/
-│   │   ├── blog/          # Artículos del blog en inglés (Markdown)
-│   │   └── legal/         # Páginas legales
-│   ├── es/
-│   │   ├── blog/          # Artículos del blog en español (Markdown)
-│   │   └── legal/         # Páginas legales
+│   ├── en/blog/           # Artículos del blog en inglés (Markdown)
+│   ├── es/blog/           # Artículos del blog en español (Markdown)
+│   ├── {en,es}/legal/     # Páginas legales (ambos idiomas)
+│   ├── robots.txt         # Robots.txt (permite todo, referencia al sitemap)
+│   ├── llms.txt           # Descripción para crawlers de IA (spec llmstxt.org)
 │   └── static/            # CSS, imágenes, favicons, PDFs
 ├── Package.swift           # Manifiesto de Swift Package Manager
-├── wrangler.toml           # Configuración de Cloudflare Workers
+├── wrangler.toml           # Configuración de Cloudflare Workers (binding ASSETS)
 └── deploy/                 # Salida generada (ignorado por git)
 ```
 
@@ -67,8 +68,12 @@ Cada idioma tiene su propio feed RSS y todas las páginas legales están disponi
 - Navegación mediante teclado y lectores de pantalla.
 - Atributos ARIA y landmarks semánticos.
 - Meta etiquetas para redes sociales (Open Graph, Twitter Card).
+- Tags canonical y hreflang para SEO multilingüe.
+- JSON-LD con datos estructurados (Person en home, BlogPosting en artículos).
+- Sitemap personalizado con fechas `lastmod` y alternativas hreflang.
+- `robots.txt` y `llms.txt` para crawlers de búsqueda e IA.
+- Worker personalizado de Cloudflare para bypass de protecciones contra bots SEO.
 - Responsive en móvil, tablet y desktop.
-- Sitemap y feeds RSS generados automáticamente.
 
 ## ☁️ Despliegue
 

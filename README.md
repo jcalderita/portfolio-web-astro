@@ -27,18 +27,19 @@ The site supports multiple languages (Spanish and English), is optimized for SEO
 ```text
 /
 ├── Sources/
-│   ├── PortfolioSite/     # Site generator (layouts, pages, components, i18n)
-│   └── ImageOptimizer/    # PNG → AVIF image optimization pipeline
+│   ├── PortfolioSite/     # Site generator (layouts, pages, components, SEO, i18n)
+│   └── ImageOptimizer/    # PNG → WebP image optimization pipeline
+├── worker/
+│   └── index.js           # Cloudflare Worker (bot bypass for SEO crawlers)
 ├── content/
-│   ├── en/
-│   │   ├── blog/          # English blog posts (Markdown)
-│   │   └── legal/         # Legal pages
-│   ├── es/
-│   │   ├── blog/          # Spanish blog posts (Markdown)
-│   │   └── legal/         # Legal pages
+│   ├── en/blog/           # English blog posts (Markdown)
+│   ├── es/blog/           # Spanish blog posts (Markdown)
+│   ├── {en,es}/legal/     # Legal pages (both languages)
+│   ├── robots.txt         # Robots.txt (allow all, sitemap reference)
+│   ├── llms.txt           # LLM crawler description (llmstxt.org spec)
 │   └── static/            # CSS, images, favicons, PDFs
 ├── Package.swift           # Swift Package Manager manifest
-├── wrangler.toml           # Cloudflare Workers config
+├── wrangler.toml           # Cloudflare Workers config (ASSETS binding)
 └── deploy/                 # Generated output (git-ignored)
 ```
 
@@ -67,8 +68,12 @@ Each locale has its own RSS feed and all legal pages are available in both langu
 - Keyboard navigation and screen reader support.
 - ARIA attributes and semantic landmarks.
 - Meta tags for social sharing (Open Graph, Twitter Card).
+- Canonical and hreflang tags for multilingual SEO.
+- JSON-LD structured data (Person on home, BlogPosting on articles).
+- Custom sitemap with `lastmod` dates and hreflang alternates.
+- `robots.txt` and `llms.txt` for search and AI crawlers.
+- Custom Cloudflare Worker to bypass bot protections for SEO crawlers.
 - Responsive on mobile, tablet, and desktop.
-- Sitemap and RSS feeds generated automatically.
 
 ## ☁️ Deployment
 
