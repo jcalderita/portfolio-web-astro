@@ -1,8 +1,11 @@
 name = "jcalderita"
 compatibility_date = "2026-04-08"
+main = "./worker/index.js"
 
 [assets]
 directory = "./deploy"
+binding = "ASSETS"
+html_handling = "drop-trailing-slash"
 not_found_handling = "404-page"
 
 [env.staging]
