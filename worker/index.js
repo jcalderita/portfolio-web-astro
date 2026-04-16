@@ -1,24 +1,20 @@
-const SOCIAL_BOTS = /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot|Discordbot|TelegramBot/i;
+const FRIENDLY_BOTS = /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot|Discordbot|TelegramBot|GPTBot|ChatGPT-User|ClaudeBot|Applebot|Googlebot|Bingbot|Google-Extended|PerplexityBot|anthropic-ai/i;
 
 export default {
   async fetch(request, env) {
     const ua = request.headers.get("user-agent") || "";
 
-    if (!SOCIAL_BOTS.test(ua)) {
+    if (!FRIENDLY_BOTS.test(ua)) {
       return env.ASSETS.fetch(request);
     }
 
     const response = await env.ASSETS.fetch(request);
+    const body = await response.arrayBuffer();
 
-    if (!response.ok || !response.headers.get("content-type")?.includes("text/html")) {
-      return response;
-    }
-
-    const html = await response.text();
-    return new Response(html, {
-      status: 200,
+    return new Response(body, {
+      status: response.status,
       headers: {
-        "content-type": "text/html; charset=utf-8",
+        ...Object.fromEntries(response.headers),
         "cache-control": "public, max-age=0, must-revalidate",
       },
     });

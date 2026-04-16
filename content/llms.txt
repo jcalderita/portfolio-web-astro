@@ -1,0 +1,30 @@
+# Jorge Calderita
+
+> Software developer with 20+ years of experience, specializing in iOS, visionOS, and Swift (client + server). Personal portfolio and technical blog about Swift, Vapor, SwiftUI, accessibility, and software architecture.
+
+## Author
+
+- Name: Jorge Calderita
+- Role: Software Developer (iOS, visionOS, Swift)
+- Website: https://jcalderita.com
+- GitHub: https://github.com/jcalderita
+- LinkedIn: https://www.linkedin.com/in/jcalderita
+- X: https://x.com/jcalderita
+- Email: contacto@jcalderita.com
+
+## Blog
+
+Technical articles in Spanish and English about Swift development, server-side Swift with Vapor, iOS patterns, accessibility, database design, and developer tooling.
+
+- [Blog (English)](https://jcalderita.com/blog/): All English articles
+- [Blog (Spanish)](https://jcalderita.com/es/blog/): All Spanish articles
+- [Atom Feed (EN)](https://jcalderita.com/blog/feed.xml): English RSS feed
+- [Atom Feed (ES)](https://jcalderita.com/es/blog/feed.xml): Spanish RSS feed
+
+## Key Topics
+
+Swift, SwiftUI, Vapor, iOS, visionOS, Server-Side Swift, Accessibility, PostgreSQL, Async/Await, Concurrency, Static Site Generation, Cloudflare Workers
+
+## Optional
+
+- [Sitemap](https://jcalderita.com/sitemap.xml): Complete site map
