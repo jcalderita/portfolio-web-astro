@@ -59,13 +59,7 @@ enum Page: CaseIterable {
         case .blogIndex:
             saga.createPage("blog/index.html", forEachLocale: swim(renderBlogIndex))
         case .sitemap:
-            saga.createPage(
-                "sitemap.xml",
-                using: Saga.sitemap(
-                    baseURL: SiteConfig.baseURL,
-                    filter: { $0.string != "404.html" }
-                )
-            )
+            saga.createPage("sitemap.xml", using: renderSitemap)
         case .notFound:
             saga.createPage("404.html", using: swim(render404))
         }

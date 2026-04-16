@@ -1,3 +1,4 @@
+import Foundation
 import HTML
 import Saga
 import SagaSwimRenderer
@@ -60,6 +61,7 @@ func renderBlogIndex(context: PageRenderingContext) -> Node {
     )
 
     return blogIndexLayout(page) {
+        h1(class: "sr-only") { "Blog" }
         div(class: "tagButtons") {
             renderTagButton(tag: "all", locale: locale)
             Node.fragment(allTags.map { renderTagButton(tag: $0, locale: locale) })
@@ -103,6 +105,9 @@ func renderBlogPost(context: ItemRenderingContext<BlogMetadata>) -> Node {
     )
 
     return blogLayout(page) {
+        // Post title
+        h1(class: "sr-only") { post.title }
+
         // Cover image
         img(class: "postImage", customAttributes: [
             "src": "/static/blog/\(post.metadata.cover).webp",
@@ -181,4 +186,77 @@ func render404(context: PageRenderingContext) -> Node {
             a(class: "btn", href: locale.homePath) { locale.goHome }
         }
     }
+}
+
+// MARK: - Sitemap
+
+private let dateOnlyFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.dateFormat = "yyyy-MM-dd"
+    f.timeZone = TimeZone(identifier: "UTC")
+    return f
+}()
+
+func renderSitemap(context: PageRenderingContext) -> String {
+    let base = SiteConfig.baseURL.absoluteString
+
+    // Build date lookup from blog items
+    let blogItems: [Item<BlogMetadata>] = context.allItems.compactMap { $0 as? Item<BlogMetadata> }
+    var dateByURL: [String: Date] = [:]
+    for item in blogItems {
+        dateByURL[item.relativeDestination.string] = item.date
+    }
+
+    // Collect all generated pages except this sitemap and 404
+    let paths = context.generatedPages
+        .filter { $0 != context.outputPath && $0.string != "404.html" }
+        .sorted { $0.string < $1.string }
+
+    // Build item lookup for hreflang alternates
+    let pathSet = Set(paths.map(\.string))
+    let itemByDest = context.allItems
+        .filter { $0.locale != nil && pathSet.contains($0.relativeDestination.string) }
+        .reduce(into: [String: AnyItem]()) { $0[$1.relativeDestination.string] = $1 }
+
+    var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    xml += "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"\n"
+    xml += " xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n"
+
+    for path in paths {
+        let url = path.string.hasPrefix("/") ? path.string : "/\(path.string)"
+        let cleanURL = url.hasSuffix("index.html")
+            ? String(url.dropLast("index.html".count))
+            : url
+
+        xml += "<url>\n"
+        xml += "<loc>\(base)\(cleanURL)</loc>\n"
+
+        // lastmod from blog post date
+        if let date = dateByURL[path.string] {
+            xml += "<lastmod>\(dateOnlyFormatter.string(from: date))</lastmod>\n"
+        }
+
+        // hreflang alternates
+        if let item = itemByDest[path.string], let locale = item.locale, !item.translations.isEmpty {
+            var alternates = [(locale, path)]
+            for (tLocale, tItem) in item.translations {
+                if pathSet.contains(tItem.relativeDestination.string) {
+                    alternates.append((tLocale, tItem.relativeDestination))
+                }
+            }
+            alternates.sort { $0.0 < $1.0 }
+            for (altLocale, altPath) in alternates {
+                let altURL = altPath.string.hasPrefix("/") ? altPath.string : "/\(altPath.string)"
+                let cleanAltURL = altURL.hasSuffix("index.html")
+                    ? String(altURL.dropLast("index.html".count))
+                    : altURL
+                xml += "<xhtml:link rel=\"alternate\" hreflang=\"\(altLocale)\" href=\"\(base)\(cleanAltURL)\"/>\n"
+            }
+        }
+
+        xml += "</url>\n"
+    }
+
+    xml += "</urlset>"
+    return xml
 }

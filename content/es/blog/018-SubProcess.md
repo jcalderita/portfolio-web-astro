@@ -5,7 +5,7 @@ date: 2025-12-17
 description: Cambiando el uso de process por Subprocess, la nueva libreria Subprocess es un paquete multiplataforma para lanzar procesos en Swift.
 tags: Swift, Vapor
 cover: Subprocess
-coverDescription: 
+coverDescription: Varios Jorges corriendo en una carrera de relevos, cada uno pasando un testigo con forma del logo de Swift al siguiente, representando la migración de Process a Subprocess.
 publish: true
 ---
 ---

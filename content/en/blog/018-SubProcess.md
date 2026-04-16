@@ -5,7 +5,7 @@ date: 2025-12-17
 description: Migrating from Process to Subprocess, the new cross-platform package for launching processes in Swift.
 tags: Swift, Vapor
 cover: Subprocess
-coverDescription: 
+coverDescription: Several Jorges running in a relay race, each one passing a baton shaped like the Swift logo to the next, representing the migration from Process to Subprocess.
 publish: true
 ---
 ---
