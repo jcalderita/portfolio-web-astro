@@ -96,7 +96,7 @@ extension Locale {
 
     // Meta
     var blogDescription: String { text("Jorge Calderita's personal Blog", es: "Blog personal de Jorge Calderita") }
-    var metaKeywords: String { "Jorge Calderita, Calderita, Swift, iOS, VisionOS, SwiftUI, Vapor, Portfolio, Developer, Accessibility" }
+    var metaKeywords: String { "Jorge Calderita, Calderita, Swift, iOS, visionOS, SwiftUI, Server-Side Swift, Portfolio, Developer, Accessibility" }
 
     // 404
     var notFoundTitle: String { text("Page not found", es: "Página no encontrada") }
