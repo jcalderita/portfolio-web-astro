@@ -171,5 +171,17 @@ private func renderHead(_ context: PageContext) -> Node {
         nodes.append(meta(content: tag, customAttributes: ["property": "article:tag"]))
     }
 
+    // Canonical
+    nodes.append(link(href: "\(siteURL)\(context.slug)", rel: "canonical"))
+
+    // Hreflang (only for indexable pages with locale variants)
+    if !context.noIndex {
+        let enSlug = context.locale == .en ? context.slug : context.locale.otherPath(for: context.slug)
+        let esSlug = context.locale == .es ? context.slug : context.locale.otherPath(for: context.slug)
+        nodes.append(link(href: "\(siteURL)\(enSlug)", hreflang: "en", rel: "alternate"))
+        nodes.append(link(href: "\(siteURL)\(esSlug)", hreflang: "es", rel: "alternate"))
+        nodes.append(link(href: "\(siteURL)\(enSlug)", hreflang: "x-default", rel: "alternate"))
+    }
+
     return head { Node.fragment(nodes) }
 }

@@ -1,6 +1,6 @@
 ---
 title: Astro to Saga
-slug: astro-to-saga-en
+slug: astro-to-saga
 date: 2026-04-15
 description: Why I migrated my portfolio from Astro to Saga, a static site generator written in Swift, and how I removed Node from my stack for good.
 tags: Swift, Astro, Saga
