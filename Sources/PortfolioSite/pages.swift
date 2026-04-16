@@ -12,11 +12,24 @@ func renderHome(context: PageRenderingContext) -> Node {
     let educationTitle = locale.educationTitle
     let projectTitle = locale.projectsTitle
 
-    let page = PageContext(
+    let allTechnologies = Array(Set(
+        (portfolio.jobs + portfolio.education).flatMap(\.technologies)
+    )).sorted()
+
+    var page = PageContext(
         title: portfolio.metadata.webTitle,
         locale: locale,
         slug: locale.homePath,
         description: portfolio.metadata.description
+    )
+    page.jsonLD = buildPersonJsonLD(
+        name: SiteConfig.author,
+        jobTitle: portfolio.role,
+        description: portfolio.introduction,
+        url: SiteConfig.baseURL.absoluteString,
+        sameAs: [SiteConfig.githubURL, SiteConfig.linkedinURL, SiteConfig.xURL, SiteConfig.discordURL],
+        email: SiteConfig.email,
+        knowsAbout: allTechnologies
     )
 
     return baseLayout(page) {
@@ -65,7 +78,9 @@ func renderBlogPost(context: ItemRenderingContext<BlogMetadata>) -> Node {
     let post = context.item
     let (headings, bodyWithIds) = extractHeadings(from: post.body)
 
-    let page = PageContext(
+    let siteURL = SiteConfig.baseURL.absoluteString
+
+    var page = PageContext(
         title: post.title,
         locale: locale,
         slug: post.url,
@@ -74,6 +89,17 @@ func renderBlogPost(context: ItemRenderingContext<BlogMetadata>) -> Node {
         ogType: "article",
         articleTags: post.metadata.tags,
         articleDate: post.date
+    )
+    page.jsonLD = buildBlogPostingJsonLD(
+        headline: post.title,
+        description: post.metadata.description,
+        datePublished: post.date,
+        url: "\(siteURL)\(post.url)",
+        imageURL: "\(siteURL)/static/blog/\(post.metadata.cover).webp",
+        authorName: SiteConfig.author,
+        authorURL: siteURL,
+        keywords: post.metadata.tags,
+        inLanguage: locale.rawValue
     )
 
     return blogLayout(page) {

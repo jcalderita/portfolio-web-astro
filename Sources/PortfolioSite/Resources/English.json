@@ -68,9 +68,9 @@
       "technologies": [
         "SwiftUI",
         "Accessibility",
-        "WCAC Compliance",
+        "WCAG Compliance",
         "VoiceOver",
-        "Accessibilty Inspector",
+        "Accessibility Inspector",
         "European Accessibility Act"
       ],
       "diploma": "SAP25",
@@ -155,14 +155,14 @@
         "Design, analyze, test applications, develop software, and implement systems."
       ],
       "technologies": [
-        "Acces",
-        "Metodoly",
+        "Access",
+        "Methodology",
         "Visual Basic",
         "Pascal",
         "Cobol",
-        "Html",
-        "Css",
-        "Asp.net"
+        "HTML",
+        "CSS",
+        "ASP.NET"
       ]
     }
   ],

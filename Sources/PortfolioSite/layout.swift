@@ -15,6 +15,7 @@ struct PageContext {
     var articleTags: [String] = []
     var articleDate: Date?
     var noIndex: Bool = false
+    var jsonLD: String?
 }
 
 // MARK: - Base layout (portfolio home)
@@ -112,7 +113,7 @@ func legalLayout(_ context: PageContext, @NodeBuilder children: () -> NodeConver
 
 // MARK: - Head
 
-nonisolated(unsafe) private let iso8601Formatter = ISO8601DateFormatter()
+nonisolated(unsafe) let iso8601Formatter = ISO8601DateFormatter()
 
 private func renderHead(_ context: PageContext) -> Node {
     let siteURL = SiteConfig.baseURL.absoluteString
@@ -181,6 +182,11 @@ private func renderHead(_ context: PageContext) -> Node {
         nodes.append(link(href: "\(siteURL)\(enSlug)", hreflang: "en", rel: "alternate"))
         nodes.append(link(href: "\(siteURL)\(esSlug)", hreflang: "es", rel: "alternate"))
         nodes.append(link(href: "\(siteURL)\(enSlug)", hreflang: "x-default", rel: "alternate"))
+    }
+
+    // JSON-LD
+    if let jsonLD = context.jsonLD {
+        nodes.append(script(type: "application/ld+json") { Node.raw(jsonLD) })
     }
 
     return head { Node.fragment(nodes) }
