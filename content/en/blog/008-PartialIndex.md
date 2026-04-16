@@ -144,6 +144,7 @@ Where <span class="high">$0.partial</span> is an optional value that indicates t
 
 The solution offers a clean and reusable way to create partial indexes within the Vapor ecosystem, maintaining the consistency and safety of Swift code.
 
+If you also want to organize your tables into namespaces using Fluent's `space` property, I covered that in [Schemas and Namespaces](/blog/schema-space/).
 
 **Keep coding, keep running** 🏃‍♂️
 

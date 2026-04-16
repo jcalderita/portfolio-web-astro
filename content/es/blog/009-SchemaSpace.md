@@ -37,6 +37,7 @@ public final class LocationCityModel: Model {
 
 Es fundamental declarar la propiedad <span class="high">space</span> como tipo <span class="high">String?</span> **(opcional)**. Si se declara como <span class="high">String</span> **(no opcional)**, no se sobrescribirá la propiedad heredada del protocolo <span class="high">Model</span>, sino que se creará una nueva propiedad con el mismo nombre. Esto ocasionará que el framework ignore la configuración del espacio de nombres, manteniendo las tablas en el esquema predeterminado sin indicación de error aparente.
 
+Si te preguntas cómo crear estos espacios de nombres automáticamente en la base de datos, explico cómo convertirlo en una migración en [Migrate Spaces](/es/blog/migrate-spaces/).
 
 **Keep coding, keep running** 🏃‍♂️
 

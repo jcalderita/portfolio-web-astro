@@ -31,8 +31,9 @@ Cloudflare protege y acelera millones de sitios web en todo el mundo, pero debid
 
 Es un ejemplo frustrante de cómo una aplicación excesiva de medidas digitales puede dañar la web abierta —incluso portfolios pequeños como el mío.
 
-*“¡Gracias, La Liga!”*
+*”¡Gracias, La Liga!”*
 
+**Actualización:** Finalmente encontré una solución sencilla para este problema. Si quieres saber cómo lo resolví en 5 minutos, lee [Only DNS](/es/blog/only-dns/).
 
 **Keep coding, keep running** 🏃‍♂️
 

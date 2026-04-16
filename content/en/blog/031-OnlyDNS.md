@@ -11,7 +11,7 @@ publish: true
 ---
 ## My Problem 🤔
 
-In a [previous article](/en/blog/la-liga-thanks-en/) I talked about how <span class="high">La Liga</span> was blocking my website during matches. People trying to visit my portfolio and blog would find that the page simply would not load, just because my domain went through <span class="high">Cloudflare</span>'s infrastructure, and <span class="high">La Liga</span> was blocking entire IP ranges from <span class="high">Cloudflare</span> to crack down on illegal streams.
+In a [previous article](/blog/la-liga-thanks/) I talked about how <span class="high">La Liga</span> was blocking my website during matches. People trying to visit my portfolio and blog would find that the page simply would not load, just because my domain went through <span class="high">Cloudflare</span>'s infrastructure, and <span class="high">La Liga</span> was blocking entire IP ranges from <span class="high">Cloudflare</span> to crack down on illegal streams.
 
 I knew it. I documented it. And I left it there.
 

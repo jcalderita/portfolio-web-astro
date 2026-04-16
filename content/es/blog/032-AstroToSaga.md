@@ -13,7 +13,7 @@ publish: true
 
 Mi portfolio funcionaba sobre <span class="high">Astro</span> con <span class="high">Bun</span>. Todo iba bien. Rápido, cómodo, sin quejas técnicas.
 
-Pero había algo que no encajaba. Cada vez que abría el proyecto me encontraba con un <span class="high">package.json</span>, un <span class="high">tailwind.config</span>, un <span class="high">astro.config</span>, y una carpeta <span class="high">node_modules</span> con cientos de dependencias que ni sabía que existían. Esa sensación de perder el control sobre lo que hay dentro de tu propio proyecto me incomoda. Me gusta saber qué ejecuta mi código y por qué está ahí.
+Pero había algo que no encajaba. Cada vez que abría el proyecto me encontraba con un <span class="high">package.json</span>, un <span class="high">tailwind.config</span>, un <span class="high">astro.config</span>, y una carpeta <span class="high">node_modules</span> con cientos de dependencias que ni sabía que existían. Esa sensación de perder el control sobre lo que hay dentro de tu propio proyecto me incomoda. Me gusta saber qué ejecuta mi código y por qué está ahí. Ya había eliminado Tailwind en una [migración previa a vanilla CSS](/es/blog/tailwind-to-css/), pero el resto del ecosistema JavaScript seguía ahí.
 
 Y al final, soy desarrollador Swift. Mi día a día es Swift. Y sin embargo, para generar mi propio portfolio dependía de un ecosistema completamente ajeno. Si alguien entraba en mi repositorio, no veía a un desarrollador Swift. Veía un proyecto JavaScript más.
 

@@ -11,7 +11,7 @@ publish: true
 ---
 ## Problema
 
-En el [post sobre AsyncMap](/es/blog/async-map-es) vimos cómo procesar colecciones de forma **secuencial asíncrona**. Sin embargo, al trabajar con **APIs externas** que implementan rate limiting, nos enfrentamos a un problema crítico:
+En el [post sobre AsyncMap](/es/blog/async-map/) vimos cómo procesar colecciones de forma **secuencial asíncrona**. Sin embargo, al trabajar con **APIs externas** que implementan rate limiting, nos enfrentamos a un problema crítico:
 
 ```swift
 // Procesar 1000 URLs secuencialmente

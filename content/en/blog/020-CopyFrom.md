@@ -84,6 +84,7 @@ This implementation uses <span class="high">COPY ... FROM</span> with file syste
 
 I'm actively monitoring this issue to integrate this functionality when available, which will provide an even more flexible and efficient API for mass import operations.
 
+If you also need the reverse operation — exporting data from PostgreSQL to CSV files — I covered that in [Copy To](/blog/copy-to/).
 
 **Keep coding, keep running** 🏃‍♂️
 

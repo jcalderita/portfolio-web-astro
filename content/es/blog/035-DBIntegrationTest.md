@@ -17,7 +17,7 @@ Los tests unitarios no me ayudan aquí. Puedo verificar el comportamiento del ti
 
 El problema es que, hasta ahora, la metadata estructural de cada tabla — índices, claves foráneas, restricciones únicas — vivía enterrada dentro del método <span class="high">prepare</span> de cada migración. No había forma de consultarla desde fuera sin ejecutarla. Y sin esa información accesible, escribir un test de integración genérico que verifique la estructura real sería repetir strings hardcodeados en cada verificación.
 
-En el [artículo anterior](/es/blog/model-parts-es/) introduje <span class="high">SchemaDescribable</span>: un protocolo que convierte el modelo en la única fuente de verdad para toda su metadata estructural. Ahora ese protocolo tiene un segundo beneficio que es el que hace posible este artículo: los tests pueden leer la estructura esperada directamente del modelo, sin strings, sin duplicación.
+En el [artículo anterior](/es/blog/model-parts/) introduje <span class="high">SchemaDescribable</span>: un protocolo que convierte el modelo en la única fuente de verdad para toda su metadata estructural. Ahora ese protocolo tiene un segundo beneficio que es el que hace posible este artículo: los tests pueden leer la estructura esperada directamente del modelo, sin strings, sin duplicación.
 
 ---
 

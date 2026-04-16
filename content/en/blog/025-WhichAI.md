@@ -67,7 +67,7 @@ My philosophy is clear:
 3. ✅ **I approve** (or don't approve)
 4. 🚀 **Then you proceed**
 
-No free will for AI with admin privileges. <span class="high">Full control</span> is my mantra, as I already shared in my article about [Claude Code](/en/blog/claude-code-en) 💪.
+No free will for AI with admin privileges. <span class="high">Full control</span> is my mantra, as I already shared in my article about [Claude Code](/blog/claude-code/) 💪.
 
 ---
 

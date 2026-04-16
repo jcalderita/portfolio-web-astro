@@ -66,6 +66,7 @@ let contents = try await urls.concurrentMap {
 
 This approach is ideal for batch HTTP requests, image processing, bulk data reading, or any scenario requiring **maximum safe parallelism**.
 
+If you need **guaranteed ordering** or want to limit resource consumption to one task at a time, I covered that in [Async Map](/blog/async-map/). And if you want to combine both strategies — concurrent processing within controlled chunks — I built that in [Async Concurrent Map](/blog/async-concurrent-map/).
 
 **Keep coding, keep running** 🏃‍♂️
 

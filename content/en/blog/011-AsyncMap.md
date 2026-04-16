@@ -54,6 +54,8 @@ It's especially useful when:
 - We must limit resource consumption (one task in flight).
 - There's dependency between operations.
 
+If you need **parallel execution** instead of sequential, I explored that approach in [Concurrent Map](/blog/concurrent-map/). And if your sequential calls hit rate limits, I added a timeout mechanism in [Async Map Timeout](/blog/async-map-timeout/).
+
 Usage example:
 
 ```swift

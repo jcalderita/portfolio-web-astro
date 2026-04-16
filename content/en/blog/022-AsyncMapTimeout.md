@@ -11,7 +11,7 @@ publish: true
 ---
 ## Problem
 
-In the [post about AsyncMap](/en/blog/async-map-en) we saw how to process collections in a **sequential asynchronous** manner. However, when working with **external APIs** that implement rate limiting, we face a critical problem:
+In the [post about AsyncMap](/blog/async-map/) we saw how to process collections in a **sequential asynchronous** manner. However, when working with **external APIs** that implement rate limiting, we face a critical problem:
 
 ```swift
 // Process 1000 URLs sequentially

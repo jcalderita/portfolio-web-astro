@@ -84,6 +84,7 @@ Esta implementación utiliza <span class="high">COPY ... FROM</span> con archivo
 
 Estoy vigilando esta issue de manera activa para integrar esta funcionalidad cuando esté disponible, lo que proporcionará una API aún más flexible y eficiente para operaciones de importación masiva.
 
+Si también necesitas la operación inversa — exportar datos de PostgreSQL a archivos CSV — lo cubrí en [Copy To](/es/blog/copy-to/).
 
 **Keep coding, keep running** 🏃‍♂️
 

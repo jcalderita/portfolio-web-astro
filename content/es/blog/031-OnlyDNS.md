@@ -11,7 +11,7 @@ publish: true
 ---
 ## Mi Problema 🤔
 
-En el [artículo anterior](/es/blog/la-liga-thanks-es/) hablé de cómo <span class="high">La Liga</span> bloqueaba mi web durante los partidos. Gente intentando visitar mi portfolio y mi blog se encontraba con que la página no cargaba, simplemente porque mi dominio pasaba por la infraestructura de <span class="high">Cloudflare</span>, y <span class="high">La Liga</span> bloqueaba rangos enteros de IPs de <span class="high">Cloudflare</span> para frenar las retransmisiones ilegales.
+En el [artículo anterior](/es/blog/la-liga-thanks/) hablé de cómo <span class="high">La Liga</span> bloqueaba mi web durante los partidos. Gente intentando visitar mi portfolio y mi blog se encontraba con que la página no cargaba, simplemente porque mi dominio pasaba por la infraestructura de <span class="high">Cloudflare</span>, y <span class="high">La Liga</span> bloqueaba rangos enteros de IPs de <span class="high">Cloudflare</span> para frenar las retransmisiones ilegales.
 
 Lo sabía. Lo documenté. Y me quedé ahí.
 

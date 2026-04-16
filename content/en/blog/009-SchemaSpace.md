@@ -37,6 +37,7 @@ public final class LocationCityModel: Model {
 
 It's essential to declare the <span class="high">space</span> property as type <span class="high">String?</span> **(optional)**. If declared as <span class="high">String</span> **(non-optional)**, it won't override the inherited property from the <span class="high">Model</span> protocol, but will create a new property with the same name instead. This will cause the framework to ignore the namespace configuration, keeping the tables in the default schema without any apparent error indication.
 
+If you're wondering how to create these namespaces automatically in the database, I explain how to turn that into a migration in [Migrate Spaces](/blog/migrate-spaces/).
 
 **Keep coding, keep running** 🏃‍♂️
 

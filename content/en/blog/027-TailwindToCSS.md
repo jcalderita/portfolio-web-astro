@@ -186,7 +186,7 @@ All imported from a single <span class="high">global.css</span>. Clean, predicta
 
 Migrating from <span class="high">Tailwind CSS</span> to <span class="high">vanilla CSS</span> isn't for everyone or every project. In large teams or projects with many developers, Tailwind remains a **fantastic choice** for its consistency and development speed.
 
-But in a personal project like a portfolio built with <span class="high">Astro</span>, where performance matters and full control is a luxury you can afford, **removing that abstraction layer** is liberating 🕊️.
+But in a personal project like a portfolio built with <span class="high">Astro</span>, where performance matters and full control is a luxury you can afford, **removing that abstraction layer** is liberating 🕊️. In fact, I ended up taking this philosophy even further and migrated the entire portfolio from Astro to Swift — I tell the full story in [Astro to Saga](/blog/astro-to-saga/).
 
 It's like painting a picture: you can use templates and tools to guide you, or you can pick up the brush and create **exactly** what you have in mind. Both options are valid. But when the canvas is yours, <span class="high">painting by hand has its charm</span> 🎨.
 

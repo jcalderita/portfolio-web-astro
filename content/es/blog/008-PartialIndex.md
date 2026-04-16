@@ -144,6 +144,7 @@ Donde <span class="high">$0.partial</span> es un valor opcional que indica el ti
 
 La solución ofrece una forma limpia y reutilizable de crear índices parciales dentro del ecosistema Vapor, manteniendo la coherencia y seguridad del código Swift.
 
+Si además quieres organizar tus tablas en espacios de nombres usando la propiedad `space` de Fluent, lo cubrí en [Esquemas y Espacios](/es/blog/schema-space/).
 
 **Keep coding, keep running** 🏃‍♂️
 

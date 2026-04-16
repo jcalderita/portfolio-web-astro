@@ -77,8 +77,7 @@ Beneficios de esta aproximación:
 🔧 **Integración nativa**: aprovecha capacidades optimizadas del motor <span class="high">PostgreSQL</span>.<br />
 📊 **Escalabilidad**: permite exportar millones de registros sin impacto en el rendimiento de la aplicación.
 
-Esta solución es el complemento perfecto para <span class="high">importCSV</span>, formando un par de funciones que permite **movimiento bidireccional de datos** entre <span class="high">PostgreSQL</span> y el sistema de archivos de forma eficiente y confiable.
-
+Esta solución es el complemento perfecto para <span class="high">importCSV</span>, formando un par de funciones que permite **movimiento bidireccional de datos** entre <span class="high">PostgreSQL</span> y el sistema de archivos de forma eficiente y confiable. Si aún no has visto la parte de importación, explico cómo construirla usando `COPY FROM` de PostgreSQL en [Copy From](/es/blog/copy-from/).
 
 **Keep coding, keep running** 🏃‍♂️
 

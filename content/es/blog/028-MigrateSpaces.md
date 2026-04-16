@@ -11,7 +11,7 @@ publish: true
 ---
 ## 🧩 Problema
 
-En el artículo anterior sobre [Esquemas y Espacios](/es/blog/schema-space-es) vimos cómo asignar un espacio de nombres a un modelo usando la propiedad <span class="high">space</span>. Muchos me preguntasteis lo mismo: **¿cómo se crean esos espacios en la base de datos?** 🤔
+En el artículo anterior sobre [Esquemas y Espacios](/es/blog/schema-space/) vimos cómo asignar un espacio de nombres a un modelo usando la propiedad <span class="high">space</span>. Muchos me preguntasteis lo mismo: **¿cómo se crean esos espacios en la base de datos?** 🤔
 
 La respuesta más habitual era hacerlo a mano, ejecutando un <span class="high">CREATE SCHEMA</span> en la consola de PostgreSQL antes de lanzar las migraciones. Funciona, pero rompe algo fundamental: si la base de datos no existe o el entorno es nuevo, **el proceso falla** antes de llegar a las migraciones reales 💥.
 

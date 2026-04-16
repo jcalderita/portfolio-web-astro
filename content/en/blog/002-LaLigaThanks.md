@@ -31,8 +31,9 @@ Cloudflare protects and accelerates millions of websites globally, but due to La
 
 It's a frustrating example of how overzealous digital enforcement can harm the open web — even small developer portfolios like mine.
 
-*“Thanks, La Liga!!”*
+*”Thanks, La Liga!!”*
 
+**Update:** I eventually found a simple fix for this problem. If you want to know how I solved it in 5 minutes, read [Only DNS](/blog/only-dns/).
 
 **Keep coding, keep running** 🏃‍♂️
 

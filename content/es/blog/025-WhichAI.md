@@ -67,7 +67,7 @@ Mi filosofía es clara:
 3. ✅ **Yo apruebo** (o no apruebo)
 4. 🚀 **Entonces procedes**
 
-No al libre albedrío de la IA con permisos de administrador. <span class="high">Control total</span> es mi mantra, como ya conté en mi artículo sobre [Claude Code](/es/blog/claude-code-es) 💪.
+No al libre albedrío de la IA con permisos de administrador. <span class="high">Control total</span> es mi mantra, como ya conté en mi artículo sobre [Claude Code](/es/blog/claude-code/) 💪.
 
 ---
 

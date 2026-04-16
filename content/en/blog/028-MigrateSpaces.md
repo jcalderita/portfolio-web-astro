@@ -11,7 +11,7 @@ publish: true
 ---
 ## 🧩 Problem
 
-In the previous article about [Schemas and Spaces](/en/blog/schema-space-en) we saw how to assign a namespace to a model using the <span class="high">space</span> property. Many of you asked the same question: **how are those spaces created in the database?** 🤔
+In the previous article about [Schemas and Spaces](/blog/schema-space/) we saw how to assign a namespace to a model using the <span class="high">space</span> property. Many of you asked the same question: **how are those spaces created in the database?** 🤔
 
 The most common answer was to do it manually, running a <span class="high">CREATE SCHEMA</span> in the PostgreSQL console before launching the migrations. It works, but it breaks something fundamental: if the database doesn't exist or the environment is new, **the process fails** before reaching the actual migrations 💥.
 

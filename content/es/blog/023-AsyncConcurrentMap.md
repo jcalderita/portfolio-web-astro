@@ -77,6 +77,8 @@ Beneficios de esta aproximación:
 🔧 **Flexibilidad total**: usa chunking cuando lo necesites, o procesamiento concurrente puro cuando no.<br />
 📊 **Escalabilidad**: permite procesar millones de registros ajustando el tamaño del chunk según los recursos disponibles.
 
+Si necesitas ejecución paralela pura, lo cubrí en [Concurrent Map](/es/blog/concurrent-map/). Y si tus chunks secuenciales necesitan rate limiting entre ellos, añadí esa capacidad en [Async Map Timeout](/es/blog/async-map-timeout/).
+
 Esta solución es la **evolución natural** de <span class="high">asyncMap</span> y <span class="high">concurrentMap</span>, combinando lo mejor de ambos mundos para optimizar el procesamiento de datos masivos en aplicaciones backend.
 
 

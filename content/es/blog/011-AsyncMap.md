@@ -54,6 +54,8 @@ Es especialmente útil cuando:
 - Debemos limitar el consumo de recursos (una tarea en vuelo).
 - Existe dependencia entre las operaciones.
 
+Si necesitas **ejecución en paralelo** en lugar de secuencial, exploré ese enfoque en [Concurrent Map](/es/blog/concurrent-map/). Y si tus llamadas secuenciales alcanzan límites de tasa, añadí un mecanismo de timeout en [Async Map Timeout](/es/blog/async-map-timeout/).
+
 Ejemplo de uso:
 
 ```swift
