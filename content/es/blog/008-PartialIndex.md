@@ -2,7 +2,7 @@
 title: Índices Parciales
 slug: partial-index
 date: 2025-09-29
-description: Cómo utilizar índices parciales en Vapor para optimizar tus tablas
+description: Extiende SQLCreateIndexBuilder de Vapor para crear índices parciales con cláusulas WHERE sobre columnas NULL, evitando SQL crudo y manteniendo type safety.
 tags: Swift, Vapor
 cover: PartialIndex
 coverDescription: Jorge corriendo por un carril totalmente distinto al de los demás corredores, con un bocadillo que dice Partial Index

@@ -2,7 +2,7 @@
 title: Schemas and Namespaces
 slug: schema-space
 date: 2025-10-06
-description: Table organization through schemas and namespaces in databases with Vapor
+description: Learn how to use the space property in Vapor's Fluent models to organize database tables into namespaces, and avoid a subtle optional type declaration bug.
 tags: Swift, Vapor
 cover: SchemaSpace
 coverDescription: Jorge sitting programming thinking about Schemas and Spaces

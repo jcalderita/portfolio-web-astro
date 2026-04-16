@@ -2,7 +2,7 @@
 title: Migrate Spaces
 slug: migrate-spaces
 date: 2026-03-14
-description: Creación de espacios de nombres en PostgreSQL usando migraciones de FluentKit, el primer paso siempre.
+description: Cómo crear espacios de nombres en PostgreSQL con migraciones de FluentKit en Vapor, reemplazando la configuración manual por código versionado y reversible.
 tags: Swift, Vapor
 cover: MigrateSpaces
 coverDescription: Jorge administrando espacios de nombres en una base de datos PostgreSQL desde código Swift.

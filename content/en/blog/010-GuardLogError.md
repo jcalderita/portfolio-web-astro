@@ -2,7 +2,7 @@
 title: Guard and LogError
 slug: guard-log
 date: 2025-10-13
-description: How to unwrap an optional, create a log, and return a throw simultaneously.
+description: Build a generic Swift function that combines guard-let unwrapping, error logging, and exception throwing in a single reusable line for Vapor backends.
 tags: Swift, Vapor
 cover: GuardLog
 coverDescription: Jorge running while opening a drink that unexpectedly releases confetti. The speech bubble says GUARD and LOGERROR.

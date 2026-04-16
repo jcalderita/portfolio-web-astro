@@ -2,7 +2,7 @@
 title: Amo Vapor
 slug: love-vapor
 date: 2025-08-25
-description: Swift del lado servidor: amor a primera vista con el framework Vapor durante el Swift Full Stack Bootcamp.
+description: Descubre por qué Vapor se convirtió en mi framework favorito de Swift en servidor en el Bootcamp, desde gRPC hasta PassKeys y tareas async.
 tags: Vapor, Swift
 cover: LoveVapor
 coverDescription: Jorge, al ver el logotipo del framework Vapor, se enamora a primera vista: ojos de corazón y varios corazones flotando alrededor.

@@ -2,7 +2,7 @@
 title: Partial Indexes
 slug: partial-index
 date: 2025-09-29
-description: How to use partial indexes in Vapor to optimize your tables
+description: Extend Vapor's SQLCreateIndexBuilder to support partial indexes with WHERE clauses on NULL columns, avoiding raw SQL while keeping type safety in Swift.
 tags: Swift, Vapor
 cover: PartialIndex
 coverDescription: Jorge running in a completely different lane from other runners, with a speech bubble saying Partial Index

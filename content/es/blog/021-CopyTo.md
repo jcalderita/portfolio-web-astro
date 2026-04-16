@@ -2,7 +2,7 @@
 title: Copy To
 slug: copy-to
 date: 2026-01-07
-description: Como hacer exportación de tus datos de la base de datos.
+description: Exporta grandes conjuntos de datos de PostgreSQL a CSV en Vapor usando el comando nativo COPY TO, evitando serialización manual y reduciendo consumo de memoria.
 tags: Swift, Vapor
 cover: CopyTo
 coverDescription: Muchas zapatillas cayendose encima de Jorge al abrir el armario.

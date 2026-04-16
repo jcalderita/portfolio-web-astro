@@ -2,7 +2,7 @@
 title: Conferences 25
 slug: conferences-25
 date: 2026-01-28
-description: Jorge mirando todas las conferencias de iOS, Swift, Server, Apple de 2025.
+description: Lista curada de las mejores conferencias de iOS, Swift y Apple en 2025 con fechas, ubicaciones y enlaces para ver todas las charlas gratis.
 tags: Swift, Conference
 cover: Conferences25
 coverDescription: Jorge frente a su pantalla programando y viendo las conferencias de 2025 sobre iOS, Swift, Server y Apple en una televisión en frente suya.

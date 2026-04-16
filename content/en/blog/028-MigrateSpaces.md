@@ -2,7 +2,7 @@
 title: Migrate Spaces
 slug: migrate-spaces
 date: 2026-03-14
-description: Creating namespaces in PostgreSQL using FluentKit migrations, always the first step.
+description: How to automate PostgreSQL namespace creation using FluentKit migrations in Vapor, replacing error-prone manual setup with versioned, reversible code.
 tags: Swift, Vapor
 cover: MigrateSpaces
 coverDescription: Jorge managing namespaces in a PostgreSQL database from Swift code.

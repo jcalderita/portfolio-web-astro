@@ -2,7 +2,7 @@
 title: Which AI
 slug: which-ai
 date: 2026-02-04
-description: Volviendote loco con todas las opciones que tiene de inteligencia artifical.
+description: Cómo lidiar con la fatiga de herramientas de IA como desarrollador: por qué perseguir cada nuevo modelo es imposible y cómo elegir sin caer en el FOMO.
 tags: AI
 cover: WhichAI
 coverDescription: Jorge frente a su pantalla programando y un bocadillo con iconos de las distintas inteligencias artificiales que hay y volviendose loco por cual usar.

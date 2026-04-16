@@ -2,7 +2,7 @@
 title: Async Map
 slug: async-map
 date: 2025-10-20
-description: Converting map into async map
+description: Build a sequential asyncMap extension on Sequence in Swift to transform collections with async/await while preserving order and limiting resources.
 tags: Swift, Vapor
 cover: AsyncMap
 coverDescription: Several Jorges running on the same line one after another.

@@ -2,7 +2,7 @@
 title: Concurrent Map
 slug: concurrent-map
 date: 2025-10-27
-description: Convertir el map en concurrent map
+description: Crea una extensión concurrentMap sobre Sequence con concurrencia estructurada de Swift para ejecutar transformaciones async en paralelo de forma segura y eficiente.
 tags: Swift, Vapor
 cover: ConcurrentMap
 coverDescription: Varios Jorges corriendo por lineas paralelas y llegando al mismo tiempo a la meta.

@@ -2,7 +2,7 @@
 title: Concurrent Map
 slug: concurrent-map
 date: 2025-10-27
-description: Transforming map into concurrent map
+description: Build a concurrentMap extension on Sequence using Swift structured concurrency to run async transformations in parallel with Sendable safety and error handling.
 tags: Swift, Vapor
 cover: ConcurrentMap
 coverDescription: Several Jorges running on parallel tracks and reaching the finish line at the same time.

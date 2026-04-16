@@ -2,7 +2,7 @@
 title: Love Vapor
 slug: love-vapor
 date: 2025-08-25
-description: Swift on the server side: love at first sight with the Vapor framework during the Swift Full Stack Bootcamp.
+description: Discover why Vapor became my favorite Swift server-side framework at the Full Stack Bootcamp, from gRPC to PassKeys and scheduled tasks.
 tags: Vapor, Swift
 cover: LoveVapor
 coverDescription: Jorge, upon seeing the Vapor framework logo, falls in love at first sight: heart-shaped eyes and several hearts floating around.

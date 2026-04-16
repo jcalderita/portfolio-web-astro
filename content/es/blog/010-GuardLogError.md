@@ -2,7 +2,7 @@
 title: Guard and LogError
 slug: guard-log
 date: 2025-10-13
-description: Cómo desempaquetar un opcional, crear un log y retornar un throw simultáneamente.
+description: Crea una función genérica en Swift que combina guard-let, logging de errores y lanzamiento de excepciones en una sola línea reutilizable para backends Vapor.
 tags: Swift, Vapor
 cover: GuardLog
 coverDescription: Jorge corriendo mientras abre una bebida de la que salen confetis sin esperarlo. En el bocadillo pone GUARD and LOGERROR.

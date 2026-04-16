@@ -2,7 +2,7 @@
 title: Which AI
 slug: which-ai
 date: 2026-02-04
-description: Going crazy with all the artificial intelligence options out there.
+description: How to deal with AI tool fatigue as a developer: why chasing every new model is impossible and how to pick the right tools without burning out from FOMO.
 tags: AI
 cover: WhichAI
 coverDescription: Jorge in front of his screen programming with a speech bubble full of different AI icons, going crazy trying to decide which one to use.

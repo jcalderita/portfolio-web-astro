@@ -2,7 +2,7 @@
 title: Esquemas y Espacios
 slug: schema-space
 date: 2025-10-06
-description: Organización de tablas mediante esquemas y espacios de nombres en bases de datos con Vapor
+description: Aprende a usar la propiedad space en los modelos Fluent de Vapor para organizar tablas en namespaces, y evita un sutil bug en la declaración de tipo opcional.
 tags: Swift, Vapor
 cover: SchemaSpace
 coverDescription: Jorge sentado programando pensando en Schemas y Spaces
