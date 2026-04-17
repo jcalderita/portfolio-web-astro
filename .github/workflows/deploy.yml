@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -32,12 +32,12 @@ jobs:
       - name: Generate site
         run: .build/release/PortfolioSite
 
-      - name: Deploy to Cloudflare Workers
+      - name: Deploy to Cloudflare Pages
         run: |
           if [ "${{ github.ref_name }}" = "main" ]; then
-            npx wrangler deploy
+            npx wrangler pages deploy deploy/ --project-name=jcalderita
           else
-            npx wrangler deploy --env staging
+            npx wrangler pages deploy deploy/ --project-name=jcalderita --branch=staging
           fi
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
