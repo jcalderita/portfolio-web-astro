@@ -192,7 +192,7 @@ private func renderHead(_ context: PageContext) -> Node {
     // Speculation Rules (prefetch on hover)
     nodes.append(script(type: "speculationrules") {
         Node.raw("""
-        {"prefetch":[{"source":"document","where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+        {"prerender":[{"source":"document","where":{"href_matches":"/*"},"eagerness":"moderate"}]}
         """)
     })
 
