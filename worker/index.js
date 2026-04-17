@@ -8,15 +8,26 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    const response = await env.ASSETS.fetch(request);
+    let response = await env.ASSETS.fetch(request);
+
+    // Follow redirects internally so bots always receive final HTML
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (location) {
+        const redirectURL = new URL(location, request.url);
+        response = await env.ASSETS.fetch(redirectURL.toString());
+      }
+    }
+
     const body = await response.arrayBuffer();
+    const headers = new Headers(response.headers);
+    headers.delete("content-encoding");
+    headers.delete("content-length");
+    headers.set("cache-control", "public, max-age=0, must-revalidate");
 
     return new Response(body, {
       status: response.status,
-      headers: {
-        ...Object.fromEntries(response.headers),
-        "cache-control": "public, max-age=0, must-revalidate",
-      },
+      headers,
     });
   },
 };
