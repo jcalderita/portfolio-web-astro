@@ -17,6 +17,9 @@ CLAUDE.md
 # Social media posts
 post/
 
+# Wrangler
+.wrangler/
+
 # Environment
 .env
 .env.production
