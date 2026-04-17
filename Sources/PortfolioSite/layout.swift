@@ -189,5 +189,12 @@ private func renderHead(_ context: PageContext) -> Node {
         nodes.append(script(type: "application/ld+json") { Node.raw(jsonLD) })
     }
 
+    // Speculation Rules (prefetch on hover)
+    nodes.append(script(type: "speculationrules") {
+        Node.raw("""
+        {"prefetch":[{"source":"document","where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+        """)
+    })
+
     return head { Node.fragment(nodes) }
 }
