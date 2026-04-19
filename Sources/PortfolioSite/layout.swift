@@ -196,5 +196,8 @@ private func renderHead(_ context: PageContext) -> Node {
         """)
     })
 
+    // Prefetch fallback for browsers without Speculation Rules
+    nodes.append(script { Node.raw(prefetchFallbackJS) })
+
     return head { Node.fragment(nodes) }
 }

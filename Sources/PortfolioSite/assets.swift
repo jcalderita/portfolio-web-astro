@@ -56,6 +56,10 @@ m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>m.hidePopover(
 })();
 """
 
+let prefetchFallbackJS = """
+(()=>{if(HTMLScriptElement.supports?.('speculationrules'))return;const s=new Set;function p(e){const a=e.target.closest('a');if(!a||a.origin!==location.origin)return;const u=a.href;if(s.has(u))return;s.add(u);const l=document.createElement('link');l.rel='prefetch';l.href=u;document.head.appendChild(l)}document.addEventListener('pointerenter',p,true);document.addEventListener('touchstart',p,{passive:true,capture:true})})();
+"""
+
 // MARK: - SVG Icons
 
 let githubSVG = """
