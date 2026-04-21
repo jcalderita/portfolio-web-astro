@@ -3,13 +3,13 @@ Si prefieres leer esta página en español, puedes encontrar la [🇪🇸 Versi�
 
 > **Professional portfolio of Jorge Calderita – Developer specialized in iOS, VisionOS, and Swift**
 
-[![Deploy on Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange?logo=cloudflare)](https://workers.cloudflare.com/)
+[![Deploy on Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange?logo=cloudflare)](https://pages.cloudflare.com/)
 [![Swift 6.3](https://img.shields.io/badge/Swift-6.3-F05138?logo=swift&logoColor=white)](https://swift.org/)
 [![Saga 3.3](https://img.shields.io/badge/Saga-3.3-blueviolet)](https://github.com/loopwerk/Saga)
 
 ## 🚀 Description
 
-This is the personal and professional portfolio of Jorge Calderita, built with [Saga](https://github.com/loopwerk/Saga) (a Swift static site generator) and deployed on [Cloudflare Workers](https://workers.cloudflare.com/).
+This is the personal and professional portfolio of Jorge Calderita, built with [Saga](https://github.com/loopwerk/Saga) (a Swift static site generator) and deployed on [Cloudflare Pages](https://pages.cloudflare.com/).
 The site supports multiple languages (Spanish and English), is optimized for SEO and accessibility (WAI-ARIA), and is fully responsive.
 
 - **Language:** Swift 6.3
@@ -18,7 +18,8 @@ The site supports multiple languages (Spanish and English), is optimized for SEO
 - **Styling:** Vanilla CSS with design tokens
 - **Syntax highlighting:** Moon (Prism.js classes, Xcode Dark theme)
 - **Accessibility:** Complies with WCAG standards and uses ARIA attributes
-- **Deployment:** Cloudflare Workers via GitHub Actions
+- **Deployment:** Cloudflare Pages via GitHub Actions
+- **Social automation:** Auto-tweet on publish via X API (OAuth 1.0a)
 - **Light/dark theme:** Automatic and manual support
 - **Cookie policy:** Only a technical cookie for language preference
 
@@ -30,7 +31,7 @@ The site supports multiple languages (Spanish and English), is optimized for SEO
 │   ├── PortfolioSite/     # Site generator (layouts, pages, components, SEO, i18n)
 │   └── ImageOptimizer/    # PNG → WebP image optimization pipeline
 ├── worker/
-│   └── index.js           # Cloudflare Worker (bot bypass for SEO crawlers)
+│   └── index.js           # Cloudflare Worker (unused — kept for reference)
 ├── content/
 │   ├── en/blog/           # English blog posts (Markdown)
 │   ├── es/blog/           # Spanish blog posts (Markdown)
@@ -72,17 +73,19 @@ Each locale has its own RSS feed and all legal pages are available in both langu
 - JSON-LD structured data (Person on home, BlogPosting on articles).
 - Custom sitemap with `lastmod` dates and hreflang alternates.
 - `robots.txt` and `llms.txt` for search and AI crawlers.
-- Custom Cloudflare Worker to bypass bot protections for SEO crawlers.
+- DNS-only mode on Cloudflare (no Workers) to avoid bot blocking.
 - Responsive on mobile, tablet, and desktop.
 
 ## ☁️ Deployment
 
-Automatically deployed on [Cloudflare Workers](https://workers.cloudflare.com/) via GitHub Actions.
+Automatically deployed on [Cloudflare Pages](https://pages.cloudflare.com/) via GitHub Actions.
 
-| Branch | Environment | Worker |
-|--------|-------------|--------|
-| `main` | Production | `jcalderita` |
-| `developing` | Staging | `jcalderita-staging` |
+| Branch | Environment |
+|--------|-------------|
+| `main` | Production |
+| `developing` | Staging |
+
+When a blog post is published (`publish: true`), the workflow automatically posts to X (Twitter) in both Spanish and English using the post's frontmatter (`description` + URL + `tags` as hashtags).
 
 ## 📄 Legal Pages
 

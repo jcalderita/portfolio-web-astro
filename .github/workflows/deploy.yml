@@ -19,6 +19,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Cache SPM dependencies
         uses: actions/cache@v5
@@ -42,3 +44,161 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Detect new blog posts
+        if: github.ref_name == 'main'
+        id: detect
+        run: |
+          BASE="${{ github.event.before }}"
+          if [ "$BASE" = "0000000000000000000000000000000000000000" ] || [ -z "$BASE" ]; then
+            echo "First push or workflow_dispatch — skipping tweet"
+            echo "slugs=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          SLUGS=""
+          for file in $(git diff --name-only "$BASE" HEAD -- 'content/es/blog/*.md'); do
+            if git diff "$BASE" HEAD -- "$file" | grep -q '^+publish: true'; then
+              SLUG=$(grep '^slug:' "$file" | sed 's/slug: *//')
+              if [ -n "$SLUG" ]; then
+                SLUGS="$SLUGS $SLUG"
+                echo "Detected new post: $SLUG"
+              fi
+            fi
+          done
+
+          echo "slugs=$(echo $SLUGS | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Post to X
+        if: github.ref_name == 'main' && steps.detect.outputs.slugs != ''
+        continue-on-error: true
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          SLUGS: ${{ steps.detect.outputs.slugs }}
+        run: |
+          python3 << 'PYEOF'
+          import hmac, hashlib, base64, time, uuid, urllib.parse, json, os, sys, glob, re
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+
+          def parse_frontmatter(filepath):
+              with open(filepath, 'r') as f:
+                  lines = f.readlines()
+              in_frontmatter = False
+              fields = {}
+              for line in lines:
+                  stripped = line.strip()
+                  if stripped == '---':
+                      if in_frontmatter:
+                          break
+                      in_frontmatter = True
+                      continue
+                  if in_frontmatter and ':' in line:
+                      key, _, value = line.partition(':')
+                      fields[key.strip()] = value.strip()
+              return fields
+
+          def find_post_by_slug(slug, locale):
+              pattern = f'content/{locale}/blog/*.md'
+              for filepath in glob.glob(pattern):
+                  fields = parse_frontmatter(filepath)
+                  if fields.get('slug') == slug:
+                      return fields
+              return None
+
+          def compose_tweet(fields, slug, locale):
+              description = fields.get('description', '')
+              tags_raw = fields.get('tags', '')
+              hashtags = ' '.join(f'#{t.strip()}' for t in tags_raw.split(',') if t.strip())
+              if locale == 'es':
+                  url = f'jcalderita.com/es/blog/{slug}/'
+              else:
+                  url = f'jcalderita.com/blog/{slug}/'
+              return f'{description}\n\n{url}\n\n{hashtags}'
+
+          def post_tweet(text):
+              api_key = os.environ['X_API_KEY']
+              api_secret = os.environ['X_API_SECRET']
+              access_token = os.environ['X_ACCESS_TOKEN']
+              access_secret = os.environ['X_ACCESS_TOKEN_SECRET']
+
+              url = 'https://api.x.com/2/tweets'
+              oauth_params = {
+                  'oauth_consumer_key': api_key,
+                  'oauth_nonce': uuid.uuid4().hex,
+                  'oauth_signature_method': 'HMAC-SHA1',
+                  'oauth_timestamp': str(int(time.time())),
+                  'oauth_token': access_token,
+                  'oauth_version': '1.0',
+              }
+
+              params_str = '&'.join(
+                  f'{urllib.parse.quote(k, safe="")}'
+                  f'={urllib.parse.quote(v, safe="")}'
+                  for k, v in sorted(oauth_params.items())
+              )
+              base_string = (
+                  f'POST'
+                  f'&{urllib.parse.quote(url, safe="")}'
+                  f'&{urllib.parse.quote(params_str, safe="")}'
+              )
+              signing_key = (
+                  f'{urllib.parse.quote(api_secret, safe="")}'
+                  f'&{urllib.parse.quote(access_secret, safe="")}'
+              )
+              signature = base64.b64encode(
+                  hmac.new(
+                      signing_key.encode(),
+                      base_string.encode(),
+                      hashlib.sha1,
+                  ).digest()
+              ).decode()
+
+              oauth_params['oauth_signature'] = signature
+              auth_header = 'OAuth ' + ', '.join(
+                  f'{k}="{urllib.parse.quote(v, safe="")}"'
+                  for k, v in sorted(oauth_params.items())
+              )
+
+              body = json.dumps({'text': text}).encode()
+              req = Request(url, data=body, method='POST')
+              req.add_header('Authorization', auth_header)
+              req.add_header('Content-Type', 'application/json')
+
+              try:
+                  with urlopen(req) as resp:
+                      result = json.loads(resp.read())
+                      tweet_id = result.get('data', {}).get('id', 'unknown')
+                      print(f'  Tweet posted: id={tweet_id}')
+                      return True
+              except HTTPError as e:
+                  error_body = e.read().decode()
+                  print(f'  Error {e.code}: {error_body}')
+                  return False
+
+          slugs = os.environ.get('SLUGS', '').split()
+          if not slugs:
+              print('No slugs to process')
+              sys.exit(0)
+
+          for slug in slugs:
+              print(f'\nProcessing: {slug}')
+              for locale in ['es', 'en']:
+                  fields = find_post_by_slug(slug, locale)
+                  if not fields:
+                      print(f'  [{locale.upper()}] Post not found, skipping')
+                      continue
+
+                  tweet = compose_tweet(fields, slug, locale)
+                  print(f'  [{locale.upper()}] Tweet ({len(tweet)} chars):')
+                  print(f'  {tweet[:80]}...' if len(tweet) > 80 else f'  {tweet}')
+                  post_tweet(tweet)
+
+                  if locale == 'es':
+                      time.sleep(5)
+
+          print('\nDone')
+          PYEOF
