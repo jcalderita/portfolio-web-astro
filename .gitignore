@@ -12,6 +12,7 @@ deploy/
 
 # Claude Code
 .claude/
+/.claude
 CLAUDE.md
 
 # Wrangler
