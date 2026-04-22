@@ -36,8 +36,10 @@ func shell(_ args: String...) -> String {
 
 struct Frontmatter {
     let slug: String
+    let title: String
     let description: String
     let tags: [String]
+    let cover: String
 
     init?(path: String) {
         let url = URL(filePath: path)
@@ -62,7 +64,9 @@ struct Frontmatter {
 
         guard let slug = fields["slug"], !slug.isEmpty else { return nil }
         self.slug = slug
+        self.title = fields["title"] ?? ""
         self.description = fields["description"] ?? ""
+        self.cover = fields["cover"] ?? ""
         self.tags = (fields["tags"] ?? "")
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespaces) }
@@ -113,6 +117,31 @@ struct Tweet {
             ? "jcalderita.com/es/blog/\(slug)/"
             : "jcalderita.com/blog/\(slug)/"
         self.text = "\(fm.description)\n\n\(url)\n\n\(hashtags)"
+    }
+}
+
+// MARK: - LinkedIn Post
+
+struct LinkedInPost {
+    let slug: String
+    let locale: String
+    let text: String
+    let url: String
+    let title: String
+    let thumbnail: String
+
+    init?(slug: String, locale: String) {
+        guard let fm = Frontmatter.find(slug: slug, locale: locale) else { return nil }
+        self.slug = slug
+        self.locale = locale
+
+        let hashtags = fm.tags.map { "#\($0)" }.joined(separator: " ")
+        self.text = "\(fm.description)\n\n\(hashtags)"
+        self.url = locale == "es"
+            ? "https://jcalderita.com/es/blog/\(slug)/"
+            : "https://jcalderita.com/blog/\(slug)/"
+        self.title = "\(fm.title): \(fm.description)"
+        self.thumbnail = "https://jcalderita.com/static/blog/\(fm.cover).webp"
     }
 }
 
@@ -208,6 +237,43 @@ func postToX(_ tweet: Tweet) async -> Bool {
     }
 }
 
+// MARK: - LinkedIn via Make.com
+
+func postToLinkedIn(_ post: LinkedInPost, webhookURL: String) async -> Bool {
+    guard let url = URL(string: webhookURL) else {
+        print("  [\(post.locale.uppercased())] Invalid webhook URL")
+        return false
+    }
+
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    let payload: [String: String] = [
+        "text": post.text,
+        "url": post.url,
+        "title": post.title,
+        "thumbnail": post.thumbnail,
+    ]
+    request.httpBody = try? JSONEncoder().encode(payload)
+
+    do {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+
+        guard (200...299).contains(status) else {
+            print("  [\(post.locale.uppercased())] LinkedIn error \(status): \(String(data: data, encoding: .utf8) ?? "")")
+            return false
+        }
+
+        print("  [\(post.locale.uppercased())] LinkedIn post sent via webhook")
+        return true
+    } catch {
+        print("  [\(post.locale.uppercased())] LinkedIn request failed: \(error.localizedDescription)")
+        return false
+    }
+}
+
 // MARK: - Main
 
 let baseSHA = Env["BASE_SHA"] ?? ""
@@ -227,13 +293,27 @@ let tweets = slugs.flatMap { slug in
     ["es", "en"].compactMap { Tweet(slug: slug, locale: $0) }
 }
 
+let linkedInPosts = slugs.flatMap { slug in
+    ["es", "en"].compactMap { LinkedInPost(slug: slug, locale: $0) }
+}
+
+let webhookURL = Env["MAKE_WEBHOOK_URL"]
+
 guard !tweets.isEmpty else {
-    print("No tweets to compose")
+    print("No posts to compose")
     exit(0)
 }
 
 for tweet in tweets {
-    print("[\(tweet.locale.uppercased())] \(tweet.slug) (\(tweet.text.count) chars)")
+    print("[X] [\(tweet.locale.uppercased())] \(tweet.slug) (\(tweet.text.count) chars)")
+}
+
+if webhookURL != nil {
+    for post in linkedInPosts {
+        print("[LinkedIn] [\(post.locale.uppercased())] \(post.slug)")
+    }
+} else {
+    print("MAKE_WEBHOOK_URL not set — skipping LinkedIn")
 }
 
 await withDiscardingTaskGroup { group in
@@ -241,7 +321,18 @@ await withDiscardingTaskGroup { group in
         group.addTask {
             let success = await postToX(tweet)
             if !success {
-                print("  Failed: [\(tweet.locale.uppercased())] \(tweet.slug)")
+                print("  Failed: [X] [\(tweet.locale.uppercased())] \(tweet.slug)")
+            }
+        }
+    }
+
+    if let webhookURL {
+        for post in linkedInPosts {
+            group.addTask {
+                let success = await postToLinkedIn(post, webhookURL: webhookURL)
+                if !success {
+                    print("  Failed: [LinkedIn] [\(post.locale.uppercased())] \(post.slug)")
+                }
             }
         }
     }
