@@ -300,6 +300,29 @@ func postToLinkedIn(_ post: LinkedInPost, webhookURL: String) async -> Bool {
     }
 }
 
+// MARK: - Cover Polling
+
+func waitForCovers(_ urls: [String], retries: Int = 10, interval: UInt64 = 5) async {
+    for urlString in Set(urls) {
+        guard let url = URL(string: urlString) else { continue }
+        for attempt in 1...retries {
+            var request = URLRequest(url: url)
+            request.httpMethod = "HEAD"
+            if let (_, response) = try? await URLSession.shared.data(for: request),
+               (response as? HTTPURLResponse)?.statusCode == 200 {
+                print("Cover available: \(urlString) (attempt \(attempt))")
+                break
+            }
+            if attempt < retries {
+                print("Cover not ready: \(urlString) (attempt \(attempt), retrying in \(interval)s...)")
+                try? await Task.sleep(for: .seconds(interval))
+            } else {
+                print("Cover not available after \(retries) attempts: \(urlString), proceeding anyway")
+            }
+        }
+    }
+}
+
 // MARK: - Main
 
 let baseSHA = Env["BASE_SHA"] ?? ""
@@ -341,6 +364,9 @@ if webhookURL != nil {
 } else {
     print("MAKE_WEBHOOK_URL not set — skipping LinkedIn")
 }
+
+let coverURLs = linkedInPosts.map(\.thumbnail)
+await waitForCovers(coverURLs)
 
 await withDiscardingTaskGroup { group in
     for tweet in tweets {

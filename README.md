@@ -19,7 +19,7 @@ The site supports multiple languages (Spanish and English), is optimized for SEO
 - **Syntax highlighting:** Moon (Prism.js classes, Xcode Dark theme)
 - **Accessibility:** Complies with WCAG standards and uses ARIA attributes
 - **Deployment:** Cloudflare Pages via GitHub Actions
-- **Social automation:** Auto-tweet on publish via X API (OAuth 1.0a)
+- **Social automation:** Auto-post on publish to X (OAuth 1.0a) and LinkedIn (Make.com webhook)
 - **Light/dark theme:** Automatic and manual support
 - **Cookie policy:** Only a technical cookie for language preference
 
@@ -85,7 +85,7 @@ Automatically deployed on [Cloudflare Pages](https://pages.cloudflare.com/) via 
 | `main` | Production |
 | `developing` | Staging |
 
-When a blog post is published (`publish: true`), the workflow automatically posts to X (Twitter) in both Spanish and English using the post's frontmatter (`description` + URL + `tags` as hashtags).
+When a blog post is published (`publish: true`), the workflow automatically posts to **X** and **LinkedIn** in both Spanish and English. X posts use the frontmatter `description` + URL + `tags` as hashtags. LinkedIn posts include an 80-word excerpt, article link with preview, and hashtags — sent via Make.com webhook. The entire social automation runs as a single Swift script (`.github/scripts/publish-social.swift`).
 
 ## 📄 Legal Pages
 

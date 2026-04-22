@@ -14,9 +14,6 @@ deploy/
 .claude/
 CLAUDE.md
 
-# Social media posts
-post/
-
 # Wrangler
 .wrangler/
 
