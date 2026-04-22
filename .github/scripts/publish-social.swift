@@ -40,6 +40,7 @@ struct Frontmatter {
     let description: String
     let tags: [String]
     let cover: String
+    let excerpt: String
 
     init?(path: String) {
         let url = URL(filePath: path)
@@ -47,11 +48,15 @@ struct Frontmatter {
 
         var fields: [String: String] = [:]
         var inside = false
+        var frontmatterEnd = content.startIndex
 
         for line in content.split(separator: "\n", omittingEmptySubsequences: false) {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
             if trimmed == "---" {
-                if inside { break }
+                if inside {
+                    frontmatterEnd = line.endIndex
+                    break
+                }
                 inside = true
                 continue
             }
@@ -70,6 +75,27 @@ struct Frontmatter {
         self.tags = (fields["tags"] ?? "")
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespaces) }
+        self.excerpt = Self.extractExcerpt(from: String(content[frontmatterEnd...]), wordCount: 80)
+    }
+
+    private static func extractExcerpt(from body: String, wordCount: Int) -> String {
+        var text = body
+        text = text.replacing(#/<span[^>]*>|<\/span>/#, with: "")
+        text = text.replacing(#/\[([^\]]+)\]\([^)]+\)/#, with: { "\($0.output.1)" })
+        text = text.replacing(#/(?m)^#{1,6}\s+.*$/#, with: "")
+        text = text.replacing(#/(?m)^---$/#, with: "")
+        text = text.replacing(#/(?ms)```.*?```/#, with: "")
+        text = text.replacing(#/``[^`]+``/#, with: "")
+        text = text.replacing(#/\*\*([^*]+)\*\*/#, with: { "\($0.output.1)" })
+        text = text.replacing(#/`([^`]+)`/#, with: { "\($0.output.1)" })
+        text = text.replacing(#/(?m)\|[^\n]+\|/#, with: "")
+        text = text.replacing(#/(?m)^>\s*/#, with: "")
+        text = text.replacing(#/(?m)^\d+\.\s+/#, with: "")
+        text = text.replacing(#/\n{2,}/#, with: "\n")
+
+        let words = text.split(whereSeparator: \.isWhitespace)
+        guard words.count > wordCount else { return words.joined(separator: " ") }
+        return words.prefix(wordCount).joined(separator: " ") + "..."
     }
 
     static func find(slug: String, locale: String) -> Frontmatter? {
@@ -136,7 +162,7 @@ struct LinkedInPost {
         self.locale = locale
 
         let hashtags = fm.tags.map { "#\($0)" }.joined(separator: " ")
-        self.text = "\(fm.description)\n\n\(hashtags)"
+        self.text = "\(fm.excerpt)\n\n\(hashtags)"
         self.url = locale == "es"
             ? "https://jcalderita.com/es/blog/\(slug)/"
             : "https://jcalderita.com/blog/\(slug)/"
