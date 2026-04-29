@@ -64,13 +64,10 @@ func renderRSSLink(locale: Locale) -> Node {
 
 // MARK: - Date formatting
 
-private let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd/MM/yy"
-    return formatter
-}()
+private let dateFormatter = DateFormatter()
 
 func formatDate(_ date: Date, locale: Locale) -> String {
     dateFormatter.locale = Foundation.Locale(identifier: locale.dateLocaleIdentifier)
+    dateFormatter.setLocalizedDateFormatFromTemplate("ddMMyy")
     return dateFormatter.string(from: date)
 }
