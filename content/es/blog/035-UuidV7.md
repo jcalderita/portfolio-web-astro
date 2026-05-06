@@ -6,7 +6,7 @@ description: Swift usa UUID v4 por defecto, pero con una pequeña extensión pue
 tags: Swift, Server, DataBase
 cover: UUID-V7
 coverDescription: Ilustración comparativa estilo cómic: a la izquierda Jorge con UUID-V4 atrapado en una pista enredada y caótica, a la derecha Jorge con UUID-V7 avanzando por una pista de atletismo ordenada y recta.
-publish: false
+publish: true
 ---
 ---
 ## Mi Problema 🤔
