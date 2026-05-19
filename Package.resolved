@@ -1,5 +1,5 @@
 {
-  "originHash" : "b29fad2e3d277719157811c5b174bbd93bd66e87b14bd131243573086796b585",
+  "originHash" : "4b73bcb6042fe25e5118a9805a763cae896f50356fa8d0a1710e035d1334709c",
   "pins" : [
     {
       "identity" : "jxkit",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/loopwerk/Saga",
       "state" : {
-        "revision" : "4f031dff4e4b33524dab9d7151b578f26d56b851",
-        "version" : "3.4.0"
+        "revision" : "5f78c45913cda0737525a913d3a2b80dbdc1f9db",
+        "version" : "3.4.1"
       }
     },
     {

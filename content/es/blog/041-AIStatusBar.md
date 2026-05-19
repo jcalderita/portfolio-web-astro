@@ -1,7 +1,7 @@
 ---
-title: "AI Status Bar"
+title: AI Status Bar
 slug: ai-status-bar
-date: 2026-05-27
+date: 2026-06-17
 description: Cómo monté una status bar personalizada en Claude Code para tener siempre visible el contexto, tokens y límites de uso sin gastar ni un token extra.
 tags: AI, Shell
 cover: AIStatusBar
@@ -20,7 +20,7 @@ Lo que en realidad necesitaba era algo más simple: **una línea siempre visible
 ---
 ## Mi Solución 🧩
 
-<span class="high">Claude Code</span> tiene una funcionalidad llamada <span class="high">statusLine</span> que permite definir un comando externo que se ejecuta periódicamente. La herramienta llama al script, le pasa información del estado actual de la sesión como JSON por <span class="high">stdin</span>, y muestra lo que el script devuelva por <span class="high">stdout</span> en la barra inferior de la interfaz.
+<span class="high">Claude Code</span> tiene una funcionalidad llamada <span class="high">statusLine</span> que permite definir un comando externo que se ejecuta cuando hay cambios en la sesión: tras cada respuesta del asistente, al terminar un <span class="high">/compact</span>, al cambiar el modo de permisos o al togglear el modo vim. La herramienta llama al script, le pasa información del estado actual de la sesión como JSON por <span class="high">stdin</span>, y muestra lo que el script devuelva por <span class="high">stdout</span> en la barra inferior de la interfaz.
 
 La configuración vive en <span class="high">settings.json</span> y es de una sola línea:
 
@@ -35,7 +35,7 @@ La configuración vive en <span class="high">settings.json</span> y es de una so
 
 El JSON que recibe el script por <span class="high">stdin</span> contiene toda la información relevante de la sesión: modelo activo, directorio de trabajo, porcentaje de uso del contexto, tamaño total de la ventana, y límites de uso de los periodos de 5 horas y 7 días, cada uno con su porcentaje y timestamp de reset.
 
-El script se ejecuta cada vez que la interfaz refresca, así que lo escribí buscando que fuera barato: <span class="high">builtins</span> de zsh en lugar de subprocesos, una única llamada a <span class="high">jq</span> en lugar de nueve, y helpers que devuelven el resultado en <span class="high">REPLY</span> para evitar capturarlo con <span class="high">$(...)</span> en el camino caliente.
+El script se ejecuta en cada uno de esos eventos, con un debounce de 300 ms que agrupa cambios rápidos. Y aquí hay un detalle importante: si llega un nuevo evento mientras el script todavía corre, <span class="high">Claude Code</span> cancela la ejecución en curso y lanza una nueva — un script lento se interrumpiría a sí mismo. Por eso lo escribí buscando que fuera barato: <span class="high">builtins</span> de zsh en lugar de subprocesos, una única llamada a <span class="high">jq</span> en lugar de nueve, y helpers que devuelven el resultado en <span class="high">REPLY</span> para evitar capturarlo con <span class="high">$(...)</span> en el camino caliente.
 
 Lo primero es cargar el módulo de fecha de zsh y extraer los nueve campos del JSON en una sola pasada. La salida de <span class="high">jq</span> es una lista ordenada de valores que voy capturando posicionalmente con <span class="high">read</span>:
 
@@ -136,7 +136,7 @@ Aplicando esos umbrales:
 
 Lo mismo para los límites de uso de 5 horas y 7 días: verde por debajo del 50%, amarillo entre 50% y 79%, rojo a partir del 80%.
 
-Las tres funciones devuelven en <span class="high">REPLY</span>: así me ahorro el <span class="high">$(...)</span> y el subshell asociado en cada llamada, que en un script que se ejecuta varias veces por segundo sí se nota. <span class="high">format_reset</span> tira del builtin <span class="high">strftime</span> y de <span class="high">$EPOCHSECONDS</span> del módulo <span class="high">zsh/datetime</span>, así que tampoco arranca un proceso <span class="high">date</span> cada vez.
+Las tres funciones devuelven en <span class="high">REPLY</span>: así me ahorro el <span class="high">$(...)</span> y el subshell asociado en cada llamada, lo que reduce el riesgo de que una invocación se cancele a sí misma cuando llegan eventos seguidos. <span class="high">format_reset</span> tira del builtin <span class="high">strftime</span> y de <span class="high">$EPOCHSECONDS</span> del módulo <span class="high">zsh/datetime</span>, así que tampoco arranca un proceso <span class="high">date</span> cada vez.
 
 Finalmente la composición. La primera línea siempre lleva los mismos elementos: modelo, barra de progreso, porcentaje de contexto, tokens actuales sobre el máximo y nombre del proyecto. La segunda se construye solo con las partes que tengan datos — si no hay límite de 5h, no hay nivel de esfuerzo configurado o no hay rama de git, simplemente no aparecen y los separadores se ajustan:
 

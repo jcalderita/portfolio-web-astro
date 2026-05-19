@@ -1,7 +1,7 @@
 ---
 title: DB Integration Test
 slug: db-integration-test
-date: 2026-06-10
+date: 2026-07-01
 description: Cómo usar SchemaDescribable y un contenedor efímero de PostgreSQL para verificar que cada migración crea exactamente la estructura que el modelo declara.
 tags: Swift, Server, DataBase, Testing
 cover: DBIntegrationTest

@@ -1,7 +1,7 @@
 ---
 title: Back to Shell
 slug: back-to-shell
-date: 2026-05-20
+date: 2026-06-10
 description: Cómo la IA me devolvió a la shell tras años de GUIs. El ciclo completo del desarrollo que vuelve al texto, al comando y al punto de partida.
 tags: AI, Shell
 cover: BackToShell
