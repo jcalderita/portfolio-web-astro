@@ -3,7 +3,7 @@ title: Apple Coding Speed
 slug: apple-coding-speed
 date: 2026-05-20
 description: "What Apple Coding Academy's training really builds: not just Swift code, but speed of comprehension, analysis, and development across the Apple ecosystem."
-tags: Swift, Conference
+tags: Swift, AI
 cover: AppleCodingSpeed
 coverDescription: Jorge running at full speed down a dirt road, wearing a white t-shirt with the AC Academy logo, the background blurred by motion and clouds of dust rising under his feet from his speed.
 publish: true
