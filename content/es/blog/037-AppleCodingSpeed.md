@@ -54,7 +54,7 @@ Las formaciones de Apple Coding Academy llevan esto en su ADN: la filosofía de 
 
 ### Las formaciones que he hecho en Apple Coding Academy
 
-He recorrido varias etapas dentro del catálogo de [Apple Coding Academy](https://acoding.academy/). El <span class="high">Swift Developer Program</span> me dio los fundamentos del ecosistema: tipos, gestión de memoria, <span class="high">Swift Concurrency</span>, composición de protocolos, integración con frameworks nativos. Cinco meses de inmersión que cubren el camino completo hasta un perfil profesional de desarrollo Apple.
+He recorrido varias etapas dentro del catálogo de [Apple Coding Academy](https://acoding.academy/). El <span class="high">Bootcamp</span> me dio los fundamentos del ecosistema: tipos, gestión de memoria, <span class="high">Swift Concurrency</span>, composición de protocolos, integración con frameworks nativos. Cinco meses de inmersión que cubren el camino completo hasta un perfil profesional de desarrollo Apple.
 
 Después llegaron formaciones más específicas: módulos de <span class="high">server-side</span> con <span class="high">Swift</span>, de <span class="high">accesibilidad</span>, y del rediseño visual con <span class="high">Liquid Glass</span>. Cada módulo apunta a una capa distinta del stack y exige un nivel de profundidad que rara vez alcanzo solo leyendo.
 

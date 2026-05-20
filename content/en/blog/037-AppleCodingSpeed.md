@@ -54,7 +54,7 @@ Apple Coding Academy's training carries this in its DNA: Apple's design philosop
 
 ### The courses I have taken at Apple Coding Academy
 
-I have gone through several stages within the [Apple Coding Academy](https://acoding.academy/) catalog. The <span class="high">Swift Developer Program</span> gave me the fundamentals of the ecosystem: types, memory management, <span class="high">Swift Concurrency</span>, protocol composition, integration with native frameworks. Five months of immersion that cover the full path to a professional Apple development profile.
+I have gone through several stages within the [Apple Coding Academy](https://acoding.academy/) catalog. The <span class="high">Bootcamp</span> gave me the fundamentals of the ecosystem: types, memory management, <span class="high">Swift Concurrency</span>, protocol composition, integration with native frameworks. Five months of immersion that cover the full path to a professional Apple development profile.
 
 Then came more specific courses: <span class="high">server-side</span> modules with <span class="high">Swift</span>, <span class="high">accessibility</span>, and the visual redesign with <span class="high">Liquid Glass</span>. Each module targets a different layer of the stack and demands a level of depth I rarely reach on my own by just reading.
 
